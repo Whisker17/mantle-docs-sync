@@ -1,0 +1,51 @@
+---
+title: "Deploying a Sepolia Rollup Verifier/Replica Node From Docker"
+---
+
+To build an app on Mantle network, you'll need access to a Mantle node. There are multiple public Node RPC Providers that you can choose from, or you can deploy your own depending on the requirements for your specific use cases.
+
+
+> **Info**
+
+
+* **This doc is a simple introduction to the process.** For more details, please refer to this:
+  * [Mantle v2 Tectonic Sepolia node](https://github.com/mantlenetworkio/networks/blob/main/run-node-sepolia)
+* For those operators who have already deployed the Mantle Sepolia node, you can skip directly to this [section](#for-operators-who-have-already-deployed-nodes).
+  
+
+## For Operators Who Deploy Nodes For the First Time[​](https://docs-v2.mantle.xyz/nodes/verifier-sepolia#for-operators-who-deploy-nodes-for-the-first-time) <a href="#for-operators-who-deploy-nodes-for-the-first-time" id="for-operators-who-deploy-nodes-for-the-first-time"></a>
+
+### Prerequisites[​](https://docs-v2.mantle.xyz/nodes/verifier-sepolia#prerequisites) <a href="#prerequisites" id="prerequisites"></a>
+
+Ensure you have the following software installed:
+
+* [Git](https://www.git-scm.com/downloads)
+* [docker](https://docs.docker.com/engine/install/)
+* [node](https://nodejs.org/en/download/)
+* [foundry](https://github.com/foundry-rs/foundry/releases)
+* [zstd](https://github.com/facebook/zstd)
+* [aira2](https://aria2.github.io/)
+
+### Hardware Recommendations[​](https://docs-v2.mantle.xyz/nodes/verifier-sepolia#hardware-recommendations) <a href="#hardware-recommendations" id="hardware-recommendations"></a>
+
+For optimal performance, it is recommended to have the following hardware specifications:
+
+* **RAM** - 16GB+
+* **CPU** - 8C+
+* **Storage** - 500GB+ disk(HDD works for now, SSD is better)
+* **Bandwidth** - 10mb/s+ download speed
+
+### Operation Guide[​](https://docs-v2.mantle.xyz/nodes/verifier-sepolia#operation-guide) <a href="#operation-guide" id="operation-guide"></a>
+
+If you are a new operator who wants to deploy a Mantle Sepolia node, please follow the steps provided [**here**](https://github.com/mantlenetworkio/networks/blob/main/run-node-sepolia#installation-and-setup-instructions-for-new-user).
+
+## For Operators Who Have Already Deployed Nodes[​](https://docs-v2.mantle.xyz/nodes/verifier-sepolia#for-operators-who-have-already-deployed-nodes) <a href="#for-operators-who-have-already-deployed-nodes" id="for-operators-who-have-already-deployed-nodes"></a>
+
+### Operation Guide[​](https://docs-v2.mantle.xyz/nodes/verifier-sepolia#operation-guide-1) <a href="#operation-guide-1" id="operation-guide-1"></a>
+
+If you have previously deployed Mantle Sepolia nodes and need to complete this hardfork upgrade, you can follow the instructions [**here**](https://github.com/mantlenetworkio/networks/blob/main/run-node-sepolia#2025-07-5-upgrade-for-historical-user) for more detailed information.
+
+
+> **Info**
+
+If you meet some data issues in the process, please try to restore from snapshot. You can refer to this [guide](https://github.com/mantlenetworkio/networks/blob/main/run-node-sepolia#restore-from-snapshot)

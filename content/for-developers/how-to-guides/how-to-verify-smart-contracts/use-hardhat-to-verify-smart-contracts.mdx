@@ -1,0 +1,105 @@
+---
+title: "Use Hardhat to Verify Smart Contracts"
+---
+
+To verify your contracts using Hardhat, you'll need an [Etherscan API key](https://docs.etherscan.io/getting-started/viewing-api-usage-statistics) and custom network configuration in your `hardhat.config.ts` file.
+
+## Configure[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/verify/hardhat#configure) <a href="#configure" id="configure"></a>
+
+1. Add your [Mantlescan API key](https://mantlescan.xyz/myapikey) to the `.env` file.
+
+   ```sh
+   ...
+
+   API_KEY=xxx
+   ```
+2. Modify the `hardhat.config.ts` configuration to include `customChains` before moving forward.
+
+   ```javascript
+   import {HardhatUserConfig} from 'hardhat/config';
+   import '@nomicfoundation/hardhat-toolbox';
+   import * as dotenv from 'dotenv';
+
+   dotenv.config();
+
+   const config: HardhatUserConfig = {
+     solidity: '0.8.19', // solidity version
+     defaultNetwork: 'mantleSepolia', // chosen by default when network isn't specified while running Hardhat
+     networks: {
+       mantle: {
+         url: 'https://rpc.mantle.xyz', //mainnet
+         accounts: [process.env.ACCOUNT_PRIVATE_KEY ?? ''],
+       },
+       mantleSepolia: {
+         url: 'https://rpc.sepolia.mantle.xyz', // Sepolia Testnet
+         accounts: [process.env.ACCOUNT_PRIVATE_KEY ?? ''],
+         gasPrice: 20000000,
+       },
+     },
+     etherscan: {
+       apiKey: process.env.API_KEY,
+       customChains: [
+         {
+           network: 'mantle',
+           chainId: 5000,
+           urls: {
+             apiURL: 'https://api.mantlescan.xyz/api',
+             browserURL: 'https://mantlescan.xyz',
+           },
+         },
+         {
+           network: 'mantleSepolia',
+           chainId: 5003,
+           urls: {
+             apiURL: 'https://api-sepolia.mantlescan.xyz/api',
+             browserURL: 'https://sepolia.mantlescan.xyz/',
+           },
+         },
+       ],
+     },
+   };
+   export default config;
+   ```
+
+## Verify your contracts[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/verify/hardhat#verify-your-contracts) <a href="#verify-your-contracts" id="verify-your-contracts"></a>
+
+Currently hardhat supports two methods of contract validation:
+
+#### Use `--deployment-id` to name your deployment.
+
+You can use a flag to name your contract (whatever you want) during deployment, and then you can run the `ignition verify` task and pass the deployment Id to verify your contracts.
+
+1. Deploy your contract like this:
+
+```bash
+npx hardhat ignition deploy ./ignition/modules/<Your-Contract>.ts --network mantleSepolia --deployment-id <Contract-Deployment-ID>
+```
+
+2. Verify your contract like this:
+
+
+```text
+npx hardhat ignition verify
+```
+
+
+#### Use  `--verify` to verify your contract during deployment:
+
+You can add a flag to verify your contract during deployment
+
+```
+npx hardhat ignition deploy ./ignition/modules/<Your-Contract>.ts --network mantleSepolia --verify
+```
+
+### **Sample Outputs**
+
+```sh
+Successfully submitted source code for contract
+contracts/Lock.sol:Lock at 0x76B6a0F36CC71d49792eC1740892E8bc9AA7814c
+for verification on the block explorer. Waiting for verification result...
+
+Successfully verified contract Lock on the block explorer.
+https://sepolia.mantlescan.xyz/address/0x76B6a0F36CC71d49792eC1740892E8bc9AA7814c#code
+```
+
+Now you can head over to [Mantle blockchain explorer](https://mantlescan.xyz/) to check the contract status.

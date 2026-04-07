@@ -1,0 +1,270 @@
+---
+title: "Bridging MNT with the Mantle SDK"
+---
+
+> **Info**
+
+If you want to test the functionality of the Mantle SDK, we recommend using the testnet environment instead of the mainnet environment. The challenge period will be much shorter in the testnet (\~40 minutes) than in the mainnet (7 days).
+
+
+This tutorial teaches you how to use the Mantle SDK to transfer MNT between Layer 1 (L1) and Layer 2 (L2). Check the complete code [here](https://github.com/mantlenetworkio/mantle-tutorial/blob/main/cross-dom-bridge-mnt/index.js).
+
+## Setup[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#setup) <a href="#setup" id="setup"></a>
+
+1. Ensure your computer has:
+   * [`git`](https://git-scm.com/downloads)
+   * [`node`](https://nodejs.org/en/)
+   * [`yarn`](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
+   * [`docker`](https://www.docker.com/products/docker-desktop/)
+2. Start L1 and L2 environments. Currently, we support the local environment or the testnet environment. If you want to deploy your own L1 and L2, please follow the instructions below.
+
+   ```sh
+   git clone https://github.com/mantlenetworkio/mantle-v2.git
+   cd mantle/ops
+   make up
+   # check status
+   make ps
+   ```
+
+   **We highly recommend using the testnet environment, which means you can skip this step, you can apply your own L1 RPC** [**here**](https://www.alchemy.com/) **and replace the L1 RPC URL in the `.env` file.**
+3. Clone this repository and enter it.
+
+   ```sh
+   git clone https://github.com/mantlenetworkio/mantle-tutorial.git
+   cd mantle-tutorial/cross-dom-bridge-mnt
+   ```
+4. Install the necessary packages.
+
+   ```sh
+   yarn
+   ```
+
+## Run the Sample Code[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#run-the-sample-code) <a href="#run-the-sample-code" id="run-the-sample-code"></a>
+
+The sample code is in the `index.js`, the whole execution flow will automatically start after running it.
+
+### Node Environment[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#node-environment) <a href="#node-environment" id="node-environment"></a>
+
+If you want to test by using your own nodes, you should configure the missing or changing environment variables in file `.env.local.tmp` then use `yarn local` to execute `index.js`.
+
+If you want to have a test in our testnet network you should do the same for `.env.testnet.tmp` and then use `yarn testnet` to execute `index.js`.
+
+## How Does It Work?[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#how-does-it-work) <a href="#how-does-it-work" id="how-does-it-work"></a>
+
+### Import the Necessary Libraries[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#import-the-necessary-libraries) <a href="#import-the-necessary-libraries" id="import-the-necessary-libraries"></a>
+
+```javascript
+const ethers = require('ethers');
+const mantleSDK = require('@mantleio/sdk');
+const fs = require('fs');
+```
+
+In this tutorial, we initialize the required libraries:
+
+* `ethers`: A JavaScript library for interacting with the Ethereum blockchain. It provides an easy-to-use interface for tasks like creating wallets, sending transactions, and interacting with smart contracts.
+* `mantleSDK`: The Mantle SDK, which facilitates cross-chain transactions between Layer 1 (L1) and Layer 2 (L2) blockchains. It abstracts away complexities, making it easier to perform operations like depositing and withdrawing assets.
+* `fs`: The Node.js `fs` module for file system operations. It may be used later in the code for reading or writing files, although it's not explicitly used in the provided snippet.
+
+### Network Configuration and Wallet Setup[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#network-configuration-and-wallet-setup) <a href="#network-configuration-and-wallet-setup" id="network-configuration-and-wallet-setup"></a>
+
+Next, the code defines some configuration parameters. We fetch the specified network and wallet configurations from the `.env` file.
+
+```javascript
+const L1TestERC20 = JSON.parse(fs.readFileSync('TestERC20.json'));
+const l1MntAddr = process.env.L1_MNT;
+const l2MntAddr = process.env.L2_MNT;
+const key = process.env.PRIV_KEY;
+```
+
+* `L1TestERC20`: A JSON object representing the L1 Test ERC20 contract.
+* `l1MntAddr`: The address of the L1 MNT token.
+* `l2MntAddr`: The address of the L2 MNT token.
+* `key`: The private key retrieved from the environment variables.
+
+```javascript
+// Global variable because we need them almost everywhere
+let crossChainMessenger;
+let ourAddr; // Our address
+```
+
+* `crossChainMessenger`: A global variable initialized later in the `setup` function, representing the Mantle SDK's `CrossChainMessenger` object.
+* `ourAddr`: A variable that will store the user's address.
+
+Then create wallet objects by passing the private key and RPC addresses as parameters for L1 and L2.
+
+```javascript
+const l1RpcProvider = new ethers.providers.JsonRpcProvider(process.env.L1_RPC);
+const l2RpcProvider = new ethers.providers.JsonRpcProvider(process.env.L2_RPC);
+const l1Wallet = new ethers.Wallet(key, l1RpcProvider);
+const l2Wallet = new ethers.Wallet(key, l2RpcProvider);
+```
+
+### Setup CrossChainMessenger Object[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#setup-crosschainmessenger-object) <a href="#setup-crosschainmessenger-object" id="setup-crosschainmessenger-object"></a>
+
+The `CrossChainMessenger` object calls the cross chain messenger contracts on L1 and L2 to transfer assets. Here we instantiate the object with chain IDs, wallet objects, and contract objects.
+
+```javascript
+const setup = async () => {
+  ourAddr = l1Wallet.address;
+  crossChainMessenger = new mantleSDK.CrossChainMessenger({
+    l1ChainId: process.env.L1_CHAINID,
+    l2ChainId: process.env.L2_CHAINID,
+    l1SignerOrProvider: l1Wallet,
+    l2SignerOrProvider: l2Wallet,
+    bedrock: true,
+  });
+  l1Mnt = new ethers.Contract(l1MntAddr, L1TestERC20.abi, l1Wallet);
+};
+```
+
+### Report the Balances[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#report-the-balances) <a href="#report-the-balances" id="report-the-balances"></a>
+
+The `reportBalances` function fetches L1 and L2 wallet balances and prints them out. We'll use this method to keep track balance change after deposit and withdraw operations.
+
+```javascript
+const reportBalances = async () => {
+  const l1Balance = (await l1Mnt.balanceOf(ourAddr)).toString().slice(0, -18);
+  const l2Balance = (await crossChainMessenger.l2Signer.getBalance())
+    .toString()
+    .slice(0, -18);
+  console.log(`Token on L1:${l1Balance}     Token on L2:${l2Balance}`);
+};
+```
+
+### Deposit[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#deposit) <a href="#deposit" id="deposit"></a>
+
+The `depositMNT` function deposits 1 MNT token to L2 via the Mantle bridge. The asynchronous function prints out the transaction hash and waits for the message to get relayed. Finally, we display the updated MNT balance on L1 and L2.
+
+To show that the deposit actually happened we show before and after balances.
+
+```javascript
+console.log('#################### Deposit MNT ####################');
+await reportBalances();
+```
+
+We need to make sure the allowance is approved. We can do that by sending an approval transaction on L1.
+
+```javascript
+// Need the l2 address to know which bridge is responsible
+const allowanceResponse = await crossChainMessenger.approveERC20(
+  l1MntAddr,
+  l2MntAddr,
+  depositToken,
+);
+await allowanceResponse.wait();
+```
+
+`crossChainMessenger.depositMNT()` creates and sends the deposit transaction on L1.
+
+```javascript
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+
+const response = await crossChainMessenger.depositMNT(depositToken);
+```
+
+Of course, it takes time for the transaction to actually be processed on L1.
+
+```javascript
+console.log(`Deposit transaction hash (on L1): ${response.hash}`);
+await response.wait();
+```
+
+After the transaction is processed on L1 it needs to be picked up by an off-chain service and relayed to L2. To show that the deposit actually happened we need to wait until the message is relayed.
+
+```javascript
+console.log('Waiting for status to change to RELAYED');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.waitForMessageStatus(
+  response.hash,
+  mantleSDK.MessageStatus.RELAYED,
+);
+```
+
+Once the message is relayed the balance change on L2 is practically instantaneous. We can just report the balances and see that the L2 balance rose by 1.
+
+```javascript
+await reportBalances();
+console.log(`depositMNT took ${(new Date() - start) / 1000} seconds\n`);
+```
+
+### Withdraw[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#withdraw) <a href="#withdraw" id="withdraw"></a>
+
+This function shows how to withdraw MNT from L2 to L1. For deposits, it was enough to transfer 1 MNT to show that the L2 balance increases. However, in the case of withdrawals the withdrawing account needs to be paid for finalizing the message, which costs more than that.
+
+To show that the withdrawal actually happened we show before and after balances.
+
+```javascript
+console.log('#################### Withdraw MNT ####################');
+await reportBalances();
+```
+
+Then we withdraw the token from L2.
+
+```javascript
+const response = await crossChainMessenger.withdrawMNT(withdrawToken);
+console.log(`Transaction hash (on L2): ${response.hash}`);
+await response.wait();
+```
+
+We need to wait until the message is ready to prove.
+
+```javascript
+console.log('Waiting for status to be READY_TO_PROVE');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.waitForMessageStatus(
+  response.hash,
+  mantleSDK.MessageStatus.READY_TO_PROVE,
+);
+```
+
+Wait until the state that includes the transaction gets past the challenge period, at which time we can finalize (also known as claim) the transaction. (Make sure your service and network are running well)
+
+```javascript
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.proveMessage(response.hash);
+
+console.log('In the challenge period, waiting for status READY_FOR_RELAY');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.waitForMessageStatus(
+  response.hash,
+  mantleSDK.MessageStatus.READY_FOR_RELAY,
+);
+```
+
+Finalizing the message also takes a bit of time.
+
+```javascript
+console.log('Ready for relay, finalizing message now');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.finalizeMessage(response.hash);
+
+console.log('Waiting for status to change to RELAYED');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.waitForMessageStatus(
+  response,
+  mantleSDK.MessageStatus.RELAYED,
+);
+```
+
+### Invoke deposit and withdraw functions[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#invoke-deposit-and-withdraw-functions) <a href="#invoke-deposit-and-withdraw-functions" id="invoke-deposit-and-withdraw-functions"></a>
+
+We write a `main()` where we call the functions to perform configuration, deposit, and withdraw operations.
+
+```javascript
+const main = async () => {
+  await setup();
+  await depositMNT();
+  await withdrawMNT();
+};
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+```
+
+## Conclusion[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-mnt#conclusion) <a href="#conclusion" id="conclusion"></a>
+
+You should now be able to write applications that use our SDK and bridge to transfer MNT between L1 and L2.

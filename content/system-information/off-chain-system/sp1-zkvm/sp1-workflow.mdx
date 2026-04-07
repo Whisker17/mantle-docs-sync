@@ -1,0 +1,59 @@
+---
+title: "SP1 Workflow"
+---
+
+This section outlines the lifecycle of a transaction from user submission to final validity proof generation on L1. It details the integration between the Mantle Sequencer, Ethereum’s blob-based data availability layer (EIP-4844), and the SP1 zkVM-based proving infrastructure (Op-Succinct).
+
+<figure><img src="https://3885809119-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FQliZlRNwHhmzesDU1Ksq%2Fuploads%2FAW4QKCwrVUmD4M2TACus%2Fwhiteboard_exported_image%20(7).png?alt=media&#x26;token=54fa2df0-7851-47ba-a570-b90934773bd2" alt="" /><figcaption></figcaption></figure>
+
+### 1. Transaction Ingestion & Data Availability
+
+The lifecycle begins with the standard sequencer flow, ensuring data is available for subsequent derivation and proving.
+
+* Sequencing: Users submit transactions via RPC. The Mantle Sequencer receives these transactions, orders them, and builds Rollup blocks.
+* Batch Submission: The `op-batcher` component asynchronously collects ordered transaction batches. The batcher encodes and compresses the rollup data and submits it to Ethereum L1 using EIP-4844 blob-carrying transactions.
+* L1 Commitment: When the blob transaction is included on Ethereum L1, the corresponding blob commitment becomes the canonical reference for rollup data availability. This on-chain commitment serves as the authoritative pointer for subsequent derivation and validity proving.
+
+### 2. Proof Orchestration (`Mantle-Succinct-Proposer`)
+
+The `Mantle-Succinct-Proposer` is the orchestrator responsible for submitting state root proposals and validity proofs to the `MantleSuccinctL2OutputOracle` contract on Ethereum L1.
+
+Instead of generating proofs locally, the proposer delegates the computational workload to the Mantle Succinct Server. The interaction follows this pattern:
+
+1. The `Mantle-Succinct-Proposer` determines that a new state transition needs to be proven.
+2. It issues a request to the Mantle Succinct Server.
+3. Depending on the current state of the epoch, it requests either a Range Proof (for a span of blocks) or an Aggregated Proof (final submission).
+
+### 3. Proof Generation Workflows
+
+The Mantle Succinct Server processes requests by coordinating data retrieval, derivation, and SP1 zkVM execution.
+
+#### Mode A: Range Proof Generation
+
+A Range Proof validates a specific sequence of Rollup blocks derived from L1 inputs.
+
+1. Data Retrieval & Derivation:
+   * Upon receiving a request, the Mantle Succinct Server monitors Ethereum L1 to identify the relevant blob commitments associated with the target Rollup block range.
+   * Using these commitments, the server retrieves the corresponding rollup data from Ethereum’s blob data availability layer within the blob retention window.
+   * The server then invokes Kona (a partial Rust implementation of the OP Stack state transition) to perform block derivation over the retrieved data.
+2. Witness Generation:
+   * During derivation, the server captures and caches all necessary dependency data (the "witness"), including pre-state roots and transaction lists.
+3. SP1 Execution:
+   * The server interacts with the Op-Succinct Prove Network.
+   * It submits the execution payload: the cached witness data and the zkVM executable binary (compiled from Kona).
+   * The SP1 zkVM executes the Kona logic off-chain to generate a Zero-Knowledge Proof (ZKP) attesting to the validity of the block range derivation.
+
+#### Mode B: Aggregated (Agg) Proof Generation
+
+An Aggregated Proof combines multiple Range Proofs (or Span Proofs) into a single proof for on-chain submission.
+
+1. Input Aggregation:
+   * The Mantle Succinct Server deserializes the previously generated span proofs.
+   * It queries the `MantleSuccinctL2OutputOracle` on L1 to fetch the latest committed block header information, ensuring the aggregation targets the correct chain tip.
+2. Recursive Proving:
+   * The aggregation logic runs within the SP1 zkVM. The server submits the span proofs and header data as inputs to the aggregation binary.
+   * SP1 generates a final, compressed ZKP that verifies the validity of all constituent span proofs.
+
+### 4. On-Chain Submission
+
+Once the Aggregated Proof is generated, the `Mantle-Succinct-Proposer` retrieves it from the server and submits the transaction to the `MantleSuccinctL2OutputOracle` on Ethereum L1. This finalizes the state transition, leveraging the security properties of the SP1 zkVM without burdening L1 with heavy verification costs.

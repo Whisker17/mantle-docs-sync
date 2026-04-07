@@ -1,0 +1,71 @@
+---
+title: "FAQs"
+---
+
+## General[​](https://docs-v2.mantle.xyz/devs/dev-guides/faqs#general) <a href="#general" id="general"></a>
+
+* **Does Mantle Network support EIP-1559?**
+
+  **Mantle Network supports EIP-1559.** EIP-1559 is a new transaction method that will be introduced after the Bedrock upgrade of the OP Stack, and will allow transactions on Mantle Network to be executed in a more stable and controlled manner. See [here](/system-information/fee-mechanism/eip-1559-support) for more information.
+* **Why is the gas fee very high for my transaction?**
+
+  Mantle v2 Tectonic introduces EIP-1559 type transactions and also to further reduce gas fees, the FIFO transaction ordering method is chosen to minimize the impact of the `priorityfee`, so you will need additional settings to optimize your handling fees, for more information check [here](/for-developers/optimize-your-transaction-fees).
+* **Why is the gas usage so high for my transaction?**
+
+  Unlike most OP Stack-based chains, Mantle chooses to use the MNT native token as the fee for L2 transactions and covers the whole transaction cost (L1 + L2) when calculating the gas usage. Mantle introduces the [tokenRatio](/system-information/fee-mechanism#control-of-tokenratio) parameter which helps regulate the price fluctuations between ETH and MNT, when calculating the gas fee, Mantle will multiply with the `tokenRatio` compared to the other L2s' gasUsed (based on ETH). For example, if `tokenRatio` is `3000`, the gas usage will be calculated as `L2GasUsed * 3000 + L1GasUsed * 3000 * scalar`.
+
+  Meanwhile, the gas usage can't reflect the level of gas fees, Mantle still has one of the [cheapest fees](/system-information/fee-mechanism#mantle-v2-tectonic-fee-showcase) compared to other L2s.
+* **Why did I get an error when I tried to send a transaction on Mantle Network?**
+
+  There are various possibilities for transaction failures. Here, we kindly ask you to ensure that your transaction construction has not been affected by any modifications to fees in Mantle v2 Tectonic. For more details, please refer to [this page](/system-information/fee-mechanism/estimate-fees).
+* **Why is the value I get by calling the contract's `getL1fee` method so much smaller than the actual L1 fee?**
+
+  This is due to the fact that `MNT` is used as the native gas fee token in Mantle, and you need to use the `tokenRatio` parameter to convert between `MNT` and `ETH` when calculating the L1 fee, for more information, please check [here](/system-information/fee-mechanism#understanding-fees-on-mantle-v2-tectonic)!
+
+## Dev Tools[​](https://docs-v2.mantle.xyz/devs/dev-guides/faqs#dev-tools) <a href="#dev-tools" id="dev-tools"></a>
+
+* **Can I use Truffle, Hardhat, and Remix to deploy contracts on Mantle Network?**
+
+  Yes. All the EVM-compatible Web3 libraries, IDEs, development frameworks can be used to deploy on and connect to Mantle Network. This includes, but isn't limited to, popular tools such as:
+
+  * [Remix](https://remix.ethereum.org/)
+  * [Truffle](https://trufflesuite.com/docs/)
+  * [Hardhat](https://hardhat.org/docs)
+  * [Foundry](https://github.com/foundry-rs/foundry)
+  * [Web3.js](https://github.com/ethereum/web3.js/)
+  * [Ethers.js](https://github.com/ethers-io/ethers.js/)
+
+  You can check more tutorials [here](/for-node-operators/deployment-guides).
+* **Can I fetch DA transaction details with an API?**
+
+  Currently, the only way to see DA transaction history is via the Explorer frontend. Here's the link for Mantle DA data storage: [https://mantlescan.xyz/batches](https://mantlescan.xyz/batches)
+* **Does the RPC rate limit affect Explorer API usage too?**
+
+  Yes. Once the RPC rate limit is reached, access to Explorer API will also be limited.
+* **Are there any limits set for batch transaction size?**
+
+  The maximum batch transaction size is derived from the target gas configuration. Mantle Network is the same as other OP Stack-based chains in this regard.
+* **Are there any limits set on return log size for `eth_getLogs` RPC call?**
+
+  Yes, it's best practice to limit the range of blocks you are querying in a single request to prevent issues such as timeout errors or overly large responses, in Mantle Network — 10,000 blocks.
+* **Does Mantle explorer support proxy contracts？**
+
+  If the contract is detected as a proxy implementation, it can be supported.
+* **How to set the token image on Mantlescan?**
+
+  You can submit token update via `https://mantlescan.xyz/tokenupdate/` or `https://mantlescan.xyz/tokenupdate/<address>` (append token contract address).
+* **How to add tokens on Mantle's official bridge？**
+
+  You'll need to make a pull request against the Mantle token list repository. After PR is approved, you need to wait a few minutes before you can check the tokens on the bridge. Check more details [here](/quick-access#adding-a-token-to-the-list).
+* **Does OpenZeppelin defender support EIP1559 transactions?**
+
+  Yes, OpenZeppelin defender support sending EIP1559 transactions now.
+* **Why do I get the error "0x5e not defined" when compiling contracts？**
+
+  This error occurs because Mantle's op-geth is not up to date, which doesn't support the `MCOPY(0x5e)` bytecode. To resolve this, specify the compiler version as **0.8.23** or below. And refer [this](/the-differences-between-mantle-op-stack-and-ethereum#unsupported-opcodes) to get more unsupported opcodes.
+* **Why do I get the error "Missing etherscan key for chain 5000/5003" when verifying contracts on Mantlescan by using Foundry?**
+
+  This error occurs because Foundry had [some bugs](https://github.com/foundry-rs/foundry/issues/7466) on this, we encourage developers to verify contracts via Mantlescan explorer rather than using forge, check [this](/how-to-guides/how-to-verify-smart-contracts/use-explorer-to-verify-smart-contracts#compiled-using-foundry) for more details.
+* **Is the Opcode `PUSH0` supported in Mantle?**
+
+  Yes, the `PUSH0` opcode is supported in Mantle.

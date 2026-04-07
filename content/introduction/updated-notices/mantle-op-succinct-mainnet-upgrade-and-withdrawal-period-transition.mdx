@@ -1,0 +1,56 @@
+---
+title: "Mantle OP Succinct Mainnet Upgrade & Withdrawal Period Transition"
+---
+
+Mantle is excited to announce our upcoming mainnet upgrade to **OP Succinct**, scheduled to begin on **September 16, 2025**.This upgrade is a monumental step, transitioning Mantle into the largest ZK validity Layer 2 in the ecosystem. By integrating ZK proofs for state validation, we are enhancing security and fundamentally improving the user experience.During this upgrade, we will be deploying essential contract updates. The most significant impact on users will be a dramatic improvement to the Mantle Canonical Bridge withdrawal process.To ensure transparency and prevent confusion during this transition, please review how withdrawals will be handled.
+
+## **The Key Change: From a 7-Day to a 12-Hour Withdrawal**
+
+Previously, as an Optimistic L2, Mantle required a 7-day "challenge period" for all withdrawals via the canonical bridge. This delay is the standard security mechanism for all Optimistic rollups, allowing time for network observers to challenge potentially fraudulent state transitions.With the move to ZK validity, the network’s state is confirmed by cryptographic proofs rather than relying on a challenge window. This allows us to **reduce the withdrawal finalization period from 7 days to just 1 2hours.**&#x48;owever, this change requires a specific transition period to safely finalize the old system and activate the new one.
+
+
+> **Success**
+
+**Why do we choose 12 hours?**
+
+Security Rationale for the 12-Hour Challenge Period While a ZK-proof system theoretically allows for a much shorter challenge period, setting it to 12 hours is a deliberate security measure. This duration serves as a critical safety buffer for the official bridge. In an extreme security event, such as a hack, this window provides the team with the necessary time to respond and mitigate risks, thereby providing maximum protection for user assets.
+
+
+## **The Transition Timeline Explained**
+
+<figure><img src="https://3885809119-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FQliZlRNwHhmzesDU1Ksq%2Fuploads%2FQlAM95Fpj3vNhmRKUOQ6%2Fimage.png?alt=media&#x26;token=f19dbcc5-5de8-45c5-a243-cb8e26847cc0" alt="" /><figcaption></figcaption></figure>
+
+The upgrade involves a multi-stage rollout. In netshell, rationale for the 7-Day Waiting Period Prior to the ZK Proposer launch, L2 state outputs were submitted using a non-ZK method. According to the security model, these historical outputs must complete their original 7-day challenge period to guarantee their finality and security. Therefore, the parameter update will be executed 7 days after the ZK Proposer is live to ensure all data submitted via the non-ZK method has been securely finalized.Here is the precise schedule and what users initiating withdrawals should expect:
+
+1. **Phase 1: ZK Proofs Begin (After Sep 16, 2025 \~15:00 UTC\*)** Starting on September 16, all new state roots on Mantle will be submitted and verified using ZK proofs.
+2. **Phase 2: The Transition Window (Sep 16 – Sep 23)** During this one-week transition window, although new state roots are ZK-proven, the original 7-day challenge period logic will **remain active** in the bridge contracts. This is necessary to securely finalize any remaining state from the Optimistic system.
+3. **Phase 3: The New Standard (After Sep 23, 2025 \~15:00 UTC\*)** On September 23, the final contract upgrade activates the new 12-hour withdrawal logic. This new, shorter finalization period will apply to **all pending and all new withdrawals** moving forward.
+
+*\*Note: 15:00 UTC (3:00 PM UTC) is used as the target activation time. Actual activation may vary slightly based on network conditions.*
+
+***
+
+## **Withdrawal Scenarios: What Will Happen to My Funds?**
+
+To make this clear, here are practical examples covering every scenario during the upgrade.
+
+**Scenario 1: Withdrawal initiated BEFORE the upgrade (e.g., Sep 14)**
+
+* **Status:** Your withdrawal is already in the challenge period before the Sep 16 upgrade begins.
+* **Result:** You must wait for the **full, original 7-day challenge period**. The new logic does not apply retroactively to withdrawals already finalized under the old Optimistic system.
+
+**Scenario 2: Withdrawal initiated DURING the transition (e.g., Sep 18)**
+
+This is the most critical scenario. You initiated your withdrawal *after* ZK proofs started, but *before* the 12-hour rule was activated.
+
+* **What you see (Sep 18 – Sep 23):** Your withdrawal will enter the legacy 7-day challenge period. The UI will show a 7-day countdown (e.g., "6 days remaining," "5 days remaining," etc.).
+* **What happens (On Sep 23, \~15:00 UTC):** The new 12-hour logic is applied to **all** pending withdrawals. Since your wait time (from Sep 18 to Sep 23) is already much longer than 12 hours, your withdrawal will become **immediately claimable** the moment the Sep 23 upgrade is finalized.
+
+**Scenario 3: Withdrawal initiated JUST BEFORE the final activation (e.g., Sep 23 at 14:00 UTC)**
+
+You initiate a withdrawal just one hour before the final upgrade activates.
+
+* **What you see (14:00 – 14:59 UTC):** The UI will temporarily show the legacy 7-day challenge period.
+* **What happens (After 15:00 UTC):** The new 12-hour rule activates. The system recalculates your requirement. Since you have already waited 1 hour (from 14:00 to 15:00), your withdrawal timer will automatically update to show only **11 hours remaining**.
+
+Thank you for your patience and support as we complete this landmark upgrade. We are thrilled to deliver the next generation of scaling with the security of ZK validity and a vastly superior bridge experience.<br />

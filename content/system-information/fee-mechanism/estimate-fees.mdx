@@ -1,0 +1,102 @@
+---
+title: "Estimate Fees"
+---
+
+## Estimate Fees in Mantle v2[​](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#estimate-fees-in-mantle-v2-tectonic) <a href="#estimate-fees-in-mantle-v2-tectonic" id="estimate-fees-in-mantle-v2-tectonic"></a>
+
+Concerning the selection of the gas fee token on Rollup, Mantle v2 departs from the conventional ETH solution adopted by most rollups, and employs MNT instead. This introduces a variable called [`tokenRatio`](/system-information/fee-mechanism/..#control-of-tokenratio) for dynamic adjustment of gas fees. The overall gas fee calculation is as follows:
+
+$$
+L2ExecutionFee=L2gasPrice∗L2gasUsed∗tokenRatio
+$$
+
+$$
+L1RollupFee=(rollupDataGas+overhead)∗L1gasPrice∗tokenRatio∗scalar
+$$
+
+Let's break down the variables involved. Both `scalar` and `overhead` are retrieved from the [`BVM_GasPriceOracle`](/system-information/off-chain-system/key-l2-contract-address) contract, while `L1gasPrice` can be obtained from layer 1 (L1). `tokenRatio` is a variable updated through an external Oracle contract, which you can fetch from the [`BVM_GasPriceOracle`](/system-information/off-chain-system/key-l2-contract-address) contract. Therefore, obtaining `L2gasPrice` and `rollupDataGas` allows the calculation of a suitable `gasLimit`.
+
+
+> **Info**
+
+**Why is a suitable gasLimit necessary?**
+
+Determining an appropriate `gasLimit` is crucial. If the `gasLimit` is set too low, the transaction may fail to execute. If set too high, the computed upfront transaction fee might exceed the user's balance, leading to insufficient funds. Additionally, setting a high `gasLimit` may discourage validators from including the transaction in a block, as validators tend to prefer including more transactions with lower `gasLimit` within the fixed block `gasLimit`. Therefore, estimating the fee is a pivotal step.
+
+The Rollup block gasLimit for Mantle can be checked [here](https://etherscan.io/address/0x427Ea0710FA5252057F0D88274f7aeb308386cAf#readProxyContract#F5), currently set at 200,000,000,000.
+
+
+### How to Obtain Parameters for`BVM_GasPriceOracle`[​](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#how-to-obtain-parameters-for-bvm_gaspriceoracle) <a href="#how-to-obtain-parameters-for-bvm_gaspriceoracle" id="how-to-obtain-parameters-for-bvm_gaspriceoracle"></a>
+
+#### **`overhead`**[**​**](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#overhead)
+
+```
+cast call --rpc-url https://rpc.mantle.xyz 0x420000000000000000000000000000000000000F 'overhead()(uint256)'
+```
+
+#### **`scalar`**[**​**](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#scalar)
+
+```
+cast call --rpc-url https://rpc.mantle.xyz 0x420000000000000000000000000000000000000F 'scalar()(uint256)'
+```
+
+You need to divide the value you get by `1,000,000` to get the true scalar value. For example, if the value you get is `10,000`, you need to divide it by `1,000,000` to get `0.01`.
+
+#### **`tokenRatio`**[**​**](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#tokenratio)
+
+```
+cast call --rpc-url https://rpc.mantle.xyz 0x420000000000000000000000000000000000000F 'tokenRatio()(uint256)'
+```
+
+#### **`L1gasPrice`**[**​**](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#l1gasprice)
+
+Also known as `L1BaseFee`.
+
+```
+cast call --rpc-url https://rpc.mantle.xyz 0x420000000000000000000000000000000000000F 'l1BaseFee()(uint256)'
+```
+
+### How to Obtain L2 gasPrice[​](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#how-to-obtain-l2-gasprice) <a href="#how-to-obtain-l2-gasprice" id="how-to-obtain-l2-gasprice"></a>
+
+Different transaction types, such as Legacy and EIP-1559 transactions, require distinct handling. For detailed information, please refer to [this](/system-information/fee-mechanism/..#l2-gasprice-depends-on-the-transaction-type).
+
+### How to Obtain rollupDataGas[​](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#how-to-obtain-rollupdatagas) <a href="#how-to-obtain-rollupdatagas" id="how-to-obtain-rollupdatagas"></a>
+
+It's essential to note that `rollupDataGas` is not constructed during the `estimateGas` process in the OP Stack codebase. Thus, an interface is needed to estimate the cost. Mantle addresses this by constructing `rollupDataGas` and introducing a constant to cover `V`, `R`, `S` signatures, and other data, ensuring that the `estimateGas`'s `gasLimit` covers L1 costs.
+
+We provide interfaces that return `L1GasUsed` data directly, i.e., the sum of `(rollupDataGas + overhead)`
+
+```
+# _data is rlp-encoded data of the signed tx
+
+cast call --rpc-url https://rpc.mantle.xyz 0x420000000000000000000000000000000000000F 'getL1GasUsed(_data)(uint256)'
+```
+
+If you want to learn more, please refer to [this](/system-information/fee-mechanism/..#rollupdatagascalculation).
+
+### Ensuring transaction success[​](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#ensuring-transaction-success) <a href="#ensuring-transaction-success" id="ensuring-transaction-success"></a>
+
+`estimateGas` provides only an estimate. To prevent transaction failure due to insufficient gas fees, Mantle Network internally magnifies the estimate by a factor, ensuring the correct execution of transactions.
+
+## Why Do We Need to Use`estimateGas`[​](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#why-we-need-to-use-estimategas) <a href="#why-we-need-to-use-estimategas" id="why-we-need-to-use-estimategas"></a>
+
+The cost of fees on L1 is difficult to predict accurately due to the influence of L1 gasPrice, therefore, in Mantle v1, the `estimateGas` function only returns an estimate of the L2 gas fee. However, in Mantle v2, we have addressed this issue by providing an optimized solution. The `estimateGas` interface now returns an estimate of the total gas fee, including both L1 and L2 costs. Consequently, when constructing transactions, adjustments need to be made to accommodate this optimization. We encourage all transactions to first call `estimateGas` to obtain an estimate of the gas fee before construction.
+
+### Example[​](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/ef#example) <a href="#example" id="example"></a>
+
+Here is an example illustrating the difference in `gasLimit` settings for transaction construction between Mantle v1 and Mantle v2.
+
+In Mantle v1, the `gasUsed` on a typical native token transfer on L2 is a fixed value (21,000), so developers might opt to skip calling `estimateGas` and set it to a fixed value.
+
+![](https://docs-v2.mantle.xyz/assets/images/mantle-v1-gas-ad78f23e971e23c1d8e5f18753ca574f.png)
+
+However, in Mantle v2, the `gasLimit` that developers need to set when constructing transactions will include both L1 and L2 components, so without calling `estimateGas` and setting it to a fixed value may result in transaction failures.
+
+![](https://docs-v2.mantle.xyz/assets/images/mantle-v2-gas-7bd15eb1c0d692e6048692211fbedd16.png)
+
+**To avoid transaction failures, we recommend calling `estimateGas` when constructing transactions to obtain an estimate of the gas fee.**
+
+
+> **Info**
+
+If you want to do `estimateGas` with the Mantle SDK, here's a [demo](https://github.com/mantlenetworkio/mantle-tutorial/tree/main/sdk-estimate-gas).

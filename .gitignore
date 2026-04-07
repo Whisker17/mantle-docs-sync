@@ -1,0 +1,5 @@
+node_modules
+.next
+tmp/npm-cache
+tmp/mantle-network-report.json
+

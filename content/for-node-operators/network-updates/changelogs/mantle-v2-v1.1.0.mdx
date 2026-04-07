@@ -1,0 +1,24 @@
+---
+title: "Mantle v2 v1.1.0"
+---
+
+## Mantle v2[​](https://docs-v2.mantle.xyz/nodes/changelogs/v1.0.2#mantle-v2) <a href="#mantle-v2" id="mantle-v2"></a>
+
+This release has optimized the way in which the Mantle network accesses EigenDA. We have introduced the `EigenDA Proxy` component, developed by the EigenDA team. Furthermore, we have enabled S3 and Redis caching for the internally deployed `EigenDA Proxy`, thereby enhancing the stability of the Mantle network. Additionally, we have changed the maximum size of the submitted EigenDA blob from 2MB to 4MB.
+
+* Change the maximum size of the submitted EigenDA blob from 2MB to 4MB ([#184](https://github.com/mantlenetworkio/mantle-v2/pull/184))
+* `EigenDA Proxy` integration ([#185](https://github.com/mantlenetworkio/mantle-v2/pull/185))
+
+## op-geth[​](https://docs-v2.mantle.xyz/nodes/changelogs/v1.0.2#op-geth) <a href="#op-geth" id="op-geth"></a>
+
+This version includes several bug fixes and functional enhancements, implements secp256r1 signature verification to enhance wallet UX (FaceID / TouchID) , and deprecates the `MetaTransaction` feature. EIP-7702 will be integrated as a replacement for `MetaTransaction` in the future.
+
+* Added the new JSON-RPC interface `eth_getBlockReceipts` ([#91](https://github.com/mantlenetworkio/op-geth/pull/91))
+* Fixed the gas validation bug in txpool ([#92](https://github.com/mantlenetworkio/op-geth/pull/92))
+* Added support for RIP-7212 secp256r1 signature verification in precompiled contracts ([#93](https://github.com/mantlenetworkio/op-geth/pull/93))
+* Deprecated the `MetaTransaction` feature ([#95](https://github.com/mantlenetworkio/op-geth/pull/95))
+
+
+> **Warning**
+
+The implementation refers to RIP 7212 spec and the secp256r1 algorithm does not perform malleability checks in the precompiled contract. Wrapper libraries **SHOULD** add a malleability check by default.

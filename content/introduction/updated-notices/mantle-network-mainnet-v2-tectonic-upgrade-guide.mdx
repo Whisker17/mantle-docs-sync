@@ -1,0 +1,49 @@
+---
+title: "Mantle Network Mainnet v2 Tectonic Upgrade Guide"
+---
+
+Welcome to the upgrade guide for migrating your node and applications from Mantle Network Mainnet Alpha v1 (Mantle v1) to Mantle Network Mainnet v2 Tectonic (Mantle v2 Tectonic). Below, we provide tailored instructions for different user roles to ensure a smooth upgrade process.
+
+## For Node Operators[​](https://docs-v2.mantle.xyz/intro/migration-guides#for-node-operators) <a href="#for-node-operators" id="for-node-operators"></a>
+
+**Node operators should restart their nodes using the new version of Mantle v2 Tectonic.** Please follow the node running [tutorial](/for-node-operators/deployment-guides/mainnet-v1.4.2/deploying-a-rollup-verifier-replica-node-from-docker) we provide, which contains the running environment requirements and the corresponding steps.
+
+[Changelogs](/for-node-operators/network-updates/changelogs/mantle-v2-v1.0.0) corresponding to Mantle v2 Tectonic versions are available, detailing changes and new features. Review these changelogs to understand post-upgrade alterations and optimizations.
+
+## For Developers[​](https://docs-v2.mantle.xyz/intro/migration-guides#for-developers) <a href="#for-developers" id="for-developers"></a>
+
+**Developers should ensure your contracts adapt to new features and updates introduced in Mantle v2 Tectonic, such as** [**gas estimation**](/system-information/fee-mechanism/estimate-fees#why-we-need-to-use-estimategas)**.** Mantle v2 Tectonic supports multiple contract deployment tools, for more information please check [here](/for-developers/how-to-guides/how-to-deploy-smart-contracts).
+
+
+> **Info**
+
+
+* Mantle v2 has modified and optimized fee mechanisms. When constructing transactions, remember to call the `estimateGas` interface to ensure your transactions execute smoothly and receive appropriate fees. More details [here](/system-information/fee-mechanism/estimate-fees).
+* Our Goerli testnet has been upgraded to Mantle v2 Tectonic. Developers are advised to check the status of your contracts on this testnet. If any issues arise, it's essential to address and fix them to avoid potential problems on the mainnet and redeploy your contracts.
+* Mantle v2 Tectonic introduces a new fee collection which will minimize your transaction fees, for information on optimizing gas fees, please check [here](/for-developers/optimize-your-transaction-fees).
+  
+
+## For Users[​](https://docs-v2.mantle.xyz/intro/migration-guides#for-users) <a href="#for-users" id="for-users"></a>
+
+**Users should suspend the use of on-chain products related to Mantle Netork during the upgrade process to avoid assets loss.** For the new features of Mantle v2, please check [here](/introduction/whats-new-in-mantle-v2-limb).
+
+#### Bridge Assets[​](https://docs-v2.mantle.xyz/intro/migration-guides#bridge-assets) <a href="#bridge-assets" id="bridge-assets"></a>
+
+During the upgrade process, we will suspend the use of the bridge, so after the upgrade, you may face the following issues:
+
+* If you have already applied to withdraw your assets on the mainnet and have completed the 7-days challenge period before the upgrade, please withdraw as soon as possible.
+* If you haven't withdrawn your assets before the upgrade (no matter if you have completed your challenge period), you will need to prove your withdraw request after the upgrade and then wait for another 7 days.
+
+
+> **Info**
+
+
+* In Mantle v2 Tectonic, if you need to withdraw your assets via bridge, we have introduced a new two-step withdrawal process. Before entering the 7-days challenge period, you will also need to perform the "prove" operation. For more details, please refer to [this](/for-users/how-to-guides/using-mantle-bridge#withdraw-mnt).
+* If you want to experience the ultimate trading experience and low transaction fees on Mantle v2 Tectonic, please configure your wallet, for more information please check [here](/for-users/how-to-guides/connecting-wallet-to-mantle-network)!
+  
+
+While upgrade operations may cause temporary inconvenience, we believe that with your support and cooperation, we can smoothly transition from Mantle v1 to v2.
+
+If you have any questions or need further assistance regarding Mantle v2 Tectonic, feel free to contact our support team.
+
+Happy upgrading! 🎉🎉🎉

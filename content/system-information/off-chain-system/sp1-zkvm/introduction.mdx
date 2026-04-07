@@ -1,0 +1,23 @@
+---
+title: "Introduction"
+---
+
+SP1 is a high-performance, open-source, zero-knowledge virtual machine (zkVM) that verifies the execution of arbitrary Rust (or any LLVM-compiled language) programs. Developed by Succinct Labs, SP1 allows developers to utilize zero-knowledge proofs (ZKPs) for scaling and privacy without needing to learn domain-specific languages (DSLs) or write manual circuits.
+
+Within the Mantle ecosystem, SP1 serves as a critical infrastructure layer for verifiable off-chain computation. It enables dApps on Mantle to offload complex computations from the EVM to an off-chain environment, generate a cryptographic proof of execution, and efficiently verify that proof on Mantle.
+
+### Core Principles
+
+SP1 is designed around the RISC-V instruction set architecture (ISA), providing a standard compilation target for modern programming languages. Its architecture prioritizes:
+
+* **Developer Velocity:** Developers can write ZK circuits using standard Rust code, leveraging existing crates (packages) and tooling (Cargo). This eliminates the steep learning curve associated with custom ZK languages like Circom or Halo2.
+* **Performance:** SP1 features a highly optimized proving system with customizable precompiles for heavy cryptographic operations (e.g., hash functions, signature verification). This ensures that proof generation is fast enough for production-grade applications.
+* **Modularity:** Consistent with Mantle's modular design philosophy, SP1 decouples execution from verification. Heavy compute happens off-chain, while Mantle handles the lightweight settlement and state transitions based on the verified proofs.
+
+### Why SP1 on Mantle?
+
+Integrating SP1 brings specific advantages to the Mantle network:
+
+1. **EVM Limitations Bypass:** Complex logic that exceeds the EVM's gas limits or computational capacity can be executed in SP1, with only the final result and validity proof submitted to Mantle.
+2. **ZK Coprocessors:** SP1 enables a "coprocessor" model where historical blockchain data or complex algorithms (e.g., machine learning inference, specialized cryptography) are processed trustlessly.
+3. **Cross-Chain Interoperability:** SP1 can facilitate trust-minimized bridging by verifying light client consensus protocols inside the zkVM.

@@ -1,0 +1,57 @@
+---
+title: "How to Use Mantle SDK"
+asIndexPage: true
+---
+
+The Mantle SDK implements methods to make contract calls for both:
+
+* **Deposit**
+  * Locking `$MNT`/ERC20/ERC721 tokens on layer 1 (L1) and minting equivalent tokens on layer 2 (L2)
+* **Withdrawal**
+  * Locking `$MNT`/ERC20/ERC721 tokens on L2 and minting equivalent tokens on L1
+* **Sending Messages**
+  * Contracts on Mantle can invoke contract functions on Ethereum, and vice versa.
+
+### Deposit[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/sdk#deposit) <a href="#deposit" id="deposit"></a>
+
+`$MNT`/`$ETH`/ERC20/ERC721 token deposits into L2 from the Ethereum mainnet can be triggered using the following SDK methods.
+
+| **Token Type** | **SDK Methods** |
+| -------------- | --------------- |
+| $ETH           | `depositETH`    |
+| $MNT           | `depositMNT`    |
+| ERC20          | `depositERC20`  |
+| ERC721         | `depositERC721` |
+
+
+> **Danger**
+
+You must first approve the Mantle Bridge to use the amount of `$MNT`/`$ETH`/`ERC20`/`ERC721` tokens that you are moving to L2, or the deposit will fail.
+
+
+
+> **Info**
+
+`$ETH` deposits can alternatively be triggered by sending $ETH directly to the [L1StandardBridge](https://github.com/mantlenetworkio/mantle/blob/main/packages/contracts/contracts/L1/messaging/L1StandardBridge.sol). Your account will be funded with the corresponding amount once the transaction is detected and finalized.
+
+
+### Withdrawal[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/sdk#withdrawal) <a href="#withdrawal" id="withdrawal"></a>
+
+`$MNT`/`$ETH`/ERC20/ERC721 token withdrawals from L2 to the Ethereum mainnet can be triggered using the following SDK methods.
+
+
+> **Info**
+
+All withdrawals use `$MNT` for gas fees.
+
+
+| **Token Type** | **SDK Methods**  | **L2 Token Address**                         |
+| -------------- | ---------------- | -------------------------------------------- |
+| $MNT           | `withdrawMNT`    | `0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000` |
+| $ETH           | `withdrawERC20`  | `0xdEAddEaDdeadDEadDEADDEAddEADDEAddead1111` |
+| ERC20          | `withdrawERC20`  | -                                            |
+| ERC721         | `withdrawERC721` | -                                            |
+
+### Sending Messages[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/sdk#sending-messages) <a href="#sending-messages" id="sending-messages"></a>
+
+Contracts on Mantle can invoke contract functions on Ethereum, and vice versa. This enables dApps on Mantle and Ethereum to interact with each other. Here's a [step-by-step](https://github.com/mantlenetworkio/mantle-tutorial/tree/main/cross-dom-comm#communication-between-contracts-on-l1-and-l2) guide on how to enable communication between L1 and L2.

@@ -1,0 +1,396 @@
+---
+title: "Social Login by Using Particle"
+---
+
+Particle Network offers Wallet Abstraction services through its Account Abstraction stack, optimizing user onboarding with a set of SDKs. Comment Edit from here
+
+Integrating customizable modules for Externally Owned Accounts (EOA) and Account Abstraction (AA), Particle facilitates quick onboarding in just 2-clicks via social login options like Google, email, and phone, alongside traditional Web3 login methods.
+
+Particle Network is compatible with Mantle Mainnet and Testnet, supporting EOA interactions and native ERC-4337 via implementations like SimpleAccount, Biconomy V2, and Cyber Connect.
+
+This tutorial guides you through the steps for building a demo application on Mantle Sepolia using the [Particle Connect SDK](https://developers.particle.network/api-reference/connect/desktop/web) — Particle's flagship onboarding SDK. The Particle Connect SDK enables quick 2-click onboarding with social and Web3 login options in a single modal. In this demo, we'll onboard users through a SimpleAccount instance of a smart account via social login and execute a gasless (sponsored) transaction.
+
+## Getting Started&#x20;
+
+This tutorial is based on a [Next.js app](https://nextjs.org/docs/getting-started/installation) with TypeScript and Tailwind CSS to demonstrate wallet creation on Mantle using social logins.
+
+The Particle Connect SDK simplifies wallet creation, user authentication, and blockchain interactions, providing a streamlined interface that supports social logins and traditional Web3 wallets.
+
+### Prerequisites&#x20;
+
+To integrate Particle Connect into your Mantle application, you'll need just a few dependencies. Particle Connect includes built-in Account Abstraction (AA) support, but in this example, we’ll also install the [Particle AA SDK](https://developers.particle.network/api-reference/aa/sdks/desktop/web) to use EIP-1193 providers like ethers.
+
+```sh
+yarn add @particle-network/connectkit viem@^2 @particle-network/aa ethers
+```
+
+### Configuring the Particle Dashboard&#x20;
+
+To get started with the setup, visit the [Particle dashboard](https://dashboard.particle.network/) to retrieve three essential values for your project.
+
+When using any Particle Network SDK, you'll need a projectId, clientKey, and appId to authenticate your project and establish a connection between your Particle Auth instance and the Particle dashboard. This setup allows you to customize in-app modals, track users, manage your Paymaster funds, and more.
+
+Once you're in the Particle dashboard, follow these steps:
+
+
+
+#### Step
+
+
+###
+
+Go to **Add New Project** to create a new project.
+
+
+
+#### Step
+
+
+###
+
+Under Your Apps, select Web (for other platforms, refer to the [platform-specific guides in Particle's documentation](https://developers.particle.network/reference/introduction-to-api-sdk-reference)).
+
+
+
+#### Step
+
+
+###
+
+Choose a name and domain for your app. You can use a placeholder here if you haven't finalized your deployment domain.
+
+
+
+#### Step
+
+
+###
+
+Copy your **Project ID**, **Client Key**, and **App ID**.
+
+
+
+For security, it's best to store these values in a .env file in this format:
+
+```
+NEXT_PUBLIC_PROJECT_ID='PROJECT_ID'
+NEXT_PUBLIC_CLIENT_KEY='CLIENT_KEY'
+NEXT_PUBLIC_APP_ID='APP_ID'
+NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID='WALLETCONNECT_PROJECT_ID'
+```
+
+## Configuring Particle Connect&#x20;
+
+First, let’s configure and initialize Particle Connect. Create a new file called `ConnectKit.tsx` in your `src` directory. In this file, we’ll define the `ParticleConnectKit` component, which wraps the configured `ConnectKitProvider` instance and acts as the primary interface for handling configuration.
+
+```javascript
+"use client";
+
+import React from "react";
+import { ConnectKitProvider, createConfig } from "@particle-network/connectkit";
+import { authWalletConnectors } from "@particle-network/connectkit/auth";
+import { evmWalletConnectors } from "@particle-network/connectkit/evm";
+import { mantleSepoliaTestnet } from "@particle-network/connectkit/chains";
+import { wallet, EntryPosition } from "@particle-network/connectkit/wallet";
+import { aa } from "@particle-network/connectkit/aa";
+
+const config = createConfig({
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID!,
+  clientKey: process.env.NEXT_PUBLIC_CLIENT_KEY!,
+  appId: process.env.NEXT_PUBLIC_APP_ID!,
+
+  walletConnectors: [
+    authWalletConnectors({}), // Social logins
+
+    // Default Web3 logins
+    evmWalletConnectors({
+      walletConnectProjectId: process.env.NEXT_PUBLIC_WALLETCONNECT_PROJECT_ID, // optional, retrieved from https://cloud.walletconnect.com
+    }),
+  ],
+
+  plugins: [
+    wallet({
+      entryPosition: EntryPosition.BR, // Positions the modal button at the bottom right on login
+      visible: true, // Determines if the wallet modal is displayed
+    }),
+    aa({
+      name: "SIMPLE",
+      version: "2.0.0",
+    }),
+  ],
+  chains: [mantleSepoliaTestnet],
+});
+
+export const ParticleConnectkit = ({ children }: React.PropsWithChildren) => {
+  return <ConnectKitProvider config={config}>{children}</ConnectKitProvider>;
+};
+```
+
+This code configures Particle Connect to enable wallet authentication and blockchain interactions on Mantle Sepolia. It supports social logins and standard Web3 options via WalletConnect and includes Account Abstraction (AA) with a `simpleAccount` instance, version 2.0.0. The configured `ConnectKitProvider` component wraps the app’s content, ensuring this setup is accessible throughout the application.
+
+## Integrate Particle Connect in Your App&#x20;
+
+After configuration, wrap your application with the `ParticleConnectKit` component to provide access to the Particle Connect SDK across the app. Update the `layout.tsx` file in the `src` directory as follows:
+
+```javascript
+import { ParticleConnectkit } from "@/components/Connectkit";
+import type { Metadata } from "next";
+import { Inter } from "next/font/google";
+import "./globals.css";
+
+const inter = Inter({ subsets: ["latin"] });
+
+export const metadata: Metadata = {
+  title: "Particle Connectkit App",
+  description: "Generated by create next app",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en">
+      <body className={inter.className}>
+        <ParticleConnectkit>{children}</ParticleConnectkit>
+      </body>
+    </html>
+  );
+}
+```
+
+## Building the Application&#x20;
+
+With your project set up, dependencies installed, and Particle Connect configured, you can start building in the `page.tsx` file.
+
+In `page.tsx`, you’ll define the core features: login flow, data visualization, transaction handling, and the UI.
+
+### Connecting the Wallet&#x20;
+
+With `layout.tsx` set up, the next step is to add a main **Connect Wallet** button for user login. Import `ConnectButton` from `@particle-network/connectkit` and add it to the interface. Once the user logs in, the `ConnectButton` transforms into an embedded wallet widget.
+
+```javascript
+"use client";
+import { ConnectButton, useAccount } from "@particle-network/connectkit";
+
+const HomePage = () => {
+  const { address, isConnected, chainId } = useAccount();
+
+  return (
+    <div className="flex justify-center items-center h-screen">
+      <div className="text-center">
+        <ConnectButton />
+        {isConnected && (
+          <>
+            <h2>Address: {address}</h2>
+            <h2>Chain ID: {chainId}</h2>
+          </>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default HomePage;
+```
+
+### Sending Transactions with an EIP-1193 Provider&#x20;
+
+Particle Connect offers built-in AA features, but pairing it with the Particle AA SDK lets you leverage EIP-1193 providers like `ethers`. This setup is particularly useful if you’re already accustomed to these providers or if you’re integrating Particle Connect into an existing application.
+
+To set this up, wrap the smart account from Particle Connect within an `ethers` instance to create a `customProvider`. This lets you interact with ethers as usual while the smart account manages transaction signing in the background.
+
+```javascript
+import {useSmartAccount } from "@particle-network/connectkit";
+import { AAWrapProvider, SendTransactionMode } from "@particle-network/aa";
+
+const smartAccount = useSmartAccount();
+
+// Init custom provider with gasless transaction mode
+const customProvider = smartAccount
+? new ethers.BrowserProvider(
+    new AAWrapProvider(
+        smartAccount,
+        SendTransactionMode.Gasless
+    ) as Eip1193Provider,
+    "any"
+    )
+: null;
+
+/**
+ * Sends a transaction using the ethers.js library.
+ * This transaction is gasless since the customProvider is initialized as gasless
+*/
+const executeTxEthers = async () => {
+    if (!customProvider) return;
+  
+    const signer = await customProvider.getSigner();
+    const tx = {
+      to: recipientAddress,
+      value: parseEther("0.01").toString(),
+    };
+  
+    const txResponse = await signer.sendTransaction(tx);
+    const txReceipt = await txResponse.wait();
+    console.log(txReceipt?.hash)
+  };
+```
+
+This transaction is gasless due to two factors:
+
+1. **Gasless Mode:** Setting `SendTransactionMode.Gasless` in `AAWrapProvider` specifies a sponsored transaction.
+2. **Funding:** On Testnets like Mantle Sepolia, transactions are automatically sponsored, so no USDT is needed. On mainnets, the Paymaster (configured in the [Particle dashboar](https://dashboard.particle.network/)d) must be funded to cover transaction fees.
+
+This example uses an EIP-1193 provider, though you can also create a userOp directly with Particle Connect. For details, see the [starter repository](https://github.com/Particle-Network/connectkit-aa-usage/blob/2017262daf297624362d51f3d50cccd3b4606ef9/app/page.tsx#L117).
+
+## Full App Example&#x20;
+
+With an understanding of each part, you can now use Particle Connect, as shown in the example application below.
+
+This application creates a smart account on Mantle Sepolia through either social or Web3 login and sends a gasless transaction of 0.01 MNT using the `ethers` provider.
+
+```javascript
+"use client";
+import React, { useEffect, useState } from "react";
+
+// Particle imports
+import {
+  ConnectButton,
+  useAccount,
+  usePublicClient,
+  useSmartAccount,
+} from "@particle-network/connectkit";
+
+// Eip1193 and AA Provider
+import { AAWrapProvider, SendTransactionMode } from "@particle-network/aa"; // Only needed with Eip1193 provider
+import { ethers, type Eip1193Provider } from "ethers";
+import { formatEther, parseEther } from "viem";
+
+export default function Home() {
+  const { isConnected, chain } = useAccount();
+  const publicClient = usePublicClient();
+  const smartAccount = useSmartAccount();
+
+  const [userAddress, setUserAddress] = useState<string>("");
+  const [balance, setBalance] = useState<string | null>(null);
+  const [recipientAddress, setRecipientAddress] = useState<string>("");
+  const [transactionHash, setTransactionHash] = useState<string | null>(null);
+
+  // Init custom provider with gasless transaction mode
+  const customProvider = smartAccount
+    ? new ethers.BrowserProvider(
+        new AAWrapProvider(
+          smartAccount,
+          SendTransactionMode.Gasless
+        ) as Eip1193Provider,
+        "any"
+      )
+    : null;
+
+  /**
+   * Fetches the balance of a given address.
+   * @param {string} address - The address to fetch the balance for.
+   */
+  const fetchBalance = async (address: string) => {
+    try {
+      const balanceResponse = await publicClient?.getBalance({
+        address: address as `0x${string}`,
+      });
+      if (balanceResponse) {
+        const balanceInEther = formatEther(balanceResponse).toString();
+        setBalance(balanceInEther);
+      } else {
+        setBalance("0.0");
+      }
+    } catch (error) {
+      console.error("Error fetching balance:", error);
+      setBalance("0.0");
+    }
+  };
+
+  /**
+   * Loads the user's account data, including address and balance.
+   */
+  useEffect(() => {
+    const loadAccountData = async () => {
+      if (isConnected && smartAccount) {
+        try {
+          const address = await smartAccount.getAddress();
+          setUserAddress(address);
+          await fetchBalance(address);
+        } catch (error) {
+          console.error("Error loading account data:", error);
+        }
+      }
+    };
+    loadAccountData();
+  }, [isConnected, smartAccount]);
+
+  /**
+   * Sends a transaction using the ethers.js library.
+   * This transaction is gasless since the customProvider is initialized as gasless
+   */
+  const executeTxEthers = async () => {
+    if (!customProvider) return;
+
+    const signer = await customProvider.getSigner();
+    try {
+      const tx = {
+        to: recipientAddress,
+        value: parseEther("0.01").toString(),
+      };
+
+      const txResponse = await signer.sendTransaction(tx);
+      const txReceipt = await txResponse.wait();
+
+      setTransactionHash(txReceipt?.hash || null);
+    } catch (error) {
+      console.error("Failed to send transaction using ethers.js:", error);
+    }
+  };
+
+  return (
+    <div className="container min-h-screen flex flex-col justify-center items-center mx-auto gap-4 px-4 md:px-8">
+      <div className="w-full flex justify-center mt-4">
+        <ConnectButton label="Click to login" />
+      </div>
+      {isConnected && (
+        <>
+          <div className="border border-purple-500 p-6 rounded-lg w-full">
+            <h2 className="text-lg font-semibold mb-2 text-white">
+              Address: <code>{userAddress || "Loading..."}</code>
+            </h2>
+            <h2 className="text-lg font-semibold mb-2 text-white">
+              Balance: {balance || "Loading..."} {chain?.nativeCurrency.symbol}
+            </h2>
+            <input
+              type="text"
+              placeholder="Recipient Address"
+              value={recipientAddress}
+              onChange={(e) = /> setRecipientAddress(e.target.value)}
+              className="mt-4 p-3 w-full rounded border border-gray-700 bg-gray-900 text-white focus:outline-none"
+            />
+            <button
+              className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-4"
+              onClick={executeTxEthers}
+              disabled={!recipientAddress}
+            >
+              Send 0.001 {chain?.nativeCurrency.name}
+            </button>
+            {transactionHash && (
+              <p className="text-green-500 mt-4">
+                Transaction Hash: {transactionHash}
+              </p>
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+```
+
+### Particle Connect Hooks&#x20;
+
+This example demonstrates a basic usage of Particle Connect. For the complete list of hooks, see the Particle Connect documentation.

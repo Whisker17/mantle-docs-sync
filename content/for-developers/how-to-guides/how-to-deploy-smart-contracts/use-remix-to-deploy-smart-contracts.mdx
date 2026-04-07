@@ -1,0 +1,75 @@
+---
+title: "Use Remix to Deploy Smart Contracts"
+---
+
+[Remix's web-based IDE](https://remix.ethereum.org/) supports writing, testing, debugging, and deploying smart contracts written in Solidity, Yul, and other popular contract development languages.
+
+## Prerequisite[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/deploy/remix#prerequisite) <a href="#prerequisite" id="prerequisite"></a>
+
+* Wallet with sufficient balance
+* The [right information](/quick-access#network-details) on the network
+
+
+> **Info**
+
+If you want to get some testnet tokens, please refer to the [Faucet page](/for-users/how-to-guides/fetching-test-tokens)
+
+
+## Deploy your contract[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/deploy/remix#deploy-your-contract) <a href="#deploy-your-contract" id="deploy-your-contract"></a>
+
+
+
+#### Step
+
+
+###
+
+Start by opening Remix in your browser. Create a new `.sol` file under the **"Contracts"** folder and start writing your code. This tutorial will use the initial example contract `Storage.sol`.
+
+
+
+#### Step
+
+
+###
+
+Once ready, you can proceed with compiling the contract by either clicking the **Compile** button on the top, or clicking on the blue button that says **"Compile \<file\_name>"**, which you can access by navigating to the **"Solidity Compiler"** tab by clicking on the left.
+
+<img src="https://3885809119-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FQliZlRNwHhmzesDU1Ksq%2Fuploads%2FOmnGd1wlX6XOvi7GCPQE%2Fimage.png?alt=media&#x26;token=b42de9e2-e010-4f95-bbd4-cdb2e88b5956" alt="" data-size="original" />
+
+
+
+#### Step
+
+
+###
+
+If the compilation was successful (A green checkmark will appear on the left side), you'll be able to deploy the contract from the **"Deploy & run transactions"** tab, which can be accessed by clicking on the left.
+
+![](https://docs-v2.mantle.xyz/assets/images/remix-2-f6db30a606a1a715ab07e0e3f18bedb8.png)
+
+
+
+#### Step
+
+
+###
+
+Switch to Mantle Network in your MetaMask wallet and select **"Injected Provider - MetaMask"** from the **"Environment"** dropdown list and select a wallet account that will be used to pay the gas fees. Remix will automatically connect to the network that the wallet is currently connected to. Click on the **Deploy** button to send the deploy transaction.
+
+![](https://docs-v2.mantle.xyz/assets/images/remix-3-1206181ef7742e278ee23c494c3e69a6.png)
+
+
+
+#### Step
+
+
+###
+
+Upon successful deployment, you'll be able to see the transaction and contract info in the terminal at the bottom, like so:
+
+![](https://docs-v2.mantle.xyz/assets/images/remix-4-04e1ed4b15f163c32d2853c9fe5f2219.png)
+
+
+
+Now you can head over to [Mantle blockchain explorer](https://mantlescan.xyz/) to check the contract details.

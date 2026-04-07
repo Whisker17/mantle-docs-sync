@@ -1,0 +1,2 @@
+https://docs.mantle.xyz/network/sitemap-pages.xml
+https://docs.mantle.xyz/network/network/sitemap-pages.xml

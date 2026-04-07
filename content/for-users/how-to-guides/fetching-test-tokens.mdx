@@ -1,0 +1,100 @@
+---
+title: "Fetching Test Tokens"
+---
+
+## Faucets[​](https://docs-v2.mantle.xyz/users/how-to/faucet#faucets) <a href="#faucets" id="faucets"></a>
+
+To begin transacting on Mantle v2 Tectonic Testnet, you must acquire Sepolia `$ETH` and testnet `$MNT` and bridge it across. You can obtain Sepolia `$ETH` from the following faucets:
+
+* [Alchemy Faucet](https://sepoliafaucet.com/)
+
+**Please get Sepolia `$ETH` at first, the following steps need it to be the gas for the transactions.** You can receive testnet `$MNT` tokens from the [Mantle faucet](https://faucet.sepolia.mantle.xyz/).
+
+
+> **Info**
+
+Make sure to import the `$MNT` token to your Sepolia wallet to see the current balance. The contract address is `0x65e37B558F64E2Be5768DB46DF22F93d85741A9E`. How to import tokens can be found [here](/for-users/connecting-wallet-to-mantle-network#add-mnt-to-your-wallet).
+
+
+## Mint $MNT on Sepolia via Etherscan[​](https://docs-v2.mantle.xyz/users/how-to/faucet#mint-mnt-on-sepolia-via-etherscan) <a href="#mint-mnt-on-sepolia-via-etherscan" id="mint-mnt-on-sepolia-via-etherscan"></a>
+
+
+> **Danger**
+
+This guide is not available on the Mantle v2 Tectonic Testnet right now. If you want to fetch test tokens, please check our [faucet](https://faucet.sepolia.mantle.xyz/).
+
+
+
+> **Info**
+
+Make sure your wallet has enough Sepolia ETH to perform the mint action before moving forward.
+
+
+
+
+#### Step
+
+
+### Navigate to the Contract
+
+First, you'll need to look up the test `$MNT` contract on Etherscan and navigate to the '**Write as Proxy**' section under the '**contract**' tab. You can follow [this link](https://sepolia.etherscan.io/address/0x65e37B558F64E2Be5768DB46DF22F93d85741A9E#writeProxyContract) to get there directly.
+
+
+
+#### Step
+
+
+### Import MNT Token
+
+Next, switch your wallet network to Sepolia, and [import](/for-users/connecting-wallet-to-mantle-network#add-mnt-to-your-wallet) (if you haven't already) the `$MNT` token.
+
+
+
+#### Step
+
+
+### Connect Your Wallet
+
+Now connect your wallet to Etherscan using the '**Connect to Web3**' button.
+
+
+
+#### Step
+
+
+### Choose the Mint Function
+
+Find and click on the `mint()` function in the list on the Etherscan page. It's on no.9.
+
+<img src="https://docs-v2.mantle.xyz/assets/images/faucet-4-b426051a807fa7c86c020634b043434f.png" alt="" data-size="original" />
+
+
+
+#### Step
+
+
+### Enter Your Address and Value
+
+Enter the address of your wallet in the `address` field. Click on the '**+**' button next to the function name to input a value. The mint amount needs to be entered in *wei* units, so 1 `$MNT` token is represented as 10^18. Select 10^18 from the drop-down list, and click on the '**Add**' button. That'll automatically enter 10^18 (1 followed by 18 zeroes) in the amount field.
+
+<img src="https://docs-v2.mantle.xyz/assets/images/faucet-2-97cba3a14570abc851f81c0068f6e8a3.png" alt="" data-size="original" />
+
+
+
+#### Step
+
+
+### Mint
+
+Now you can add a few zeroes at the back for a higher amount. For example, add three zeroes at the back to mint 1000 `$MNT`, and so on.
+
+<img src="https://docs-v2.mantle.xyz/assets/images/faucet-3-0f50cf2719283b5f35828a73be4738f3.png" alt="" data-size="original" />
+
+
+
+#### Step
+
+
+### Finish Minting
+
+Finally, click on the '**Write**' button to send a transaction. Confirm the action in your wallet, and after a few seconds your `$MNT` will show up there.

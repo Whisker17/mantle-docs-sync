@@ -1,0 +1,40 @@
+---
+title: "What's New in Mantle v2 Limb"
+---
+
+The **Limb Upgrade** is a pivotal release in the evolution of the Mantle Network that ensures **full compatibility with Ethereum’s Fusaka era**, including Osaka EVM semantics, CellProofs blob handling, and the emerging PeerDAS-based data availability infrastructure. This upgrade prepares Mantle’s execution and validation pipeline for post-Fusaka network conditions while preserving existing developer and user-facing interfaces.
+
+### Enhancements in Mantle v2 Limb (v1.4.2) Compared to Previous Versions
+
+This section outlines the key improvements and new features in the Limb Upgrade, drawing from updates in op-geth v1.4.2 and mantle-v2 v1.4.2. These enhancements ensure Mantle remains at the forefront of Layer 2 scalability while preparing for future Ethereum upgrades.
+
+#### Full Compatibility with Ethereum Osaka and Fusaka Standards
+
+The Limb upgrade synchronizes Mantle's execution client (`op-geth`) with the latest upstream Osaka version. This ensures that the Mantle Network seamlessly supports the latest features of the Ethereum Execution Layer and maintains strong consistency with the EVM ecosystem.
+
+Mantle’s execution layer now **fully supports the Osaka EVM specification**. This includes:
+
+* Activation of Osaka-era opcode semantics (e.g., CLZ and others).
+* Support for new precompiled contracts introduced in the Osaka spec (EIP-7883, EIP-7951).
+* Adjusted gas costs and refined EVM logic in accordance with upstream Ethereum changes.
+
+These updates ensure Mantle L2 execution produces identical behavior to Ethereum L1 under the Osaka EVM ruleset.
+
+#### Updated Blob Handling (CellProofs)
+
+Ethereum’s **Fusaka upgrade transitions blob data to the CellProofs format**, which affects how blobs are submitted, queried, and verified:
+
+* Mantle’s batcher, op-node, and verification pipeline have been updated to process **CellProofs-based blob transactions**.
+* The node logic now queries the appropriate beacon RPC endpoints to retrieve blob contents and commitments as per Fusaka specifications.
+* Blob base fee and submission semantics are aligned with Ethereum L1 post-Fusaka behavior (e.g., new base fee retrieval and blob format handling).
+
+These changes ensure Mantle can correctly read, derive, and validate rollup data involving blob transactions after Ethereum transitions past the Fossuka fork.
+
+#### ZKP Pipeline Alignment
+
+Changes in blob structure and availability pathways require updates in Mantle’s **Zero-Knowledge Proof (ZKP) pipeline**:
+
+* The execution and proof generation stack has been updated to ensure that L2 output proofs remain valid and consistent with new data availability mechanics.
+* These updates lay the groundwork for future proof optimizations and support for PeerDAS-oriented data flows.
+
+This alignment is necessary for maintaining **robust succinct proof validity** across epoch boundaries and data availability transitions.<br />

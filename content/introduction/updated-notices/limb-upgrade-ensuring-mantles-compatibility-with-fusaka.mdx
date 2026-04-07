@@ -1,0 +1,62 @@
+---
+title: "Limb Upgrade: Ensuring Mantle’s Compatibility with Fusaka"
+---
+
+### Overview
+
+Mantle Network will complete the **Limb Upgrade** on Sepolia.\
+This upgrade ensures full compatibility and stable operation as Ethereum approaches the **Fusaka hard fork**, which includes PeerDAS and the Osaka EVM changes.\
+The upgrade will not affect normal user activity and will not modify the network’s economic model.
+
+### Purpose of the Upgrade
+
+Fusaka is a major upcoming Ethereum release introducing deep protocol-level changes across the data availability pipeline, the EVM instruction set, and precompiled contracts. For example, **Peer Data Availability Sampling (PeerDAS)** will become a foundational component of Ethereum’s long-term scalability roadmap, and the newly introduced **CellProofs Blob** format will become the default structure for blob submissions. At the same time, the full set of **Osaka-era EVM behaviors** will be activated.
+
+To ensure that Mantle Network continues to operate safely after Fusaka activation, the Limb Upgrade focuses on three key objectives:
+
+1. Aligning Mantle’s execution layer with Ethereum’s latest EVM semantics.
+2. Ensuring the new blob submission and verification flow functions correctly within the rollup architecture.
+3. Establishing forward compatibility with the PeerDAS-based data availability pathway.
+
+### What’s New in This Upgrade?
+
+The Limb Upgrade primarily introduces **low-level compatibility updates**. While these changes do not alter developer-facing APIs or smart-contract execution semantics, they are critical for long-term stability.
+
+#### Osaka EVM Compatibility
+
+Mantle’s execution layer will fully support the **Osaka EVM**.\
+This includes activation of all EVM behaviors shipped with Ethereum’s Osaka spec, such as:
+
+* New opcodes (e.g., **CLZ** from EIP-7939)
+* New precompiled contracts (**EIP-7883** and **EIP-7951**)
+* Gas schedule adjustments and EVM logic refinements
+
+#### Updated Blob Handling
+
+The upgrade introduces support for Ethereum’s Fusaka-era **CellProofs-based blob format**.\
+Ethereum is migrating from the previous blob structure to a new format designed for PeerDAS sampling. Mantle’s batcher, node derivation pipeline, and Beacon RPC query logic have all been updated accordingly, ensuring that after Fusaka activation, Mantle can continue to reliably read and verify blob data from L1.
+
+#### ZKP Pipeline Alignment
+
+Changes to the blob structure and submission process also require updates in the ZKP pipeline (kona / succinct).\
+The goal is to ensure that Mantle’s L2 Output proofs continue to be valid, robust, and compatible with the new data paths, while establishing a foundation for future optimizations in proof generation.
+
+### Impact Assessment
+
+This upgrade has **no impact** on regular users, DApps, or on-chain asset operations.\
+It does **not** introduce any modifications to the fee mechanism or protocol economics.
+
+For developers, all application-layer interfaces and contract environments remain fully unchanged — no migration or adaptation is required.
+
+Node operators are the primary group that must pay attention to the upgrade window. They must ensure that all relevant components are updated during the transition to maintain correct node synchronization and interaction with Ethereum L1. Further details are available [here](/for-node-operators/network-updates/changelogs/mantle-v2-v1.4.1-limb-upgrade-sepolia).
+
+### Summary
+
+The Limb Upgrade is a critical preparation step for Mantle Network ahead of Ethereum’s Fusaka era.\
+After the upgrade, Mantle will:
+
+* Support the new blob submission structure, enabling lower rollup costs
+* Benefit directly from PeerDAS improvements on Ethereum L1
+* Achieve complete Osaka EVM compatibility
+
+The Mantle team will continue to monitor network conditions and provide updates to the community before and after the upgrade.

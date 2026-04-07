@@ -1,0 +1,89 @@
+---
+title: "Use Hardhat to Deploy Smart Contracts"
+---
+
+[Hardhat](https://hardhat.org/hardhat-runner/docs/getting-started#overview) is a smart contract development environment that comes with tools that can be used to compile, debug, and deploy Solidity smart contracts and dApps on Ethereum and other EVM-compatible chains like Mantle Network.
+
+## Prerequisite[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/deploy/hardhat#prerequisite) <a href="#prerequisite" id="prerequisite"></a>
+
+* Wallet with sufficient balance
+* The [right information](/quick-access#network-details) on the network
+
+
+> **Info**
+
+If you want to get some testnet tokens, please refer to the [Faucet page](/for-users/how-to-guides/fetching-test-tokens)
+
+
+## Create a project and configure[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/deploy/hardhat#create-a-project-and-configure) <a href="#create-a-project-and-configure" id="create-a-project-and-configure"></a>
+
+1. Begin by [creating a new Hardhat project](https://hardhat.org/hardhat-runner/docs/guides/project-setup) and installing the necessary dependencies. In this tutorial, we will use the `dotenv` library to set up your wallet private key.
+
+   ```sh
+   npm install dotenv --save-dev
+   ```
+2. Create a `.env` file and set your wallet private key inside it.
+
+   ```sh
+   touch .env
+   echo "ACCOUNT_PRIVATE_KEY=<your-wallet-private-key>" >> .env
+   ```
+3. Once the wallet private key is ready, configure the `hardhat.config.ts` file to include Mantle Network's settings.
+
+   ```javascript
+   import { HardhatUserConfig } from "hardhat/config";
+   import '@nomicfoundation/hardhat-toolbox';
+   import * as dotenv from 'dotenv';
+
+   dotenv.config();
+
+   const config: HardhatUserConfig = {
+       solidity: "0.8.19", // solidity version
+       defaultNetwork: "mantleSepolia", // chosen by default when network isn't specified while running Hardhat
+       networks: {
+           mantle: {
+               url: "https://rpc.mantle.xyz", //mainnet
+               accounts: [process.env.ACCOUNT_PRIVATE_KEY ?? ""],
+           },
+           mantleSepolia: {
+               url: "https://rpc.sepolia.mantle.xyz", // Sepolia Testnet
+               accounts: [process.env.ACCOUNT_PRIVATE_KEY ?? ""],
+           },
+       },
+   };
+
+   export default config;
+   ```
+
+   In this configuration file, three networks are set up for deployment: **Mantle Mainnet**, and **Mantle Sepolia Testnet** (as default).
+
+## Compile and Deploy[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/deploy/hardhat#compile-and-deploy) <a href="#compile-and-deploy" id="compile-and-deploy"></a>
+
+
+> **Info**
+
+If you need to verify your contracts, we strongly recommend that you skip directly to the [‘Use Hardhat to Verify Smart Contracts’](/for-developers/how-to-guides/how-to-verify-smart-contracts/use-hardhat-to-verify-smart-contracts) section to avoid double deploying contracts when verifying them!
+
+
+1. With your contracts prepared in the **"Contracts"** directory within your Hardhat project, compile them using the following command.
+
+   ```sh
+   npx hardhat compile
+   ```
+
+   **Sample Outputs**
+
+   ```sh
+   Generating typings for: 1 artifacts in dir: typechain-types for target: ethers-v6
+   Successfully generated 6 typings!
+   Compiled 1 Solidity file successfully (evm target: paris).
+   ```
+2. Deploy your contracts to a chosen network using the following command. You can omit the `--network` field to deploy on the default network specified in `hardhat.config.ts` (Mantle Sepolia Testnet in this tutorial).
+
+   ```sh
+   npx hardhat ignition deploy ./ignition/modules/<Your-Contract>.ts --network mantleSepolia
+   ```
+
+   You will receive a response confirming successful contract deployment, and the address (e.g., `0xDe33e86f2Da37E01e0eCb870bd1CE91a71bB6bF4`) is the deployed contract's address.
+
+Now you can head over to [Mantle blockchain explorer](https://mantlescan.xyz/) to check the contract details.

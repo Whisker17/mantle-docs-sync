@@ -1,0 +1,99 @@
+---
+title: "How to Send Gasless Transaction by Using Biconomy"
+---
+
+This tutorial will guide you through the process of implementing gasless transactions on the Mantle network using Biconomy. By the end of this tutorial, you'll learn how to integrate Biconomy into your DApp, allowing users to make transactions without holding native tokens.
+
+### Prerequisites[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/aa/biconomy#prerequisites) <a href="#prerequisites" id="prerequisites"></a>
+
+Before you start, ensure you have the following:
+
+1. Basic Knowledge: Familiarity with Ethereum and smart contracts.
+2. Development Environment: Node.js and npm installed.
+3. Biconomy Account: [Register](https://dashboard.biconomy.io/) and create a project on Biconomy.
+
+### Step 1: Create a Project on Biconomy[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/aa/biconomy#step-1-create-a-project-on-biconomy) <a href="#step-1-create-a-project-on-biconomy" id="step-1-create-a-project-on-biconomy"></a>
+
+1. Add a Paymaster, in this tutorial we choose Mantle Sepolia network.
+2. Now you can see a Mode screen on the right, choose and enable the `Sponsored`.
+3. Now you need to setup your gas tank, choose your wallet and deposit some MNT testnet token.
+4. Get your Bundler URL from Biconomy Dashboard.
+
+### Step 2: Setup the Gasless Transaction Environment[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/aa/biconomy#step-2-setup-the-gasless-transaction-environment) <a href="#step-2-setup-the-gasless-transaction-environment" id="step-2-setup-the-gasless-transaction-environment"></a>
+
+Import the following packages and setup the gasless transaction environment.
+
+```javascript
+import {Hex, createWalletClient, http, parseEther} from 'viem';
+import {privateKeyToAccount} from 'viem/accounts';
+import {
+  createSmartAccountClient,
+  PaymasterMode,
+  SupportedSigner,
+} from '@biconomy/account';
+import {mantle, mantleSepoliaTestnet} from 'viem/chains';
+
+const biconomyTestPaymasterApiKey = 'Your Paymaster API Key';
+const bundlerTestUrl = 'Your Bundler URL';
+
+const privateKey = '0xxxxxxxx';
+```
+
+### Step 3: Create Biconomy Smart Account Instance[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/aa/biconomy#step-3-create-biconomy-smart-account-instance) <a href="#step-3-create-biconomy-smart-account-instance" id="step-3-create-biconomy-smart-account-instance"></a>
+
+Now you can create the Biconomy Smart Account Instance.
+
+```javascript
+// ----- 1. Generate EOA from private key
+const account = privateKeyToAccount(privateKey as Hex);
+const client = createWalletClient({
+  account,
+  chain: mantleSepoliaTestnet,
+  transport: http(),
+});
+const eoa = client.account.address;
+console.log(`EOA address: ${eoa}`);
+
+// ------ 2. Create biconomy smart account instance
+const smartAccount = await createSmartAccountClient({
+  signer: client as SupportedSigner,
+  bundlerUrl: bundlerTestUrl,
+  biconomyPaymasterApiKey: biconomyTestPaymasterApiKey,
+});
+const scwAddress = await smartAccount.getAccountAddress();
+console.log('SCW Address', scwAddress);
+```
+
+Make sure your smart account has enough MNT tokens to transfer.
+
+### Step 4: Generate Transaction Data[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/aa/biconomy#step-4-generate-transaction-data) <a href="#step-4-generate-transaction-data" id="step-4-generate-transaction-data"></a>
+
+```javascript
+// ------ 3. Generate transaction data
+const txData = {
+  to,
+  value: parseEther(amount.toString()),
+};
+```
+
+### Step 5: Send Gasless Transaction[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/aa/biconomy#step-5-send-gasless-transaction) <a href="#step-5-send-gasless-transaction" id="step-5-send-gasless-transaction"></a>
+
+```javascript
+// ------ 4. Send user operation and get tx hash
+const userOpResponse = await smartAccount.sendTransaction(txData, {
+  paymasterServiceData: {mode: PaymasterMode.SPONSORED},
+});
+const {transactionHash} = await userOpResponse.waitForTxHash();
+console.log('Transaction Hash', transactionHash);
+const userOpReceipt = await userOpResponse.wait();
+if (userOpReceipt.success == 'true') {
+  console.log('UserOp receipt', userOpReceipt);
+  console.log('Transaction receipt', userOpReceipt.receipt);
+}
+```
+
+### Step 6: Verify Transaction[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/aa/biconomy#step-6-verify-transaction) <a href="#step-6-verify-transaction" id="step-6-verify-transaction"></a>
+
+Run this function and you can get your EOA address, smart account address and transaction hash, after several seconds you will receive the UserOp receipt which means the transaction was successful.
+
+<br />

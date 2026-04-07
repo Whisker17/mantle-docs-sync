@@ -1,0 +1,67 @@
+---
+title: "Glossary"
+---
+
+## Batcher[​](https://docs-v2.mantle.xyz/intro/more/glossary#batcher) <a href="#batcher" id="batcher"></a>
+
+Batcher is a node role that packs transactions in L2 into batches and uploads them to L1. See [here](/system-information/off-chain-system/node-introduction#op-batcher) for more information.
+
+## Bridge[​](https://docs-v2.mantle.xyz/intro/more/glossary#bridge) <a href="#bridge" id="bridge"></a>
+
+App developers and users commonly need to move data and assets between layer 1 (L1) and layer 2 (L2). We call the process of moving data and assets between the two networks "bridging".
+
+## Channel[​](https://docs-v2.mantle.xyz/intro/more/glossary#channel) <a href="#channel" id="channel"></a>
+
+Channel is a data structure used in OP Stack to store compressed and encoded sequencer batches, by storing multiple batches together to achieve a better compression rate and reduce data availability cost. For more details, please check [here](https://github.com/mantlenetworkio/mantle-v2/blob/develop/specs/glossary#channel).
+
+## EIP-1559 transaction[​](https://docs-v2.mantle.xyz/intro/more/glossary#eip-1559-transaction) <a href="#eip-1559-transaction" id="eip-1559-transaction"></a>
+
+[EIP-1559](https://eips.ethereum.org/EIPS/eip-1559) introduces a new transaction type for Ethereum transactions. Unlike traditional transactions where users set their gas prices, EIP-1559 introduces a mechanism that automatically determines the transaction fee based on network demand.
+
+## Fraud proof / Fault proof[​](https://docs-v2.mantle.xyz/intro/more/glossary#fraud-proof--fault-proof) <a href="#fraud-proof--fault-proof" id="fraud-proof--fault-proof"></a>
+
+An on-chain challenge mechanism initiated by a verifier, where the verifier, after fetching the state root from L1, compares it with the state root provided by the DA, and initiates single/multiple rounds of interactive/non-interactive proofs on the chain in case of inconsistency.
+
+## Hardware security module (HSM)[​](https://docs-v2.mantle.xyz/intro/more/glossary#hardware-security-module-hsm) <a href="#hardware-security-module-hsm" id="hardware-security-module-hsm"></a>
+
+A hardware security module is a specialized hardware device designed to safeguard sensitive information, keys, and cryptographic operations from unauthorized access and attacks. In Mantle Network, we use a hardware security module for custody of crucial accounts in modules like [`op-proposer`](/system-information/off-chain-system/node-introduction#op-proposer), [`op-batcher`](/system-information/off-chain-system/node-introduction#op-batcher), etc.
+
+## Legacy transaction[​](https://docs-v2.mantle.xyz/intro/more/glossary#legacy-transaction) <a href="#legacy-transaction" id="legacy-transaction"></a>
+
+Refers to the format of transactions before the introduction of type transactions using [EIP-2718](https://eips.ethereum.org/EIPS/eip-2718). These transactions are identified as type `0x0` and contain parameters such as `nonce`, `gasPrice`, `gasLimit`, `to`, `value`, `data`, `v`, `r` and `s`.
+
+## MIPS[​](https://docs-v2.mantle.xyz/intro/more/glossary#mips) <a href="#mips" id="mips"></a>
+
+MIPS architecture, which stands for Microprocessor without Interlocked Pipeline Stages, is a type of computer architecture that uses a Reduced Instruction Set Computing (RISC) design philosophy. See more details [here](https://en.wikipedia.org/wiki/MIPS_architecture).
+
+## Modular chains[​](https://docs-v2.mantle.xyz/intro/more/glossary#modular-chains) <a href="#modular-chains" id="modular-chains"></a>
+
+In a Modular Blockchain, the core functions of blockchain operation (execution, consensus, settlement, data availability) are performed on specialized layers. By applying this principle to a rollup, we can optimize the solution since each layer is now performing a specialized task. This leads to lower costs and better overall performance.
+
+## Monolithic chains[​](https://docs-v2.mantle.xyz/intro/more/glossary#monolithic-chains) <a href="#monolithic-chains" id="monolithic-chains"></a>
+
+The entire blockchain system is viewed as a monolithic, tightly coupled entity. With this structure, all functions and protocols are built into the same chain.
+
+## Optimistic Rollup[​](https://docs-v2.mantle.xyz/intro/more/glossary#optimistic-rollup) <a href="#optimistic-rollup" id="optimistic-rollup"></a>
+
+Optimistic rollups (ORs) are L2 protocols designed to increase the throughput of Ethereum. They reduce computation load on the main Ethereum chain by taking computation and state storage off-chain and processing transactions in batches. ORs are considered “optimistic” because they assume off-chain transactions are valid and don't publish proofs of validity for transaction batches posted on-chain, and also use Fraud proof to detect and deal with invalid status.
+
+## Proposer[​](https://docs-v2.mantle.xyz/intro/more/glossary#proposer) <a href="#proposer" id="proposer"></a>
+
+Proposer and Batcher are similar functions, but it packs not the transactions themselves, but the state after the transactions are completed, and sends the state root to the corresponding contract in L1. For more details, please check [here](/system-information/off-chain-system/node-introduction#op-proposer).
+
+## Reorg[​](https://docs-v2.mantle.xyz/intro/more/glossary#reorg) <a href="#reorg" id="reorg"></a>
+
+Reorg, i.e., chain re-organization, refers to the situation where a transaction is rejected after it has been accepted due to a network attack or other factors, which often occurs in the L2 re-org situation after L1 has been attacked.
+
+## Sequencer[​](https://docs-v2.mantle.xyz/intro/more/glossary#sequencer) <a href="#sequencer" id="sequencer"></a>
+
+Sequencer is a node role consisting of [op-node](/system-information/off-chain-system/node-introduction#op-node) and [op-geth](/system-information/off-chain-system/node-introduction#op-geth) that performs transaction ordering in L2 and L2 block production. See [here](/system-information/off-chain-system/node-introduction#sequencer) for more information.
+
+## Verifier[​](https://docs-v2.mantle.xyz/intro/more/glossary#verifier) <a href="#verifier" id="verifier"></a>
+
+Verifier is a node role consisting of [op-node](/system-information/off-chain-system/node-introduction#op-node) and [op-geth](/system-information/off-chain-system/node-introduction#op-geth) that provides users with verified transactions and state root in L2, and it also initiates fraud proof in case of inconsistency in the state of on-chain and off-chain transactions to ensure the validity of transactions. See [here](/system-information/off-chain-system/node-introduction#verifier) for more information.
+
+## WASM[​](https://docs-v2.mantle.xyz/intro/more/glossary#wasm) <a href="#wasm" id="wasm"></a>
+
+WebAssembly, commonly abbreviated as WASM, is a binary instruction format that serves as a portable compilation target for high-level programming languages. It is designed to enable efficient execution of code on web browsers but is not limited to the web environment. WASM allows code to run at near-native speed, providing a performance boost compared to traditional web development technologies. See more details [here](https://en.wikipedia.org/wiki/WebAssembly).
