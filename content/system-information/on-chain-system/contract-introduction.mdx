@@ -4,45 +4,45 @@ title: "Contract Introduction"
 
 Mantle Network's on-chain module contains a series of smart contracts that run on the blockchain to ensure decentralized and reliable execution. These contracts are responsible for handling the logic of various dApps interacting with the blockchain, as well as the interaction of the off-chain system with the on-chain system, including asset transfers, asset swaps, and so on.
 
-## Contract Explained <a href="#l1crossdomainmessengerproxy" id="l1crossdomainmessengerproxy"></a>
+## Contract Explained 
 
-### L1CrossDomainMessengerProxy[​](https://docs-v2.mantle.xyz/intro/system-components/on-chain-system#l1crossdomainmessengerproxy) <a href="#l1crossdomainmessengerproxy" id="l1crossdomainmessengerproxy"></a>
+### L1CrossDomainMessengerProxy 
 
 This contract is a proxy for the L1CrossDomainMessenger contract on the L2, which can be used to the interaction with the L2 contract from L1.
 
 The L1CrossDomainMessenger contract is a high-level interface for sending messages to and receiving messages from Mantle Network (from L1 to L2).
 
-### L1StandardBridgeProxy[​](https://docs-v2.mantle.xyz/intro/system-components/on-chain-system#l1standardbridgeproxy) <a href="#l1standardbridgeproxy" id="l1standardbridgeproxy"></a>
+### L1StandardBridgeProxy 
 
 This contract is a proxy for the L1StandardBridge contract on the L2, which can be used to the interaction with the L2 bridge from L1.
 
 The L1StandardBridge is a standardized contract for transferring ERC20 tokens to/from Mantle Network
 
-### L1ERC721BridgeProxy[​](https://docs-v2.mantle.xyz/intro/system-components/on-chain-system#l1erc721bridgeproxy) <a href="#l1erc721bridgeproxy" id="l1erc721bridgeproxy"></a>
+### L1ERC721BridgeProxy 
 
 The proxy contract for transferring ERC721 tokens to/from Mantle Network.
 
-### L2OutputOracleProxy[​](https://docs-v2.mantle.xyz/intro/system-components/on-chain-system#l2outputoracleproxy) <a href="#l2outputoracleproxy" id="l2outputoracleproxy"></a>
+### L2OutputOracleProxy 
 
 The proxy contract of stores commitments to the state of Mantle Network, which can be used by contracts on L1 to access the L2 state
 
-### OptimismMintableERC20FactoryProxy[​](https://docs-v2.mantle.xyz/intro/system-components/on-chain-system#optimismmintableerc20factoryproxy) <a href="#optimismmintableerc20factoryproxy" id="optimismmintableerc20factoryproxy"></a>
+### OptimismMintableERC20FactoryProxy 
 
 The proxy contract of factory contract for minting ERC20 tokens.
 
-### OptimismPortalProxy[​](https://docs-v2.mantle.xyz/intro/system-components/on-chain-system#optimismportalproxy) <a href="#optimismportalproxy" id="optimismportalproxy"></a>
+### OptimismPortalProxy 
 
 The proxy contract of low-level message-passing interface.
 
-### ProxyAdmin[​](https://docs-v2.mantle.xyz/intro/system-components/on-chain-system#proxyadmin) <a href="#proxyadmin" id="proxyadmin"></a>
+### ProxyAdmin 
 
 Admin contract for the contracts, is the owner of all the proxy contracts. It can be used to upgrade the most system contracts in Mantle.
 
-### SystemConfigProxy[​](https://docs-v2.mantle.xyz/intro/system-components/on-chain-system#systemconfigproxy) <a href="#systemconfigproxy" id="systemconfigproxy"></a>
+### SystemConfigProxy 
 
 This is a proxy contract of the system contract that stores the configuration values for the on-chain system.
 
-### AddressManager[​](https://docs-v2.mantle.xyz/intro/system-components/on-chain-system#addressmanager) <a href="#addressmanager" id="addressmanager"></a>
+### AddressManager 
 
 AddressManager is a legacy contract that was used in the old version of the Mantle system to manage a registry of string names to addresses.
 

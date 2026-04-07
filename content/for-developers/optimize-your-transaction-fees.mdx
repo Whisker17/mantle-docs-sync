@@ -6,11 +6,11 @@ This section will help you to reduce the transaction fees on Mantle v2 Tectonic.
 
 In Mantle v2 Tectonic, with the introduction of the EIP-1559 mechanism, users need to configure the network's `basefee` (the minimum basefee currently set `0.02 gwei`) and `priorityfee` (recommend to set it to 0) configurations in order to optimize the transaction fees. We explain the different development components to optimize the user experience.
 
-## MetaMask[​](https://docs-v2.mantle.xyz/devs/dev-guides/decrease-fee#metamask) <a href="#metamask" id="metamask"></a>
+## MetaMask 
 
 If you are a user of MetaMask for trading or contract deployment and interaction (e.g. using [Remix](/for-developers/how-to-guides/how-to-deploy-smart-contracts/use-remix-to-deploy-smart-contracts)), you can set up `basefee` and `priorityfee` in MetaMask to be able to send transactions at a lowest fee. Details can be found [here](/for-users/how-to-guides/connecting-wallet-to-mantle-network#configure-your-wallet).
 
-## Hardhat[​](https://docs-v2.mantle.xyz/devs/dev-guides/decrease-fee#hardhat) <a href="#hardhat" id="hardhat"></a>
+## Hardhat 
 
 If you are using [Hardhat](/for-developers/how-to-guides/how-to-deploy-smart-contracts/use-hardhat-to-deploy-smart-contracts) for contract deployment and interaction, you can use the default configuration in `hardhat.config.ts` or specify `gasPrice` as the network minimum basefee:
 
@@ -33,24 +33,22 @@ const config: HardhatUserConfig = {
 };
 ```
 
-## Foundry[​](https://docs-v2.mantle.xyz/devs/dev-guides/decrease-fee#foundry) <a href="#foundry" id="foundry"></a>
+## Foundry 
 
 If you are using [Foundry](/for-developers/how-to-guides/how-to-deploy-smart-contracts/use-foundry-to-deploy-smart-contracts) for contract deployment and interaction, you need to set it up on the corresponding command line:
 
-### Contracts Deployment[​](https://docs-v2.mantle.xyz/devs/dev-guides/decrease-fee#contracts-deployment) <a href="#contracts-deployment" id="contracts-deployment"></a>
+### Contracts Deployment 
 
 
-> **Warning**
-
+<Callout type="warning">
 Currently, for users deploying contracts using `forge create`, we strongly recommend using the **legacy** transaction type.
 
 Make sure you are using [the latest version](https://github.com/foundry-rs/foundry/releases) of Foundry, if you are using a version lower than [`2024-07-31`](https://github.com/foundry-rs/foundry/releases/tag/nightly-26a7559758c192911dd39ce7d621a18ef0d419e6), please add `-skip-simulation` to your command line to ensure successful execution!
+</Callout>
 
 
-
-
-#### Use forge script
-
+<Tabs items={['Use forge script', 'Use forge create']}>
+<Tabs.Tab>
 When you use the `forge script` for contract deployment, there are different settings for different transaction types:
 
 * **legacy transactions**
@@ -67,12 +65,8 @@ When you use the `forge script` for contract deployment, there are different set
   ```
   forge script script/Deploy.s.sol:DeploySiege --sig "run()" --with-gas-price 20000000 --rpc-url <mantle_rpc_url> --broadcast
   ```
-
-
-
-
-#### Use forge create
-
+</Tabs.Tab>
+<Tabs.Tab>
 When you use `forge create` for contract deployment, there are different settings for different transaction types:
 
 * **legacy transactions (recommended)**
@@ -89,3 +83,5 @@ When you use `forge create` for contract deployment, there are different setting
   ```sh
   forge create --rpc-url <mantle_rpc_url> ./script/StorageTest.sol:Storage --private-key <private_key> --priority-gas-price 0 --gas-price 20000000 --gas-limit 40000000000
   ```
+</Tabs.Tab>
+</Tabs>

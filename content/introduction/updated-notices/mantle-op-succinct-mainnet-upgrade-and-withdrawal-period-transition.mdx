@@ -9,11 +9,11 @@ Mantle is excited to announce our upcoming mainnet upgrade to **OP Succinct**, s
 Previously, as an Optimistic L2, Mantle required a 7-day "challenge period" for all withdrawals via the canonical bridge. This delay is the standard security mechanism for all Optimistic rollups, allowing time for network observers to challenge potentially fraudulent state transitions.With the move to ZK validity, the network’s state is confirmed by cryptographic proofs rather than relying on a challenge window. This allows us to **reduce the withdrawal finalization period from 7 days to just 1 2hours.**&#x48;owever, this change requires a specific transition period to safely finalize the old system and activate the new one.
 
 
-> **Success**
-
+<Callout type="info">
 **Why do we choose 12 hours?**
 
 Security Rationale for the 12-Hour Challenge Period While a ZK-proof system theoretically allows for a much shorter challenge period, setting it to 12 hours is a deliberate security measure. This duration serves as a critical safety buffer for the official bridge. In an extreme security event, such as a hack, this window provides the team with the necessary time to respond and mitigate risks, thereby providing maximum protection for user assets.
+</Callout>
 
 
 ## **The Transition Timeline Explained**

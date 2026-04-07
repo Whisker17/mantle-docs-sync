@@ -1,0 +1,8 @@
+[submodule "repos/mantle-v2"]
+	path = repos/mantle-v2
+	url = https://github.com/mantlenetworkio/mantle-v2.git
+	shallow = true
+[submodule "repos/op-geth"]
+	path = repos/op-geth
+	url = https://github.com/mantlenetworkio/op-geth.git
+	shallow = true

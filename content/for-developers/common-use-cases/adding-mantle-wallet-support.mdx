@@ -4,7 +4,7 @@ title: "Adding Mantle Wallet Support"
 
 Mantle network uses `$MNT` as a native token, and creates an EVM-like code execution environment for transaction and state processing. This means a user on Layer 2 (L2) can use `$MNT` exactly like they would `$ETH` on Ethereum, namely to pay gas fees. For this reason, there are changes to how fees are calculated on Mantle network, which you can better understand in this [section](/system-information/fee-mechanism). Any `$MNT` tokens collected on the L2 as transaction gas fee will be rewarded to validators or burned out on schedule.
 
-## Connecting to Mantle[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/wallet#connecting-to-mantle) <a href="#connecting-to-mantle" id="connecting-to-mantle"></a>
+## Connecting to Mantle 
 
 Mantle network shares the [Ethereum JSON-RPC API](https://eth.wiki/json-rpc/API) with almost no differences. You can choose to connect to Mantle through any of the following means:
 
@@ -12,15 +12,13 @@ Mantle network shares the [Ethereum JSON-RPC API](https://eth.wiki/json-rpc/API)
 2. Third-party endpoints from infrastructure [providers](/for-developers/resources-and-tooling/node-endpoints-and-providers).
 3. Running your [own node](/for-node-operators/deployment-guides).
 
-### Add Mantle Network to Metamask Quickly[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/wallet#add-mantle-network-to-metamask-quickly) <a href="#add-mantle-network-to-metamask-quickly" id="add-mantle-network-to-metamask-quickly"></a>
+### Add Mantle Network to Metamask Quickly 
 
 Based on the [JSON-RPC API](https://docs.metamask.io/wallet/reference/wallet_addethereumchain/) provided by Metamask, developers can implement the ability to add Mantle Network to Metamask with a single click.
 
 
-
-#### Mainnet
-
-
+<Tabs items={['Mainnet', 'Testnet (Sepolia)']}>
+<Tabs.Tab>
 ```javascript
 await window.ethereum.request({
   "method": "wallet_addEthereumChain",
@@ -46,13 +44,8 @@ await window.ethereum.request({
   ]
 });
 ```
-
-
-
-
-#### Testnet (Sepolia)
-
-
+</Tabs.Tab>
+<Tabs.Tab>
 ```javascript
 await window.ethereum.request({
   "method": "wallet_addEthereumChain",
@@ -78,37 +71,34 @@ await window.ethereum.request({
   ]
 });
 ```
+</Tabs.Tab>
+</Tabs>
 
 
-
-
-## Canonical Token Addresses[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/wallet#canonical-token-addresses) <a href="#canonical-token-addresses" id="canonical-token-addresses"></a>
+## Canonical Token Addresses 
 
 The ERC-20 contract address for a token on Mantle network may be different from the address for the same token on Ethereum. Mantle maintains [a token list](https://github.com/mantlenetworkio/mantle-token-lists/blob/main/mantle.tokenlist.json) that includes known addresses for many popular tokens. For example, looking at the`$MNT` token, the Mantle token list returns the following addresses:
 
 
-
-#### Mainnet
-
-
+<Tabs items={['Mainnet', 'Testnet (Sepolia)']}>
+<Tabs.Tab>
 | Name               | ChainID | Address                                    |
 | ------------------ | ------- | ------------------------------------------ |
 | **Ethereum**       | 1       | 0x3c3a81e81dc49a522a592e7622a7e711c06bf354 |
 | **Mantle Network** | 5000    | 0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000 |
-|        |         |                                            |
-
-
-#### Testnet (Sepolia)
-
-
+|
+</Tabs.Tab>
+<Tabs.Tab>
 | Name               | ChainID | Address                                    |
 | ------------------ | ------- | ------------------------------------------ |
 | **Ethereum**       | 1       | 0x65e37B558F64E2Be5768DB46DF22F93d85741A9E |
 | **Mantle Network** | 5003    | 0xDeadDeAddeAddEAddeadDEaDDEAdDeaDDeAD0000 |
-|        |         |                                            |
-|       |         |                                            |
+|
+</Tabs.Tab>
+</Tabs>
+      |         |                                            |
 
-## Transaction Status[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/wallet#transaction-status) <a href="#transaction-status" id="transaction-status"></a>
+## Transaction Status 
 
 A transaction on Mantle network can be in one of these states:
 
@@ -124,22 +114,22 @@ If a transaction is a withdrawal, it can be in one of the following states:
 
 You can use the [Mantle SDK](https://github.com/mantlenetworkio/mantle-v2/tree/develop/packages/sdk) to find out your transaction status.
 
-## Transaction Fees[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/wallet#transaction-fees) <a href="#transaction-fees" id="transaction-fees"></a>
+## Transaction Fees 
 
 Mantle network aims to be EVM-compatible, you can see a summary of the few differences between Mantle and Ethereum [here](/system-information/fee-mechanism).
 
-## Estimating Total Fees[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/wallet#estimating-total-fees) <a href="#estimating-total-fees" id="estimating-total-fees"></a>
+## Estimating Total Fees 
 
 The major portion of the total cost of a transaction on Mantle network comes from the cost of publishing the transaction to Ethereum. Unlike with L2 execution gas fees, users cannot specify a particular gas price or gas limit for this portion of their transaction cost when it rolls up to Ethereum.
 
 In fact, this fee is automatically deducted from the user's `$MNT` balance on Mantle when the transaction is executed.
 
 
-> **Info**
-
+<Callout type="info">
 Mantle SDK provides an interface to get the total gas fee directly.
+</Callout>
 
 
-## Sending "Max" $MNT[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/wallet#sending-max-mnt) <a href="#sending-max-mnt" id="sending-max-mnt"></a>
+## Sending "Max" $MNT 
 
 Many wallets allow users to send the maximum amount of a token available in the user's balance. This requires the fee for this transaction to be calculated in advance, and then deducted from the user's `$MNT` balance being sent.

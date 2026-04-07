@@ -2,9 +2,9 @@
 title: "Bridging ETH with Mantle Viem"
 ---
 
-> **Info**
-
+<Callout type="info">
 If you want to test the functionality of the Mantle Viem, we recommend using the testnet environment instead of the mainnet environment. The challenge period will be much shorter in the testnet (\~40 minutes) than in the mainnet (7 days).
+</Callout>
 
 
 This tutorial teaches you how to use the Mantle Viem to transfer ETH between Layer 1 (L1) and Layer 2 (L2).&#x20;
@@ -75,10 +75,9 @@ export const walletClientL2 = createWalletClient(\{
 ```
 
 
-
-> **Info**
-
+<Callout type="info">
 We strongly recommend using your own RPC endpoint instead of the official testnet nodes to avoid failures due to rate limiting policies. For information on how to apply for your own RPC endpoint, please check [here](/resources-and-tooling/node-endpoints-and-providers#testnet-sepolia-1).
+</Callout>
 
 
 If you are using your own RPC endpoint, you need to modify the `config.ts` file as follows:

@@ -2,9 +2,9 @@
 title: "Transaction Lifecycle"
 ---
 
-## L2 -> L1 Workflow[​](https://docs-v2.mantle.xyz/devs/concepts/tx-lifecycle#l2---l1-workflow) <a href="#l2---l1-workflow" id="l2---l1-workflow"></a>
+## L2 -> L1 Workflow 
 
-### 1. The Initiation[​](https://docs-v2.mantle.xyz/devs/concepts/tx-lifecycle#1-the-initiation) <a href="#id-1-the-initiation" id="id-1-the-initiation"></a>
+### 1. The Initiation 
 
 Wallet users, dApps, or some scripts may wish to utilize a blockchain-based system to transfer funds or execute tasks.
 
@@ -18,19 +18,19 @@ As with any other service, this operation requires payment. It is not just for t
 
 They use the tools at hand to compose a request, sign it using their private keys, and send it to Mantle Network where a sequencer is ready to process it. This is where the transaction first enters Mantle. More details [here](/off-chain-system/node-introduction#sequencer).
 
-### 2. The Handling[​](https://docs-v2.mantle.xyz/devs/concepts/tx-lifecycle#2-the-handling) <a href="#id-2-the-handling" id="id-2-the-handling"></a>
+### 2. The Handling 
 
 The transaction triggers the standard state verification process, executed by the Ethereum Virtual Machine (EVM) software ([`op-geth`](/off-chain-system/node-introduction#op-geth)) running on these nodes. This is to ensure that the transaction is fundamentally valid, the necessary fees have been paid, and nothing exceptional has occurred.&#x20;
 
 After block execution, Mantle enters the **batching → DA → proving → L1 finalization** pipeline.
 
 
-> **Info**
-
+<Callout type="info">
 It's important to note that state submission doesn't need to be executed after every transaction, but can be chosen to be submitted after a tx-batch.
+</Callout>
 
 
-### 3. The Storage[​](https://docs-v2.mantle.xyz/devs/concepts/tx-lifecycle#3-the-storage) <a href="#id-3-the-storage" id="id-3-the-storage"></a>
+### 3. The Storage 
 
 Mantle follows the standard OP Stack data availability model by publishing rollup data to Ethereum L1 using EIP-4844 blob-carrying transactions.
 

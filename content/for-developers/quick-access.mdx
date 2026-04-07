@@ -2,13 +2,11 @@
 title: "Quick Access"
 ---
 
-## Network Details[​](https://docs-v2.mantle.xyz/devs/dev-guides/quick#network-details) <a href="#network-details" id="network-details"></a>
+## Network Details 
 
 
-
-#### Mainnet
-
-
+<Tabs items={['Mainnet', 'Testnet (Sepolia)']}>
+<Tabs.Tab>
 | Name              | Description                                       |
 | ----------------- | ------------------------------------------------- |
 | **RPC URL**       | [https://rpc.mantle.xyz](https://rpc.mantle.xyz/) |
@@ -16,12 +14,9 @@ title: "Quick Access"
 | **Chain ID**      | 5000                                              |
 | **Token Symbol**  | MNT                                               |
 | **Explorer**      | [https://mantlescan.xyz/](https://mantlescan.xyz/)                         |
-|       |                                                   |
-
-
-#### Testnet (Sepolia)
-
-
+|
+</Tabs.Tab>
+<Tabs.Tab>
 | Name              | Description                                                       |
 | ----------------- | ----------------------------------------------------------------- |
 | **RPC URL**       | [https://rpc.sepolia.mantle.xyz](https://rpc.sepolia.mantle.xyz/) |
@@ -29,69 +24,67 @@ title: "Quick Access"
 | **Chain ID**      | 5003                                                              |
 | **Token Symbol**  | MNT                                                               |
 | **Explorer**      | [https://sepolia.mantlescan.xyz/](https://sepolia.mantlescan.xyz/)                                 |
-|       |                                                                   |
-|      |                                                                   |
+|
+</Tabs.Tab>
+</Tabs>
+     |                                                                   |
 
 
-> **Info**
-
+<Callout type="info">
 The official Mantle RPC employs **rate limiting** to ensure stability during traffic spikes. If your particular use case involves calling the [Mantle API](/for-developers/resources-and-tooling/mantle-api) frequently, you might run into issues that arise due to rate limiting. For such use cases, consider connecting to third-party RPCs instead. You can find the list of available RPC providers [here](/for-developers/resources-and-tooling/node-endpoints-and-providers).
+</Callout>
 
 
-## Onboarding Tools[​](https://docs-v2.mantle.xyz/devs/dev-guides/quick#onboarding-tools) <a href="#onboarding-tools" id="onboarding-tools"></a>
+## Onboarding Tools 
 
 Here are some useful tools for developers' onboarding.
 
 
-
-#### Mainnet
-
-
+<Tabs items={['Mainnet', 'Testnet (Sepolia)']}>
+<Tabs.Tab>
 | Name                                      | URL                                                                                                                        |
 | ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
 | **Faucet**                                | N/A                                                                                                                        |
 | **Bridge**                                | [https://app.mantle.xyz/bridge](https://app.mantle.xyz/bridge)                                                                                            |
 | **Recommended Solidity Compiler Version** | [v0.8.23](https://github.com/ethereum/solidity/releases/tag/v0.8.23) or below                                              |
 | **Wrapped MNT Address**                   | [0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8](https://explorer.mantle.xyz/token/0x78c1b0C915c4FAA5FffA6CAbf0219DA63d7f4cb8) |
-|                               |                                                                                                                            |
-
-
-#### Testnet (Sepolia)
-
-
+|
+</Tabs.Tab>
+<Tabs.Tab>
 <table><thead><tr><th width="306">Name</th><th>URL</th></tr></thead><tbody><tr><td><strong>Faucet</strong></td><td><a href="https://faucet.sepolia.mantle.xyz/">https://faucet.sepolia.mantle.xyz/</a></td></tr><tr><td><strong>Third-party Faucet</strong><em>*</em></td><td>- <a href="https://faucet.quicknode.com/mantle/sepolia">https://faucet.quicknode.com/mantle/sepolia</a><br />- <a href="https://thirdweb.com/mantle-sepolia-testnet/faucet">https://thirdweb.com/mantle-sepolia-testnet/faucet</a></td></tr><tr><td><strong>Bridge</strong></td><td><a href="https://app.mantle.xyz/bridge?network=sepolia">https://app.mantle.xyz/bridge?network=sepolia</a></td></tr><tr><td><strong>Recommended Solidity Compiler Version</strong></td><td><a href="https://github.com/ethereum/solidity/releases/tag/v0.8.23">v0.8.23</a> or below</td></tr><tr><td><strong>Wrapped MNT Address</strong></td><td><a href="https://explorer.sepolia.mantle.xyz/address/0x19f5557E23e9914A18239990f6C70D68FDF0deD5">0x19f5557E23e9914A18239990f6C70D68FDF0deD5</a></td></tr></tbody></table>
 
 *\** You can get MNT tokens directly on the Mantle Sepolia network and no longer need to bridge from Ethereum Sepolia. However, there is a limit to the number of MNT tokens that can be acquired.
+</Tabs.Tab>
+</Tabs>
 
 
-
-## Contract Address[​](https://docs-v2.mantle.xyz/devs/dev-guides/quick#contract-address) <a href="#contract-address" id="contract-address"></a>
+## Contract Address 
 
 Mantle as an Rollup system of Ethereum, scales Ethereum by deploying L1 contracts and L2 contracts. The most updated list of addresses of the contracts deployed on Ethereum and Mantle Network is available as follows:
 
 * [L1 Contracts](/system-information/on-chain-system/key-l1-contract-address)
 * [L2 Contracts](/system-information/off-chain-system/key-l2-contract-address)
 
-## Token List[​](https://docs-v2.mantle.xyz/devs/dev-guides/quick#token-list) <a href="#token-list" id="token-list"></a>
+## Token List 
 
 The [Mantle Bridge](https://bridge.mantle.xyz/) allows a one-to-many mapping between layer 1 (L1) and layer 2 (L2) tokens, meaning that there can be multiple Mantle implementations of an L1 token.
 
 However, there is always a one-to-one mapping between L1 and L2 tokens listed on the [Mantle token list](https://token-list.mantle.xyz/mantle.tokenlist.json). The token list is used as the source of truth for the Mantle Bridge which is the main portal for moving assets between L1 and L2.
 
 
-> **Info**
-
+<Callout type="info">
 If you want to support your token on the Mantle Bridge, we strongly recommend using [this template](https://github.com/mantle-xyz/bridge-token-contracts) for token deployment in order to authorize bridge contracts
+</Callout>
 
 
-### Adding a Token to the List[​](https://docs-v2.mantle.xyz/devs/dev-guides/quick#adding-a-token-to-the-list) <a href="#adding-a-token-to-the-list" id="adding-a-token-to-the-list"></a>
+### Adding a Token to the List 
 
 If you want to have your token added to the token list, you'll need to make a pull request against the [Mantle token list repository](https://github.com/mantlenetworkio/mantle-token-lists). You'll need the addresses for both the L1 and L2 tokens, as well as a logo for the token.
 
 
-> **Info**
-
+<Callout type="info">
 For reference, take a look at [this simple pull request](https://github.com/mantlenetworkio/mantle-token-lists#adding-a-token-to-the-list) that adds a token to the token list.
+</Callout>
 
 
 ## Tools for Developers

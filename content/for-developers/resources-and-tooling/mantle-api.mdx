@@ -5,23 +5,23 @@ title: "Mantle API"
 Applications need to connect to a node to fetch block data and send transactions to the Mantle network. Mantle Network shares the same JSON-RPC API implementation as Ethereum.
 
 
-> **Info**
-
+<Callout type="info">
 You can refer to the common methods [here](https://ethereum.org/en/developers/docs/apis/json-rpc/#json-rpc-methods).
 
 If you want to get the L2 gas price, you can either use [`eth_gasPrice`](https://ethereum.org/en/developers/docs/apis/json-rpc/#eth_gasprice) or get it from `GasPriceOracle` 's [`gasPrice`](https://mantlescan.xyz/address/0x420000000000000000000000000000000000000F#readProxyContract#F4) function. If you want to get the L1 gas price, you can get it from `GasPriceOracle` 's [`l1BaseFee`](https://mantlescan.xyz/address/0x420000000000000000000000000000000000000F#readProxyContract#F7) function.
+</Callout>
 
 
 We've also introduced custom methods to simplify certain Mantle-specific interactions. All methods can be accessed via `https` and `websocket`, endpoints can be found [here](/for-developers/resources-and-tooling/node-endpoints-and-providers).
 
-## Custom Methods[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/api#custom-methods) <a href="#custom-methods" id="custom-methods"></a>
+## Custom Methods 
 
 | **Method**          | **Description**                                                          |
 | ------------------- | ------------------------------------------------------------------------ |
 | `eth_getBlockRange` | Returns block info for multiple blocks, takes a block range as parameter |
 | `rollup_getInfo`    | Returns L2 node info                                                     |
 
-### `eth_getBlockRange`[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/api#eth_getblockrange) <a href="#eth_getblockrange" id="eth_getblockrange"></a>
+### `eth_getBlockRange` 
 
 Returns the block info in the form of an array of block objects for multiple blocks within a specified range. (See [`eth_getBlockByHash`](https://eth.wiki/json-rpc/API#eth_getblockbyhash) for the structure of a block object)
 
@@ -94,7 +94,7 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"eth_getBlockRange","params":["0x
 }
 ```
 
-### `rollup_getInfo`[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/api#rollup_getinfo) <a href="#rollup_getinfo" id="rollup_getinfo"></a>
+### `rollup_getInfo` 
 
 Returns various pieces of information in the form of an Object for a specified node. The response Object structure is as follows:
 
@@ -132,7 +132,7 @@ curl -X POST --data '{"jsonrpc":"2.0","method":"rollup_getInfo","params":[],"id"
 }
 ```
 
-### Unsupported Methods[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/api#unsupported-methods) <a href="#unsupported-methods" id="unsupported-methods"></a>
+### Unsupported Methods 
 
 <table data-header-hidden><thead><tr><th width="247"></th><th></th></tr></thead><tbody><tr><td><strong>Method</strong></td><td><strong>Description</strong></td></tr><tr><td><code>eth_getAccounts</code></td><td>Used to fetch the list of addresses owned by a user. Mantle nodes do not expose internal wallets for security reasons, and thus block the <code>eth_getAccounts</code> method. You can use an external wallet service as an alternative.</td></tr><tr><td><code>eth_sendTransaction</code></td><td>Mantle nodes block <code>eth_sendTransaction</code> for security reasons as well. This is different from <code>eth_sendRawTransaction</code> which takes a signed transaction as input, and is supported by Mantle nodes.</td></tr></tbody></table>
 

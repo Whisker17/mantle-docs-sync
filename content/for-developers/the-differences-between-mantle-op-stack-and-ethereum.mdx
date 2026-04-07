@@ -4,40 +4,40 @@ title: "The Differences between Mantle, OP Stack, and Ethereum"
 
 Mantle is developed based on the OP Stack architecture. While it shares many design similarities with Ethereum, there are differences when transitioning from Ethereum to Mantle.
 
-## Key Differences[​](https://docs-v2.mantle.xyz/devs/dev-guides/diffs#key-differences) with Ethereum <a href="#key-differences" id="key-differences"></a>
+## Key Differences with Ethereum 
 
-### Opcodes[​](https://docs-v2.mantle.xyz/devs/dev-guides/diffs#opcodes) <a href="#opcodes" id="opcodes"></a>
+### Opcodes 
 
 While Mantle aims for Ethereum compatibility, there may be differences in supported opcode sets or their specific implementations. Developers transitioning from Ethereum should review and adjust their smart contracts accordingly. Refer to the table below for detailed information:
 
 <table><thead><tr><th width="193">Opcode</th><th width="230">Solidity equivalent</th><th>Behavior</th></tr></thead><tbody><tr><td><code>COINBASE</code></td><td><code>block.coinbase</code></td><td>In mantle-V2 Tectonic, block coinbase is the <code>SequencerFeeVault</code>, which address is <code>0x4200000000000000000000000000000000000011</code></td></tr><tr><td><code>DIFFICULTY</code></td><td><code>block.difficulty</code></td><td>Random value. As this value is set by the sequencer, it is not as reliably random as the L1 equivalent.</td></tr><tr><td><code>NUMBER</code></td><td><code>block.number</code></td><td>L2 block number</td></tr><tr><td><code>TIMESTAMP</code></td><td><code>block.timestamp</code></td><td>Timestamp of the L2 block</td></tr><tr><td><code>ORIGIN</code></td><td><code>tx.origin</code></td><td>If the transaction is an L1 ⇒ L2 transaction, then <code>tx.origin</code> is set to the <a href="https://community.optimism.io/docs/developers/build/differences/#address-aliasing">aliased address</a> of the address that triggered the L1 ⇒ L2 transaction. Otherwise, this opcode behaves normally.</td></tr><tr><td><code>CALLER</code></td><td><code>msg.sender</code></td><td>If the transaction is an L1 ⇒ L2 transaction, and this is the initial call (rather than an internal transaction from one contract to another), the same <a href="https://community.optimism.io/docs/developers/build/differences/#address-aliasing">address aliasing</a> behavior applies.</td></tr></tbody></table>
 
-### Blocks[​](https://docs-v2.mantle.xyz/devs/dev-guides/diffs#blocks) <a href="#blocks" id="blocks"></a>
+### Blocks 
 
 As a rollup, Mantle's block structure may differ from Ethereum, including block construction time, block size, and more. Developers should familiarize themselves with Mantle's block specifications for optimal integration. Refer to [this](https://community.optimism.io/docs/developers/build/differences/#blocks) for more details.
 
-### Network Specifications[​](https://docs-v2.mantle.xyz/devs/dev-guides/diffs#network-specifications) <a href="#network-specifications" id="network-specifications"></a>
+### Network Specifications 
 
 Mantle has distinct network specifications compared to Ethereum, particularly in JSON-RPC differences. Understanding these variances is crucial for a smooth transition to Mantle. Refer to [this](https://community.optimism.io/docs/developers/build/differences/#network-specifications) for more details.
 
-### Transaction Costs[​](https://docs-v2.mantle.xyz/devs/dev-guides/diffs#transaction-costs) <a href="#transaction-costs" id="transaction-costs"></a>
+### Transaction Costs 
 
 As a rollup on Ethereum, Mantle's transaction cost composition differs from L1. Developers should understand Mantle's fee structure to optimize their applications' performance on Mantle Network. Refer to [this](/system-information/fee-mechanism) for more details.
 
-### Solidity Support[​](https://docs-v2.mantle.xyz/devs/dev-guides/diffs#solidity-support) <a href="#solidity-support" id="solidity-support"></a>
+### Solidity Support 
 
 Currently Mantle supports [the latest version](https://github.com/ethereum/solidity/releases) of the Solidity. Please make sure that your evm environment version is before (and including) Shanghai.
 
-## Key Differences[​](https://docs-v2.mantle.xyz/devs/dev-guides/diffs#key-differences) with OP Stack <a href="#key-differences" id="key-differences"></a>
+## Key Differences with OP Stack 
 
-### Independent Data Availability (DA)[​](https://docs-v2.mantle.xyz/intro/whats-new-in-mantle-v2#independent-data-availability-da) <a href="#independent-data-availability-da" id="independent-data-availability-da"></a>
+### Independent Data Availability (DA) 
 
 Considering Ethereum's current limited number of blobs and the large throughput associated with future Mantle performance enhancements, Mantle chose to use EigenDA as the DA Layer. This significantly reduces transaction fees while making minimal compromises on security guarantees. For more details, please check [here](/for-developers/broken-reference).
 
-### Migration of Native Tokens in Rollup[​](https://docs-v2.mantle.xyz/intro/whats-new-in-mantle-v2#migration-of-native-tokens-in-l2) <a href="#migration-of-native-tokens-in-l2" id="migration-of-native-tokens-in-l2"></a>
+### Migration of Native Tokens in Rollup 
 
 In Mantle v2 Tectonic, we introduce a highly anticipated feature — the migration of native tokens in Rollup. In Mantle v2 Tectonic, the flow of MNT tokens in Rollup will no longer use the ERC-20 contract. Instead, MNT will be a native Mantle Network Rollup asset, instead of a bridged version of its Ethereum ERC-20 counterpart. For more details, please check [here](#migration-of-native-tokens-in-l2).
 
-### Fee Optimization Strategy[​](https://docs-v2.mantle.xyz/intro/whats-new-in-mantle-v2#fee-optimization-strategy) <a href="#fee-optimization-strategy" id="fee-optimization-strategy"></a>
+### Fee Optimization Strategy 
 
 Mantle v2 Tectonic implements a fee optimization strategy using the tokenRatio parameter to adjust the impact of using $MNT as transaction fees. Additionally, we have optimized the `estimateGas` function to directly provide an estimate of the total cost of a transaction. For more details, please check [here](/system-information/fee-mechanism).

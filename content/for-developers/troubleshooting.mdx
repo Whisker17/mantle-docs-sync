@@ -2,7 +2,7 @@
 title: "Troubleshooting"
 ---
 
-## General[​](https://docs-v2.mantle.xyz/devs/dev-guides/troubleshooting#general) <a href="#general" id="general"></a>
+## General 
 
 * **Status code: 429 \{"error": "API rate limit exceeded"\}**
 
@@ -19,15 +19,13 @@ title: "Troubleshooting"
 
   This error usually occurs when you need to replace a transaction with the same nonce. Note that if you need to replace an old transaction with a new transaction with the same nonce, you need to set the `gasprice` by **1.1x**!
 
-## Smart Contracts[​](https://docs-v2.mantle.xyz/devs/dev-guides/troubleshooting#smart-contracts) <a href="#smart-contracts" id="smart-contracts"></a>
+## Smart Contracts 
 
-### Deployment Issues[​](https://docs-v2.mantle.xyz/devs/dev-guides/troubleshooting#deployment-issues) <a href="#deployment-issues" id="deployment-issues"></a>
-
-
-
-#### Hardhat
+### Deployment Issues 
 
 
+<Tabs items={['Hardhat', 'Foundry']}>
+<Tabs.Tab>
 * **Contract deploy error: "max code size exceeded."**
 
   Set `optimizer` bigger. Such as:
@@ -45,29 +43,23 @@ title: "Troubleshooting"
     },
   };
   ```
-
-
-
-
-#### Foundry
-
-
+</Tabs.Tab>
+<Tabs.Tab>
 * **"insufficient gas for l1Cost. Please use estimateGas to get gasLimit."**
 
   The reason for this error is that Mantle's gas model is different from Ethereum, and the `forge script` command broadcasts the transaction without estimating the gas using the provided mantle rpc. You can fix this error by these 2 ways:
 
   1. Upgrade your Foundry tools version to the latest.
   2. Add `--skip-simulation` to the `forge script` command.
-     
-     
-
-### Verification Issues[​](https://docs-v2.mantle.xyz/devs/dev-guides/troubleshooting#verification-issues) <a href="#verification-issues" id="verification-issues"></a>
+</Tabs.Tab>
+</Tabs>
 
 
+### Verification Issues 
 
-#### Hardhat
 
-
+<Tabs items={['Hardhat']}>
+<Tabs.Tab>
 * **Contract verification error: Hardhat found multiple contracts in the project (your MyTokenContract and the imported @openzeppelin/contracts/token/ERC20/IERC20.sol), and it doesn't know against which one you want to verify the bytecode**
 
   If you see this error, try verifying the contract again by specifying the name of the contract that you're looking to verify. You can do this using the --contract option. Here's an example:
@@ -75,33 +67,32 @@ title: "Troubleshooting"
   ```sh
   npx hardhat verify --contract "contracts/MyTokenContract.sol:MyToken" --network mantleTest 0x3A2b26...
   ```
+</Tabs.Tab>
+</Tabs>
 
 
+### Contracts Call Issues 
 
 
-### Contracts Call Issues <a href="#contracts-call-issues" id="contracts-call-issues"></a>
-
-
-
-#### Foundry
-
-
+<Tabs items={['Foundry']}>
+<Tabs.Tab>
 * **Error: Failed to send transaction. Context: (code: -32000, message: failed to forward tx to sequencer, please try again. Error message: 'intrinsic gas too low', data: None)**
 
   The reason for this error is that Mantle's gas model is different from Ethereum, and the `forge script` command broadcasts the transaction without estimating the gas using the provided mantle rpc. Two things should be noted when using it:
 
   1. Set the `priority-gas-price` to 0.
   2. Upgrade your Foundry tools version to the latest or add `--skip-simulation` to the `forge script` command.
-     
-     
+</Tabs.Tab>
+</Tabs>
 
-## Standard Bridge[​](https://docs-v2.mantle.xyz/devs/dev-guides/troubleshooting#standard-bridge) <a href="#standard-bridge" id="standard-bridge"></a>
+
+## Standard Bridge 
 
 * **Error when withdrawing: no bridge found for token pair**
 
   Try switching to a different [RPC provider](/for-developers/resources-and-tooling/node-endpoints-and-providers).
 
-## Explorer[​](https://docs-v2.mantle.xyz/devs/dev-guides/troubleshooting#explorer) <a href="#explorer" id="explorer"></a>
+## Explorer 
 
 * **Error: Awaiting internal transactions for reason**
 

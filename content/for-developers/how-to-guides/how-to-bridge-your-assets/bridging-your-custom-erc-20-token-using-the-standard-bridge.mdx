@@ -20,11 +20,11 @@ However, this standard implementation intentionally limits extensibility.If your
 You **must** use a custom L2 token implementation.This tutorial explains how to build a **custom, upgradeable ERC-20 token** that remains compatible with the Mantle Standard Bridge, while allowing you to safely extend functionality over time.
 
 
-> **Info**
-
+<Callout type="info">
 Custom logic must not modify bridge-critical behavior.&#x20;
 
 Incorrect implementations can break bridge accounting or invalidate security assumptions.
+</Callout>
 
 
 ### Prerequisites
@@ -47,13 +47,13 @@ Unlike the standard `OptimismMintableERC20`, this approach allows you to introdu
 This tutorial uses [**Remix**](https://remix.ethereum.org) to simplify deployment. You may adapt the same pattern to frameworks such as Hardhat or Foundry if preferred.
 
 
-> **Info**
-
+<Callout type="info">
 This tutorial demonstrates one possible approach to creating a custom, upgradeable ERC-20 token for use with the Standard Bridge.
 
 It may **not be suitable for all use cases**. Contract design choices such as upgrade patterns, permission models, and security assumptions should be carefully reviewed before deploying to production.
 
 Developers are encouraged to rely on battle-tested implementations and to review official resources, such as the [OpenZeppelin Contracts documentation](https://docs.openzeppelin.com/contracts/5.x)
+</Callout>
 
 
 1. **Open Remix**
@@ -200,9 +200,9 @@ Using Remix:
    3. `_name`, `_symbol`: token metadata
 
 
-> **Warning**
-
+<Callout type="warning">
 Always interact with the **proxy address**, not the implementation address.
+</Callout>
 
 
 Once deployed, this proxy address represents your **L2 bridged token**.

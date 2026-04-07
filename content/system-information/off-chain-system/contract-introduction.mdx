@@ -4,40 +4,40 @@ title: "Contract Introduction"
 
 The off-chain System is another key module of the Mantle Network. It is responsible for executing specific tasks and logic in an environment outside of the blockchain, which is key to Layer 2's ability to scale L1 and provide more efficient and faster response and execution.
 
-## Contract [​](https://docs-v2.mantle.xyz/intro/system-components/off-chain-system#introduction)Explained <a href="#key-l2-smart-contracts" id="key-l2-smart-contracts"></a>
+## Contract Explained 
 
-### BVM\_GasPriceOracle[​](https://docs-v2.mantle.xyz/intro/system-components/off-chain-system#bvm_gaspriceoracle) <a href="#bvm_gaspriceoracle" id="bvm_gaspriceoracle"></a>
+### BVM\_GasPriceOracle 
 
 Stores L2 gas price configuration values. Provide the tokenRatio parameter to keep the gas fees more stable.
 
-### L1\_BLOCK\_NUMBER[​](https://docs-v2.mantle.xyz/intro/system-components/off-chain-system#l1_block_number) <a href="#l1_block_number" id="l1_block_number"></a>
+### L1\_BLOCK\_NUMBER 
 
 Stores L1 block context information (e.g., latest known L1 block hash)
 
-### L2CrossDomainMessenger[​](https://docs-v2.mantle.xyz/intro/system-components/off-chain-system#l2crossdomainmessenger) <a href="#l2crossdomainmessenger" id="l2crossdomainmessenger"></a>
+### L2CrossDomainMessenger 
 
 High-level interface for sending messages to and receiving messages from L1
 
-### L2StandardBridge[​](https://docs-v2.mantle.xyz/intro/system-components/off-chain-system#l2standardbridge) <a href="#l2standardbridge" id="l2standardbridge"></a>
+### L2StandardBridge 
 
 Standardized system for transferring ERC20 tokens to/from L1
 
-### L2\_TO\_L1\_MESSAGE\_PASSER[​](https://docs-v2.mantle.xyz/intro/system-components/off-chain-system#l2_to_l1_message_passer) <a href="#l2_to_l1_message_passer" id="l2_to_l1_message_passer"></a>
+### L2\_TO\_L1\_MESSAGE\_PASSER 
 
 Low-level message-passing interface
 
-### BaseFeeVault[​](https://docs-v2.mantle.xyz/intro/system-components/off-chain-system#basefeevault) <a href="#basefeevault" id="basefeevault"></a>
+### BaseFeeVault 
 
 Vault for L2 BaseFee transaction fees, more details [here](/fee-mechanism/eip-1559-support#application-of-eip-1559-in-mantle-v2-tectonic).
 
-### BVM\_SequencerFeeVault[​](https://docs-v2.mantle.xyz/intro/system-components/off-chain-system#bvm_sequencerfeevault) <a href="#bvm_sequencerfeevault" id="bvm_sequencerfeevault"></a>
+### BVM\_SequencerFeeVault 
 
 Vault for L2 transaction fees except for BaseFee, more details [here](/fee-mechanism/eip-1559-support#application-of-eip-1559-in-mantle-v2-tectonic).
 
-### L1Block[​](https://docs-v2.mantle.xyz/intro/system-components/off-chain-system#l1block) <a href="#l1block" id="l1block"></a>
+### L1Block 
 
 The L1Block gives users access to information about the last known L1 block.
 
-### OptimismMintableERC20Factory[​](https://docs-v2.mantle.xyz/intro/system-components/off-chain-system#optimismmintableerc20factory) <a href="#optimismmintableerc20factory" id="optimismmintableerc20factory"></a>
+### OptimismMintableERC20Factory 
 
 OptimismMintableERC20Factory is a factory contract that generates OptimismMintableERC20 contracts on the network it's deployed to.

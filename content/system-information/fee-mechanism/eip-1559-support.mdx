@@ -4,11 +4,11 @@ title: "EIP-1559 Support"
 
 [EIP-1559](https://github.com/ethereum/EIPs/blob/master/EIPS/eip-1559) is an upgrade proposal put forth by the Ethereum community, aiming to address network security issues by adjusting the structure of transaction fees. The core idea of this proposal is to burn transaction fees while providing miners (or proof-of-stake validators) with a more reliable permanent block reward, thus creating a more effective incentive mechanism.
 
-## Analysis of Factors Affecting Fees[​](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/eip-1559#analysis-of-factors-affecting-fees) <a href="#analysis-of-factors-affecting-fees" id="analysis-of-factors-affecting-fees"></a>
+## Analysis of Factors Affecting Fees 
 
 In EIP-1559, the composition of transaction fees undergoes significant changes with the introduction of `BASEFEE` and `GasTipCap` (or `MaxPriorityFeePerGas`), along with the addition of `GasFeeCap` to ensure transaction security. The Ethereum protocol dynamically adjusts `BASEFEE` based on network congestion, resolving potential security risks associated with external price discovery in transaction packing by burning all `BASEFEE`.
 
-## Why Was EIP-1559 Introduced[​](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/eip-1559#why-was-eip-1559-introduced) <a href="#why-was-eip-1559-introduced" id="why-was-eip-1559-introduced"></a>
+## Why Was EIP-1559 Introduced 
 
 The introduction of EIP-1559 aims to address the following issues:
 
@@ -16,7 +16,7 @@ The introduction of EIP-1559 aims to address the following issues:
 * **Inconsistent block utilization**: The native fee design results in inconsistent block utilization. EIP-1559 allows for the adjustment of block utilization, enabling a longer-term average block size limit.
 * **Enhancing network security**: Additional incentives (`GasTipCap`) help eliminate validators' dependence on block rewards, thereby strengthening network security.
 
-## Application of EIP-1559 in Mantle v2[​](https://docs-v2.mantle.xyz/devs/concepts/tx-fee/eip-1559#application-of-eip-1559-in-mantle-v2-tectonic) <a href="#application-of-eip-1559-in-mantle-v2-tectonic" id="application-of-eip-1559-in-mantle-v2-tectonic"></a>
+## Application of EIP-1559 in Mantle v2 
 
 In Mantle v2, we have made the following adjustments to `BASEFEE` and `GasTipCap`:
 
@@ -30,6 +30,6 @@ In Mantle v2, we have made the following adjustments to `BASEFEE` and `GasTipCap
 Through these adjustments, Mantle v2 Tectonic builds on EIP-1559 to provide a more flexible and efficient transaction fee management mechanism.
 
 
-> **Info**
-
+<Callout type="info">
 Mantle v2 Tectonic sets a very low `BASEFEE`, we also recommend that you set the `MaxPriorityFeePerGas` of your EIP-1559 transactions to 0, so that your transaction fees will be very low!<br />
+</Callout>

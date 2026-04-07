@@ -2,14 +2,14 @@
 title: "Bridging ERC-20 tokens with the Mantle SDK"
 ---
 
-> **Info**
-
+<Callout type="info">
 If you want to test the functionality of the Mantle SDK, we recommend using the testnet environment instead of the mainnet environment. The challenge period will be much shorter in the testnet (\~40 minutes) than in the mainnet (7 days).
+</Callout>
 
 
 This tutorial teaches you how to use the Mantle SDK to transfer ERC-20 tokens between layer 1 (L1) and layer 2 (L2). While you *could* use [the bridge contracts](https://github.com/mantlenetworkio/mantle-v2/blob/develop/packages/contracts/contracts/L1/messaging/L1StandardBridge.sol) directly. Check the complete code [here](https://github.com/mantlenetworkio/mantle-tutorial/blob/main/cross-dom-bridge-erc20/index.js).
 
-## Setup[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#setup) <a href="#setup" id="setup"></a>
+## Setup 
 
 1. Ensure your computer has:
    * [`git`](https://git-scm.com/downloads)
@@ -39,19 +39,19 @@ This tutorial teaches you how to use the Mantle SDK to transfer ERC-20 tokens be
    yarn
    ```
 
-## Run the sample code[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#run-the-sample-code) <a href="#run-the-sample-code" id="run-the-sample-code"></a>
+## Run the sample code 
 
 The sample code is in `index.js`, the whole execution flow will automatically start after running it.
 
-### Node Environment[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#node-environment) <a href="#node-environment" id="node-environment"></a>
+### Node Environment 
 
 If you want to test by using your own nodes, you should configure the missing or changing environment variables in file `.env.local.tmp` then use `yarn local` to execute `index.js`.
 
 If you want to have a test in our testnet network you should do the same for `.env.testnet.tmp` and then use `yarn testnet` to execute `index.js`.
 
-## How does it work?[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#how-does-it-work) <a href="#how-does-it-work" id="how-does-it-work"></a>
+## How does it work? 
 
-### Import the Necessary Libraries[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#import-the-necessary-libraries) <a href="#import-the-necessary-libraries" id="import-the-necessary-libraries"></a>
+### Import the Necessary Libraries 
 
 ```javascript
 const ethers = require('ethers');
@@ -65,7 +65,7 @@ In this tutorial, we initialize the required libraries:
 * `mantleSDK`: The Mantle SDK, which facilitates cross-chain transactions between Layer 1 (L1) and Layer 2 (L2) blockchains. It abstracts away complexities, making it easier to perform operations like depositing and withdrawing assets.
 * `fs`: The Node.js `fs` module for file system operations. It may be used later in the code for reading or writing files, although it's not explicitly used in the provided snippet.
 
-### Network Configuration and Wallet Setup[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#network-configuration-and-wallet-setup) <a href="#network-configuration-and-wallet-setup" id="network-configuration-and-wallet-setup"></a>
+### Network Configuration and Wallet Setup 
 
 Next, the code defines some configuration parameters. We fetch the specified network and wallet configurations from the `.env` file.
 
@@ -112,7 +112,7 @@ const l1Wallet = new ethers.Wallet(key, l1RpcProvider);
 const l2Wallet = new ethers.Wallet(key, l2RpcProvider);
 ```
 
-### Setup CrossChainMessenger Object[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#setup-crosschainmessenger-object) <a href="#setup-crosschainmessenger-object" id="setup-crosschainmessenger-object"></a>
+### Setup CrossChainMessenger Object 
 
 The `CrossChainMessenger` object calls the cross chain messenger contracts on L1 and L2 to transfer assets. Here we instantiate the object with chain IDs, wallet objects, and contract objects.
 
@@ -179,7 +179,7 @@ l1ERC20 = L1_ERC20;
 l2ERC20 = L2_ERC20;
 ```
 
-### Report the Balances[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#report-the-balances) <a href="#report-the-balances" id="report-the-balances"></a>
+### Report the Balances 
 
 The `reportBalances` function fetches L1 and L2 wallet balances and prints them out. We'll use this method to keep track balance change after deposit and withdraw operations.
 
@@ -191,7 +191,7 @@ const reportERC20Balances = async () => {
 };
 ```
 
-### Deposit[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#deposit) <a href="#deposit" id="deposit"></a>
+### Deposit 
 
 The `depositERC20` function deposits 1 ERC-20 token to L2 via the Mantle bridge. The asynchronous function prints out the transaction hash and waits for the message to get relayed. Finally, we display the updated LTT balance on L1 and L2.
 
@@ -258,7 +258,7 @@ await reportERC20Balances();
 console.log(`depositERC20 took ${(new Date() - start) / 1000} seconds\n`);
 ```
 
-### Withdraw[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#withdraw) <a href="#withdraw" id="withdraw"></a>
+### Withdraw 
 
 This function shows how to withdraw ERC-20 from L2 to L1.
 
@@ -329,7 +329,7 @@ await crossChainMessenger.waitForMessageStatus(
 );
 ```
 
-### Invoke deposit and withdraw functions[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#invoke-deposit-and-withdraw-functions) <a href="#invoke-deposit-and-withdraw-functions" id="invoke-deposit-and-withdraw-functions"></a>
+### Invoke deposit and withdraw functions 
 
 We write a `main()` where we call the functions to perform configuration, deposit, and withdraw operations.
 
@@ -348,6 +348,6 @@ main()
   });
 ```
 
-## Conclusion[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/bridge-erc20#conclusion) <a href="#conclusion" id="conclusion"></a>
+## Conclusion 
 
 You should now be able to write applications that use our SDK and bridge to transfer ERC-20 assets between L1 and L2.

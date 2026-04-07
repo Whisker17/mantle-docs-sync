@@ -31,11 +31,11 @@ TotalFee = L2ExecutionFee + L1DataFee + OperatorFee
 This model is aligned with the OP Stack Jovian upgrade and is specifically designed to support more complex and modular blockchain execution environments, such as ZK Rollups.
 
 
-> **Info**
-
+<Callout type="info">
 For frontend developers, the `TotalFee` of the current transaction can be estimated by calling the `estimateTotalFee` method provided in the Mantle-Viem SDK.&#x20;
 
 For backend developers, a similar `eth_estimateTotalFee` RPC is available in Geth, which directly returns the total fee without requiring manual aggregation of individual components.
+</Callout>
 
 
 ### L2 Execution Fee
@@ -49,9 +49,9 @@ The **L2 Execution Fee** is the most fundamental component of the fee model. It 
 <table data-header-hidden data-full-width="true"><thead><tr><th width="143.6484375"></th><th></th><th></th></tr></thead><tbody><tr><td><br /></td><td><strong>Pre-Arsia</strong></td><td><strong>Post-Arsia</strong></td></tr><tr><td><strong>Difference</strong><br /></td><td>Before Arsia, <code>eth_estimateGas</code> on Mantle returned a gas value that already incorporated amortized L1 data costs, instead of reflecting pure L2 execution.Although the model followed an EIP-1559 structure in form, the base fee was static with respect to block usage, and users were generally encouraged to set the priority fee to zero, resulting in a simplified version of EIP-1559.</td><td>The L2 execution fee returns to the fundamental definition of gas. The value returned by <code>eth_estimateGas</code> now reflects <strong>pure EVM execution cost only</strong>. This means that if your contract logic does not change, your estimated gas limit will remain stable regardless of L1 market fluctuations.</td></tr></tbody></table>
 
 
-> **Info**
-
+<Callout type="info">
 With the Arsia upgrade, Mantle restores a full EIP-1559 execution fee model. The L2 base fee responds dynamically to block utilization, while priority fees are explicitly supported as a congestion signal. This ensures that gas pricing once again serves as a stable measure of execution complexity, independent of L1 fee volatility.
+</Callout>
 
 
 #### Formula
@@ -72,9 +72,9 @@ L2ExecutionFee = L2GasUsed * L2GasPrice
 Retrieving the L2 Fee follows the standard Ethereum development workflow. You can use the standard RPC interface `eth_estimateGas` to obtain the amount of gas required for the transaction, and then use `eth_gasPrice` to fetch the current gas price.
 
 
-> **Info**
-
+<Callout type="info">
 Under Mantle’s current design, the value returned by `eth_estimateGas` reflects only pure L2 execution costs. Unlike implementations prior to Mantle Arsia, it no longer includes L1 data costs. Therefore, when calculating the total transaction fee, it is critical not to omit the other two fee components.
+</Callout>
 
 
 ### L1 Data Fee
@@ -111,9 +111,9 @@ L1DataFee = EstimatedSize * WeightedL1Fee * TokenRatio
 Developers can query the on-chain `GasPriceOracle` contract and call the `getL1Fee(txBytes)` method to obtain an estimated value. To do so, you must provide the fully constructed, unsigned, and RLP-encoded transaction bytes as the input parameter in order to receive an L1 Fee estimate.
 
 
-> **Info**
-
+<Callout type="info">
 Note that the value returned by this method is still denominated in ETH. To calculate the actual L1 Fee in Mantle’s native token (MNT), you must multiply it by the `TokenRatio`, which can also be retrieved from the `GasPriceOracle` contract.
+</Callout>
 
 
 Therefore:

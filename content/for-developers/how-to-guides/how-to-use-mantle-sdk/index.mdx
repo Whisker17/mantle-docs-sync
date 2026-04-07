@@ -12,7 +12,7 @@ The Mantle SDK implements methods to make contract calls for both:
 * **Sending Messages**
   * Contracts on Mantle can invoke contract functions on Ethereum, and vice versa.
 
-### Deposit[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/sdk#deposit) <a href="#deposit" id="deposit"></a>
+### Deposit 
 
 `$MNT`/`$ETH`/ERC20/ERC721 token deposits into L2 from the Ethereum mainnet can be triggered using the following SDK methods.
 
@@ -24,25 +24,24 @@ The Mantle SDK implements methods to make contract calls for both:
 | ERC721         | `depositERC721` |
 
 
-> **Danger**
-
+<Callout type="error">
 You must first approve the Mantle Bridge to use the amount of `$MNT`/`$ETH`/`ERC20`/`ERC721` tokens that you are moving to L2, or the deposit will fail.
+</Callout>
 
 
-
-> **Info**
-
+<Callout type="info">
 `$ETH` deposits can alternatively be triggered by sending $ETH directly to the [L1StandardBridge](https://github.com/mantlenetworkio/mantle/blob/main/packages/contracts/contracts/L1/messaging/L1StandardBridge.sol). Your account will be funded with the corresponding amount once the transaction is detected and finalized.
+</Callout>
 
 
-### Withdrawal[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/sdk#withdrawal) <a href="#withdrawal" id="withdrawal"></a>
+### Withdrawal 
 
 `$MNT`/`$ETH`/ERC20/ERC721 token withdrawals from L2 to the Ethereum mainnet can be triggered using the following SDK methods.
 
 
-> **Info**
-
+<Callout type="info">
 All withdrawals use `$MNT` for gas fees.
+</Callout>
 
 
 | **Token Type** | **SDK Methods**  | **L2 Token Address**                         |
@@ -52,6 +51,6 @@ All withdrawals use `$MNT` for gas fees.
 | ERC20          | `withdrawERC20`  | -                                            |
 | ERC721         | `withdrawERC721` | -                                            |
 
-### Sending Messages[​](https://docs-v2.mantle.xyz/devs/dev-guides/tools/sdk#sending-messages) <a href="#sending-messages" id="sending-messages"></a>
+### Sending Messages 
 
 Contracts on Mantle can invoke contract functions on Ethereum, and vice versa. This enables dApps on Mantle and Ethereum to interact with each other. Here's a [step-by-step](https://github.com/mantlenetworkio/mantle-tutorial/tree/main/cross-dom-comm#communication-between-contracts-on-l1-and-l2) guide on how to enable communication between L1 and L2.

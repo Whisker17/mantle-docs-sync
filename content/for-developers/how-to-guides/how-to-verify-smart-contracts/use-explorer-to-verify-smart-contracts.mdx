@@ -4,53 +4,43 @@ title: "Use Explorer to Verify Smart Contracts"
 
 There are multiple methods of verification available via [Mantle Explorer](https://mantlescan.xyz/verifyContract).
 
-## Via Source Code[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/verify/explorer#via-source-code) <a href="#via-source-code" id="via-source-code"></a>
+## Via Source Code 
 
-### Plugging Code Into Explorer[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/verify/explorer#plugging-code-into-explorer) <a href="#plugging-code-into-explorer" id="plugging-code-into-explorer"></a>
+### Plugging Code Into Explorer 
 
 Once you have obtained the source code, fill in the contract address, contract name, the flattened code, and other fields on [Mantle Explorer](https://mantlescan.xyz/verifyContract) and proceed with verifying your contract.
 
 
-> **Info**
-
+<Callout type="info">
 Make sure to select the correct compiler for your contract, the proper EVM version and the optimization number.
+</Callout>
 
 
 <figure><img src="https://docs-v2.mantle.xyz/assets/images/explorer-3-9893936ecddd85016c449f96b7f3a985.png" alt="" /><figcaption></figcaption></figure>
 
-## Via Standard Input JSON[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/verify/explorer#via-standard-input-json) <a href="#via-standard-input-json" id="via-standard-input-json"></a>
+## Via Standard Input JSON 
 
-### Get JSON file[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/verify/explorer#get-json-file) <a href="#get-json-file" id="get-json-file"></a>
-
-
-
-#### Compiled Using Remix
+### Get JSON file 
 
 
+<Tabs items={['Compiled Using Remix', 'Compiled Using Hardhat', 'Compiled Using Foundry']}>
+<Tabs.Tab>
 1. The file can be found under the **"Solidity Compiler"** tab that can be accessed by clicking on the left navigate bar.
 
-   ![](https://docs-v2.mantle.xyz/assets/images/explorer-4-eb99e50581b67f4a3c7f2ce943b096cf.png)
+   !
 2. Click on the **Compilation Details** button to bring up a menu from where you can copy the `COMPILERINPUT` code, as shown below.
 
-   ![](https://docs-v2.mantle.xyz/assets/images/explorer-5-7a9fd705b6a549cba5041f677a8835b7.png)
-   
-
-
-#### Compiled Using Hardhat
-
-
+   !
+</Tabs.Tab>
+<Tabs.Tab>
 1. Once you've successfully compiled your contract code, you'll be able to find a JSON file (with a long name in hexadecimal) in the **"./artifacts/build-info"** directory, as shown below.
 
-   ![](https://docs-v2.mantle.xyz/assets/images/explorer-6-9e1abff10dbf84ed104f15104c53aa01.png)
+   !
 2. Within this JSON file, you'll need to copy the `input` field, as shown below, and then paste the copied code into a **new** empty JSON file. You can import this file to the Explorer later.
 
 <figure><img src="https://3885809119-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FQliZlRNwHhmzesDU1Ksq%2Fuploads%2F0NA1XA2wMxma2M3lZaE6%2Fimage.png?alt=media&#x26;token=df53befb-f0b6-49ab-aa2a-6640c0d75c53" alt="" /><figcaption></figcaption></figure>
-
-
-
-#### Compiled Using Foundry
-
-
+</Tabs.Tab>
+<Tabs.Tab>
 1. With Foundry, you'll need to run the following command to obtain the input and output information for your contract code.
 
    ```sh
@@ -68,10 +58,11 @@ Make sure to select the correct compiler for your contract, the proper EVM versi
 2. You'll then be able to find a JSON file (with a long name in hexadecimal) in the **"./out/build-info"** directory, as shown below. Copy the `input` field and paste it into a new empty JSON file, which you can then import to the explorer.
 
 <figure><img src="https://docs-v2.mantle.xyz/assets/images/explorer-8-8be230c85ee3972884c948d1926b97f6.png" alt="" /><figcaption></figcaption></figure>
+</Tabs.Tab>
+</Tabs>
 
 
-
-### Importing JSON file to Explorer[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/verify/explorer#importing-json-file-to-explorer) <a href="#importing-json-file-to-explorer" id="importing-json-file-to-explorer"></a>
+### Importing JSON file to Explorer 
 
 Once you've obtained the standard input JSON values in a file, you can import it to the explorer, as shown below.
 

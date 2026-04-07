@@ -9,6 +9,7 @@
     "migrate:mantle-network": "node scripts/migrate-mantle-network.mjs"
   },
   "dependencies": {
+    "katex": "^0.16.45",
     "next": "15.3.3",
     "nextra": "4.6.1",
     "nextra-theme-docs": "4.6.1",
@@ -16,4 +17,3 @@
     "react-dom": "19.0.0"
   }
 }
-

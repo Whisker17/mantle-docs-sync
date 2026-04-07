@@ -4,15 +4,15 @@ title: "Moving Assets and Data"
 
 The process of moving assets or data between two blockchains is generally referred to as 'bridging'. Since Mantle network is a separate Layer 2 (L2) blockchain system, apps and wallets moving assets or any another arbitrary form of data between Ethereum and Mantle can use our official bridge to achieve that.
 
-## Sending Assets[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/move-assets#sending-assets) <a href="#sending-assets" id="sending-assets"></a>
+## Sending Assets 
 
 The [Mantle Bridge](https://bridge.mantle.xyz/) enables all functionality necessary for the most common use case, i.e., moving tokens between Mantle network and Ethereum. It also allows you to easily create L2 representations of existing tokens on Ethereum.
 
-## Sending Data[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/move-assets#sending-data) <a href="#sending-data" id="sending-data"></a>
+## Sending Data 
 
 If you need to send arbitrary data between Ethereum & Mantle network, you can do so by having a contract on Ethereum trigger a contract function on Mantle and vice versa. The [Mantle Bridge](https://bridge.mantle.xyz/) has a simple API for triggering a cross-chain function call.
 
-## How does it work?[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/move-assets#how-does-it-work) <a href="#how-does-it-work" id="how-does-it-work"></a>
+## How does it work? 
 
 The standard Mantle bridge is essentially a set of smart contracts. The two main contracts that implement the ERC-20 asset bridging mechanism are [`L2StandardBridge`](https://github.com/mantlenetworkio/mantle-v2/blob/develop/packages/contracts-bedrock/contracts/L2/L2StandardBridge.sol) on Mantle network, and [`L1StandardBridge`](https://github.com/mantlenetworkio/mantle-v2/blob/develop/packages/contracts-bedrock/contracts/L1/L1StandardBridge.sol) on Ethereum. Deposit or withdrawal transactions sent to the bridge by a wallet on L2 or L1 trigger specific methods in the standard bridge contracts.
 
@@ -22,6 +22,6 @@ In case a wallet makes a withdrawal of `10 $MNT` on L2, these tokens are burned 
 
 You can connect your wallet to the [Mantle Bridge](https://bridge.mantle.xyz/) to make simple deposits and withdrawals directly. However, if you're looking to use the bridge API instead, refer to the [API page](/for-developers/resources-and-tooling/mantle-api) for more information and tutorials on how to call the appropriate SDK methods to bridge the various kinds of tokens that are currently supported.
 
-## Using the Official Mantle Bridge[​](https://docs-v2.mantle.xyz/devs/dev-guides/common/move-assets#using-the-official-mantle-bridge) <a href="#using-the-official-mantle-bridge" id="using-the-official-mantle-bridge"></a>
+## Using the Official Mantle Bridge 
 
 To move your `$MNT` tokens/Ether/other ERC-20 tokens between the Mantle and Ethereum chain, visit the [Mantle Bridge](https://bridge.mantle.xyz/). Feel free to try out the testnet bridge first to get yourself acquanted with the UI. You can find the detailed steps [here](/for-users/how-to-guides/using-mantle-bridge). ​

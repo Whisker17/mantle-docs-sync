@@ -5,16 +5,16 @@ title: "Deploying a Rollup Verifier/Replica Node From Docker"
 To build an app on Mantle network, you'll need access to a Mantle node. There are multiple public Node RPC Providers that you can choose from, or you can deploy your own depending on the requirements for your specific use cases.
 
 
-> **Info**
-
+<Callout type="info">
 **This doc is a simple introduction to the process.** For more details, please refer to this:
 
 * [Mantle v2 Skadi mainnet node](https://github.com/mantlenetworkio/networks/blob/main/run-node-mainnetv2)
-  
+</Callout>
 
-## For Operators Who Deploy Nodes For the First Time <a href="#for-operators-who-deploy-nodes-for-the-first-time" id="for-operators-who-deploy-nodes-for-the-first-time"></a>
 
-### Prerequisites[​](https://docs-v2.mantle.xyz/nodes/verifier#prerequisites) <a href="#prerequisites" id="prerequisites"></a>
+## For Operators Who Deploy Nodes For the First Time 
+
+### Prerequisites 
 
 Ensure you have the following software installed:
 
@@ -24,7 +24,7 @@ Ensure you have the following software installed:
 * [Foundry](https://book.getfoundry.sh/getting-started/installation)
 * [zstd](https://github.com/facebook/zstd)
 
-### Hardware Recommendations[​](https://docs-v2.mantle.xyz/nodes/verifier#hardware-recommendations) <a href="#hardware-recommendations" id="hardware-recommendations"></a>
+### Hardware Recommendations 
 
 For optimal performance, it is recommended to have the following hardware specifications:
 
@@ -33,16 +33,16 @@ For optimal performance, it is recommended to have the following hardware specif
 * **Storage** - 4T+ disk(HDD works for now, SSD is better)
 * **Bandwidth** - 10mb/s+ download speed
 
-### Approximate Disk Usage[​](https://docs-v2.mantle.xyz/nodes/verifier#approximate-disk-usage) <a href="#approximate-disk-usage" id="approximate-disk-usage"></a>
+### Approximate Disk Usage 
 
 As of Dec. 25, 2023:
 
 * Archive node: \~1.5TB
 * Full node: \~75GB
 
-### Installation and Configuration[​](https://docs-v2.mantle.xyz/nodes/verifier#installation-and-configuration) <a href="#installation-and-configuration" id="installation-and-configuration"></a>
+### Installation and Configuration 
 
-#### Clone the Repository[​](https://docs-v2.mantle.xyz/nodes/verifier#clone-the-repository) <a href="#clone-the-repository" id="clone-the-repository"></a>
+#### Clone the Repository 
 
 Firstly, we need to clone the repository:
 
@@ -50,25 +50,24 @@ Firstly, we need to clone the repository:
 git clone https://github.com/mantlenetworkio/networks.git
 ```
 
-#### Initialize to Generate Files[​](https://docs-v2.mantle.xyz/nodes/verifier#initialize-to-generate-files) <a href="#initialize-to-generate-files" id="initialize-to-generate-files"></a>
+#### Initialize to Generate Files 
 
 Before running the node, you need to generate some necessary files, such as the `jwt_secret.txt` and `p2p_node_key.txt`. You can find more details [**here**](https://github.com/mantlenetworkio/networks/blob/main/run-node-mainnetv2#init-to-generate-the-jwt_secret_txt-file-and-the-p2p_node_key_txt).
 
-### Deploy the Node[​](https://docs-v2.mantle.xyz/nodes/verifier#deploy-the-node) <a href="#deploy-the-node" id="deploy-the-node"></a>
+### Deploy the Node 
 
-#### Download Latest Snapshot From Mantle (Recommended)[​](https://docs-v2.mantle.xyz/nodes/verifier#download-latest-snapshot-from-mantle-recommended) <a href="#download-latest-snapshot-from-mantle-recommended" id="download-latest-snapshot-from-mantle-recommended"></a>
+#### Download Latest Snapshot From Mantle (Recommended) 
 
 **We recommend that you start the node with the latest snapshot**, so that you don't need to wait a long time to sync data. Check [**this**](https://github.com/mantlenetworkio/networks/blob/main/run-node-mainnetv2#download-latest-snapshot-from-mantle) to know how to get the latest snapshot.
 
 
-> **Info**
-
-
+<Callout type="info">
 * Depending on the user's location, we provide download links for snapshots in different regions. Check more details [here](https://github.com/mantlenetworkio/networks/blob/main/run-node-mainnetv2#download-latest-snapshot-from-mantle).
 * If you want to run with fullnode mode, please change the `--gcmode` to `full` in the [`docker-compose-mainnetv2.yml`](https://github.com/mantlenetworkio/networks/blob/main/docker-compose-mainnetv2.yml#L52).
-  
+</Callout>
 
-#### Operate Mantle Node[​](https://docs-v2.mantle.xyz/nodes/verifier#operate-mantle-node) <a href="#operate-mantle-node" id="operate-mantle-node"></a>
+
+#### Operate Mantle Node 
 
 Once the snapshot is downloaded and extracted to the correct folder, you can start the node, we've prepared a `docker-compose` file for you, so that you can easily start and stop the node.
 
@@ -79,11 +78,11 @@ Once the snapshot is downloaded and extracted to the correct folder, you can sta
 * [How to update the node](https://github.com/mantlenetworkio/networks/blob/main/run-node-mainnetv2#update)
 
 
-> **Info**
-
+<Callout type="info">
 Please make sure to change your own L1 RPC Node URL in the [`docker-compose-mainnetv2.yml`](https://github.com/mantlenetworkio/networks/blob/main/docker-compose-mainnetv2.yml).
 
 OP\_NODE\_L1\_ETH\_RPC: 'wss\://mainnet.gateway.tenderly.co' #change this
+</Callout>
 
 
 **Example**[**​**](https://docs-v2.mantle.xyz/nodes/verifier#example)
@@ -100,15 +99,15 @@ docker-compose -f docker-compose-mainnetv2.yml up -d
 docker logs -f <container_id>
 ```
 
-## For Operators Who Have Already Deployed Nodes <a href="#for-operators-who-have-already-deployed-nodes" id="for-operators-who-have-already-deployed-nodes"></a>
+## For Operators Who Have Already Deployed Nodes 
 
-### Operation Guide[​](https://docs-v2.mantle.xyz/nodes/verifier-sepolia#operation-guide-1) <a href="#operation-guide-1" id="operation-guide-1"></a>
+### Operation Guide 
 
 If you have previously deployed Mantle nodes and need to complete this hardfork upgrade, you can follow the instructions [**here**](https://github.com/mantlenetworkio/networks/blob/main/run-node-mainnetv2#upgrade-for-historical-user) for more detailed information.
 
-## Verification[​](https://docs-v2.mantle.xyz/nodes/verifier#verification) <a href="#verification" id="verification"></a>
+## Verification 
 
-#### Check Service Status[​](https://docs-v2.mantle.xyz/nodes/verifier#check-service-status) <a href="#check-service-status" id="check-service-status"></a>
+#### Check Service Status 
 
 Once you start the node, you also need to check the service status, we provide a command to check the service status and the chain data.
 

@@ -4,18 +4,18 @@ title: "Use Hardhat to Deploy Smart Contracts"
 
 [Hardhat](https://hardhat.org/hardhat-runner/docs/getting-started#overview) is a smart contract development environment that comes with tools that can be used to compile, debug, and deploy Solidity smart contracts and dApps on Ethereum and other EVM-compatible chains like Mantle Network.
 
-## Prerequisite[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/deploy/hardhat#prerequisite) <a href="#prerequisite" id="prerequisite"></a>
+## Prerequisite 
 
 * Wallet with sufficient balance
 * The [right information](/quick-access#network-details) on the network
 
 
-> **Info**
-
+<Callout type="info">
 If you want to get some testnet tokens, please refer to the [Faucet page](/for-users/how-to-guides/fetching-test-tokens)
+</Callout>
 
 
-## Create a project and configure[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/deploy/hardhat#create-a-project-and-configure) <a href="#create-a-project-and-configure" id="create-a-project-and-configure"></a>
+## Create a project and configure 
 
 1. Begin by [creating a new Hardhat project](https://hardhat.org/hardhat-runner/docs/guides/project-setup) and installing the necessary dependencies. In this tutorial, we will use the `dotenv` library to set up your wallet private key.
 
@@ -57,12 +57,12 @@ If you want to get some testnet tokens, please refer to the [Faucet page](/for-u
 
    In this configuration file, three networks are set up for deployment: **Mantle Mainnet**, and **Mantle Sepolia Testnet** (as default).
 
-## Compile and Deploy[​](https://docs-v2.mantle.xyz/devs/dev-guides/how-to/deploy/hardhat#compile-and-deploy) <a href="#compile-and-deploy" id="compile-and-deploy"></a>
+## Compile and Deploy 
 
 
-> **Info**
-
+<Callout type="info">
 If you need to verify your contracts, we strongly recommend that you skip directly to the [‘Use Hardhat to Verify Smart Contracts’](/for-developers/how-to-guides/how-to-verify-smart-contracts/use-hardhat-to-verify-smart-contracts) section to avoid double deploying contracts when verifying them!
+</Callout>
 
 
 1. With your contracts prepared in the **"Contracts"** directory within your Hardhat project, compile them using the following command.
