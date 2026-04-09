@@ -1,0 +1,43 @@
+---
+title: "Use Foundry to Verify Smart Contracts"
+---
+
+# Use Foundry to Verify Smart Contracts
+
+To verify your contracts using Foundry, we need to verify the contract with the help of Mantle's explorer. It is assumed that you have already completed the deployment of the contract. If not, you can review this document to complete the contract deployment.
+
+## Verify your contract 
+
+Run the following command in your terminal to verify your contract.
+
+```sh
+forge verify-contract --verifier-url "https://api.etherscan.io/v2/api?chainid=5003" --etherscan-api-key <YOUR_MANTLESCAN_API_KEY> --compiler-version "v0.8.23+commit.f704f362" <contract address> src/Contract_Name.sol:Contract_Name --watch
+```
+
+
+<Callout type="info">
+Make sure to configure `--compiler-version` and `--num-of-optimizations` correctly! And you can modify the `--constructor-args` if needed. And make sure you set the `--chain` and `--verifier-url` correctly.
+</Callout>
+
+
+### **Sample Outputs**
+
+```sh
+Start verifying contract `0xad4736AE3DB1E71375a27b7d8A634994921E3c04` deployed on mainnet
+
+Submitting verification for [src/Counter.sol:Counter] 0xad4736AE3DB1E71375a27b7d8A634994921E3c04.
+Submitted contract for verification:
+        Response: `OK`
+        GUID: `d5s2dhvr62tahsjez9cypxkxdcmpjagkkxxuqcp6dkyaizbp8n`
+        URL:
+        https://etherscan.io/address/0xad4736ae3db1e71375a27b7d8a634994921e3c04
+Contract verification status:
+Response: `NOTOK`
+Details: `Pending in queue`
+Contract verification status:
+Response: `OK`
+Details: `Pass - Verified`
+Contract successfully verified
+```
+
+<br />

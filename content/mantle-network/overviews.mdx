@@ -1,0 +1,47 @@
+---
+title: "Overviews"
+---
+
+# Overviews
+
+Mantle Network is an EVM-compatible scaling solution for Ethereum built as a **ZK Validity Rollup**. All contracts and tools that run on Ethereum can be used on Mantle with minimal modification.
+
+Leveraging its modular architecture, Mantle separates execution, data availability, proof generation, and settlement into independent modules. Mantle now uses **ZK validity proofs** together with innovative data availability solutions to provide lower-cost and more accessible data availability while fully inheriting Ethereum's security guarantees.
+
+Our protocol design philosophy aims to offer users a less costly and more user-friendly experience, provide developers with a simpler and more flexible development environment, and deliver a comprehensive set of infrastructure for the next wave of mass-adopted dApps.
+
+## Choose Your Path
+
+<CardGrid cols={3}>
+  <HomeCard
+    href="/developers/quick-access"
+    icon="⌨️"
+    title="Developers"
+    description="Get started with Mantle development — deploy contracts, bridge assets, and use SDKs."
+  />
+  <HomeCard
+    href="/node-operators/deploy-from-docker"
+    icon="🖥️"
+    title="Node Operators"
+    description="Run a Mantle node and contribute to the network's security and decentralization."
+  />
+  <HomeCard
+    href="/users/how-to-guides/connecting-wallet-to-mantle-network"
+    icon="😄"
+    title="Users"
+    description="Connect your wallet, bridge assets, and explore the Mantle ecosystem."
+  />
+</CardGrid>
+
+## Key Features of Mantle Network
+
+* **Built as a ZK Validity Rollup**
+  * All state transitions are verified on Ethereum using ZK proofs, providing immediate finality without challenge periods. Once verified by the Ethereum settlement contract, batches achieve finality with mathematical certainty.
+* **Modular Architecture**
+  * Unlike traditional [monolithic chains](/mantle-network/glossary#monolithic-chains) that execute transaction execution, consensus, settlement, and storage at the same network layer, Mantle separates these functions into individual modules as a [modular chain](/mantle-network/glossary#modular-chains). These include an EVM-compatible execution layer, a consensus and settlement layer on Ethereum, and a pluggable DA component.
+* **Custom Gas Token (MNT)**
+  * Mantle uses MNT as its native gas token instead of ETH, enabling independent token economics and giving the community direct participation in the network's fee market.
+* **Secured by Ethereum**
+  * All Rollup state transitions must pass through Ethereum's verification process via ZK validity proofs, ensuring that only mathematically correct state roots are finalized.
+* **Modular Data Availability**
+  * Independent DA modules supporting EigenDA and Ethereum Blobs. According to internal assessments, this translates to potential cost savings of more than **90%** compared to on-chain L1.

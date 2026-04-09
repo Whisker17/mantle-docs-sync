@@ -1,0 +1,105 @@
+---
+title: "Mantle v2 v1.5.4 - Arsia Upgrade (Mainnet)"
+---
+
+# Mantle v2 v1.5.4 - Arsia Upgrade (Mainnet)
+
+This release activates the **Arsia upgrade on Mantle Mainnet** and includes audit-driven fixes on top of the v1.5.3 Sepolia release.
+
+Arsia is scheduled to activate on Mantle Mainnet at L2 block timestamp **1776841200** (Wednesday, **April 22, 2026, 07:00:00 UTC**).
+
+<Callout type="warning">
+**All Mantle Mainnet node operators must upgrade to this release before the activation time.**
+</Callout>
+
+## Upgrade from v1.4.2 (Limb)
+
+If you are upgrading from v1.4.2 (the current mainnet release), the Arsia upgrade includes all changes from both v1.5.3 and v1.5.4. See the [v1.5.3 changelog](/node-operators/mantle-v2-v1.5.3-arsia-upgrade-sepolia) for the full Arsia feature set.
+
+## What's New in v1.5.4 (vs v1.5.3)
+
+### mantle-v2
+
+* **op-node:** Fixed `CheckL2GenesisBlockHash` to gracefully handle `NotFound` errors.
+* **op-node:** Updated derivation pipeline data source and L1 retrieval logic; added blob format switch tests.
+* **op-batcher:** Configuration and driver improvements.
+* **op-service:** Fixes to crypto signature handling, HSM signer, backup sync client, and transaction manager.
+* **op-chain-ops:** Genesis and mantle config fixes.
+* **contracts:** Removed dead code from `GasPriceOracle` and `L1Block`; fixed `OperatorFeeVault`.
+* **deps:** Bumped op-geth to v1.5.4, gnark-crypto to v0.18.1, Go toolchain to 1.24.13.
+* **infra:** Dockerfile version bumps across op-batcher, op-node, op-proposer, and gas oracle.
+* **tests:** Added EIP-1559 params tests, blob format switch tests, L1 retrieval tests, and `NotFound` tolerance tests.
+* **audit:** Uploaded CertiK audit report for Mantle Arsia.
+
+### op-geth
+
+* **Removed unused `tokenRatio` read in receipt generation:** `DeriveL1GasInfoMantle` no longer reads the `tokenRatio` storage slot, eliminating a redundant state access.
+* **Fixed `EstimateTotalFee` block pinning for hash-based selectors:** Hash-based `blockNrOrHash` selectors are now preserved as-is (instead of being converted to a block number), maintaining `requireCanonical` semantics consistent with `EstimateGas`.
+* **DA footprint enforcement in preconfirmation checker:** Added DA space validation before applying transactions in the preconf path, preventing preconfirmed transactions from being rejected at seal time due to insufficient DA capacity. DA footprint is now correctly accumulated and reset per block.
+* **Hardened `makeEnv` state resolution:** Added nil checks for `parentBlock`, `state`, and `release` when resolving historical state, preventing potential panics during deep reorgs.
+* **Removed premature `getBlobsV2RequestHit` metric increment** in the `GetBlobsV2` API.
+* **Code cleanup:** Removed commented-out imports and reformatted error variable alignment in the preconf checker.
+
+## Docker Images
+
+| Component | Image |
+|---|---|
+| op-node | `mantlenetworkio/mantle-op-node:v1.5.4` |
+| op-geth | `mantlenetworkio/mantle-op-geth:v1.5.4` |
+
+## Full Arsia Feature Summary (v1.4.2 → v1.5.4)
+
+For operators upgrading from v1.4.2 (Limb), here is the complete list of Arsia features:
+
+### Fee Model Overhaul
+
+* **Three-component fee model**: `TotalFee = L2ExecutionFee + L1DataFee + OperatorFee`
+* **Compression-based L1 data fee**: FastLZ compression → Brotli regression for accurate DA cost estimation
+* **Operator fee**: New configurable fee component collected by `OperatorFeeVault` predeploy
+* **Dynamic EIP-1559 base fee**: Adjustable denominator, elasticity, and minimum base fee via block `extraData`
+* **DA footprint gas scalar**: Converts DA size to gas-equivalent for base fee targeting
+
+### Protocol Alignment
+
+* **OP Stack rebase to v1.16.3**: Activates Canyon, Delta, Ecotone, Fjord, Granite, Holocene, Isthmus, and Jovian forks simultaneously
+* **Blob encoding migration**: Dual-mode decoding (legacy Mantle format → standard OP Stack format)
+* **Span batch and Brotli compression** support in the batcher
+
+### Contract Upgrades
+
+* New `OperatorFeeVault` predeploy at `0x420000000000000000000000000000000000001b`
+* Updated `GasPriceOracle` with compression-based fee calculation and token ratio bounds
+* Updated `L1Block` with operator fee and DA footprint scalar fields
+* L1 `SystemConfig` upgraded with Arsia governance functions
+
+### New APIs and Deprecations
+
+* **`eth_estimateTotalFee`**: Returns total estimated transaction cost (all three fee components)
+* **`eth_getBlockRange`**: Deprecated, will be removed in a future release
+
+### Infrastructure
+
+* **L2 backup sync**: Enabled by default for improved node reliability
+* **Token ratio bounds**: Upper/lower limits in `GasPriceOracle` to prevent extreme fee fluctuations
+* **DA footprint enforcement in preconfirmations**: Prevents preconfirmed transactions from exceeding DA capacity
+
+### Security
+
+* **CertiK audit completed** for the Arsia upgrade
+* Multiple audit-driven fixes in contracts, op-node, and op-geth
+
+## Upgrade Instructions
+
+Update your node software to v1.5.4 before the mainnet activation time (April 22, 2026, 07:00 UTC):
+
+1. Pull the latest Docker images:
+   ```bash
+   docker pull mantlenetworkio/mantle-op-node:v1.5.4
+   docker pull mantlenetworkio/mantle-op-geth:v1.5.4
+   ```
+
+2. Follow the [mainnet deployment guide](/node-operators/mainnet-v1.4.2/deploying-a-rollup-verifier-replica-node-from-docker) with the updated images.
+
+3. Verify your node is running on v1.5.4 and has synced past the activation block.
+
+For detailed deployment steps, see the [Deployment Guides](/node-operators/tutorials).

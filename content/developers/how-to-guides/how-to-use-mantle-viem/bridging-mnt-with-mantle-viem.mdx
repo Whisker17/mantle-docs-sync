@@ -1,0 +1,299 @@
+---
+title: "Bridging MNT with Mantle Viem"
+---
+
+# Bridging MNT with Mantle Viem
+
+<Callout type="info">
+If you want to test the functionality of the Mantle Viem, we recommend using the testnet environment instead of the mainnet environment. The challenge period will be much shorter in the testnet (\~40 minutes) than in the mainnet (7 days).
+</Callout>
+
+
+This tutorial teaches you how to use the Mantle Viem to transfer MNT between Layer 1 (L1) and Layer 2 (L2).&#x20;
+
+### Setup
+
+1. Ensure your computer has:
+   1. `node`
+   2. `npm/yarn`
+   3. `typescript`
+2. Install `mantle-viem` library, for example:
+
+```bash
+npm i @mantleio/viem
+```
+
+### Configuration of Viem Clients
+
+First, we need to configure multiple clients, including the Sepolia network and wallet client, as well as the Mantle Sepolia network and wallet client, to facilitate subsequent function calls.
+
+
+```text
+
+
+```typescript
+import \{
+  publicActionsL2,
+  walletActionsL1,
+  walletActionsL2,
+  publicActionsL1,
+\} from "@mantleio/viem";
+import \{ mantleSepoliaTestnet \} from "@mantleio/viem/chains";
+import \{ createPublicClient, createWalletClient, http \} from "viem";
+import \{ sepolia \} from "viem/chains";
+import \{ privateKeyToAccount \} from "viem/accounts";
+
+// Enter your own private key
+export const account = privateKeyToAccount('0x...');
+
+// Create Sepolia client
+export const publicClientL1 = createPublicClient(\{
+  chain: sepolia,
+  transport: http(),
+\}).extend(publicActionsL1());
+
+// Create Sepolia wallet client
+export const walletClientL1 = createWalletClient(\{
+  account,
+  chain: sepolia,
+  transport: http(),
+\}).extend(walletActionsL1());
+
+// Create Mantle Sepolia client
+export const publicClientL2 = createPublicClient(\{
+  chain: mantleSepoliaTestnet,
+  transport: http(),
+\}).extend(publicActionsL2());
+
+// Create Mantle Sepolia wallet client
+export const walletClientL2 = createWalletClient(\{
+  account,
+  chain: mantleSepoliaTestnet,
+  transport: http(),
+\}).extend(walletActionsL2());
+```
+
+
+```
+
+
+<Callout type="info">
+We strongly recommend using your own RPC endpoint instead of the official testnet nodes to avoid failures due to rate limiting policies. For information on how to apply for your own RPC endpoint, please check [here](/resources-and-tooling/node-endpoints-and-providers#testnet-sepolia-1).
+</Callout>
+
+
+If you are using your own RPC endpoint, you need to modify the `config.ts` file as follows:
+
+```typescript
+const sepoliaRpc = “https://eth-sepolia.g.alchemy.com/v2/"
+const mantleSepoliaRpc = “https://rpc-moon.sepolia.mantle.xyz/v1/xxx"
+
+// Enter your own private key
+export const account = privateKeyToAccount('0x...');
+
+// Create Sepolia client
+export const publicClientL1 = createPublicClient({
+  chain: sepolia,
+  transport: http(sepoliaRpc),
+}).extend(publicActionsL1());
+
+// Create Sepolia wallet client
+export const walletClientL1 = createWalletClient({
+  account,
+  chain: sepolia,
+  transport: http(sepoliaRpc),
+}).extend(walletActionsL1());
+
+// Create Mantle Sepolia client
+export const publicClientL2 = createPublicClient({
+  chain: mantleSepoliaTestnet,
+  transport: http(mantleSepoliaRpc),
+}).extend(publicActionsL2());
+
+// Create Mantle Sepolia wallet client
+export const walletClientL2 = createWalletClient({
+  account,
+  chain: mantleSepoliaTestnet,
+  transport: http(mantleSepoliaRpc),
+}).extend(walletActionsL2());
+```
+
+### Deposit MNT (From L1 to L2)
+
+The deposit operation moves MNT tokens from L1 to L2. Here’s how to do it:
+
+#### **Steps**
+
+1. **Approve Token Transfer**
+   1. Since MNT works as an ERC-20 token on the Sepolia network, you need to set an allowance before depositing, which allows the L1 bridge contract to spend your MNT tokens.
+2. **Execute Deposit**
+   1. Call the `depositMNT` function to transfer tokens to L2.
+3. **Wait for Confirmation**
+   1. Confirm the transaction on both L1 and L2.
+
+#### Code Example
+
+```typescript
+import { getL2TransactionHashes } from "@mantleio/viem";
+import { mantleSepoliaTestnet } from "@mantleio/viem/chains";
+import { publicClientL1, publicClientL2, walletClientL1 } from "./config.ts";
+import { erc20Abi, maxUint256, parseEther } from "viem";
+
+console.log("Deposit Starts!!!!!!!");
+
+// Step 1: Approve token transfer
+const allowanceHash = await walletClientL1.writeContract({
+  // This is the token contract address for MNT in Sepolia network
+  address: "0x65e37B558F64E2Be5768DB46DF22F93d85741A9E",
+  abi: erc20Abi,
+  functionName: "approve",
+  args: [
+    mantleSepoliaTestnet.contracts.l1StandardBridge[11155111].address,
+    maxUint256,
+  ],
+});
+
+console.log("The allowance L1 hash is:", allowanceHash);
+const allowanceReceipt = await publicClientL1.waitForTransactionReceipt({
+  hash: allowanceHash,
+});
+console.log("The allowance L1 is processed.");
+
+// Step 2: Execute the deposit transaction on the L1.
+const depositHash = await walletClientL1.depositMNT({
+  request: {
+    amount: parseEther("1"),
+  },
+  targetChain: mantleSepoliaTestnet,
+});
+console.log("The deposit hash is:", depositHash);
+
+// Step 3.1: Wait for the L1 transaction to be processed.
+const depositReceipt = await publicClientL1.waitForTransactionReceipt({
+  hash: depositHash,
+});
+console.log("The deposit L1 Tx is processed.");
+
+// Step 3.2: Get the L2 transaction hash from the L1 transaction receipt.
+const [l2Hash] = getL2TransactionHashes(depositReceipt);
+console.log("The deposit L2 Hash is:", l2Hash);
+
+// Step 3.3: Wait for the L2 transaction to be processed.
+const depositL2Receipt = await publicClientL2.waitForTransactionReceipt({
+  hash: l2Hash,
+});
+
+console.log("The deposit L2 Tx is processed.");
+
+console.log("Deposit Finished");
+```
+
+### Withdraw MNT (From L2 to L1)
+
+The withdraw operation transfers MNT tokens from L2 back to L1. It involves multiple steps due to the bridge’s design.
+
+#### **Steps**
+
+1. **Initiate Withdrawal**
+   1. Start the withdrawal process on L2.
+2. **Wait for Proof**
+   1. Wait until the withdrawal can be proven on L1.
+3. **Prove Withdrawal**
+   1. Submit the withdrawal proof on L1.
+4. **Wait for Finalization**
+   1. Wait until the withdrawal can be finalized.
+   2. We manually added a wait time here (1 minute) to prevent withdraw failures due to prove information not being updated by the rpc.
+5. **Finalize Withdrawal**
+   1. Complete the process on L1.
+
+#### Code Example
+
+```typescript
+import {
+  account,
+  publicClientL1,
+  publicClientL2,
+  walletClientL1,
+  walletClientL2,
+} from "./config.ts";
+import { parseEther } from "viem";
+
+console.log("Withdrawal Starts!!!!!");
+
+// Step 1: Execute the initiate ETH withdrawal transaction on the L2.
+const withdrawalHash = await walletClientL2.initiateMNTWithdrawal({
+  account,
+  request: {
+    amount: parseEther("1"),
+  },
+});
+
+console.log("The withdrawal L2 Tx hash is: ", withdrawalHash);
+
+// Step 2.1: Wait for the initiate withdrawal transaction receipt.
+const withdrawalReceipt = await publicClientL2.waitForTransactionReceipt({
+  hash: withdrawalHash,
+});
+
+console.log("The withdrawal L2 Tx is processed.");
+
+// Step 2.2: Wait until the withdrawal is ready to prove.
+const { output, withdrawal } = await publicClientL1.waitToProve({
+  receipt: withdrawalReceipt,
+  targetChain: walletClientL2.chain,
+});
+console.log("The withdrawal L2 Tx is waiting for proving");
+
+// Step 2.3: Build parameters to prove the withdrawal on the L2.
+const proveArgs = await publicClientL2.buildProveWithdrawal({
+  output,
+  withdrawal,
+});
+
+console.log("The withdrawal prove Tx paras are built.");
+
+// Step 3: Prove the withdrawal on the L1.
+const proveHash = await walletClientL1.proveWithdrawal(proveArgs);
+
+console.log("The withdrawal prove tx hash is: ", proveHash);
+
+// Step 4.1: Wait until the prove withdrawal is processed.
+const proveReceipt = await publicClientL1.waitForTransactionReceipt({
+  hash: proveHash,
+});
+console.log("The withdrawal prove Tx is processed.");
+
+// Step 4.2: Wait until the withdrawal is ready to finalize.
+await publicClientL1.waitToFinalize({
+  targetChain: walletClientL2.chain,
+  withdrawalHash: withdrawal.withdrawalHash,
+});
+console.log("The withdrawal Tx is processed.");
+
+// Step 4.3: Wait for rpc to update proving
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+console.log("Start waiting 1 minute...");
+
+await sleep(1 * 60 * 1000); // 
+
+console.log("Continue with the subsequent code...");
+
+// Step 5.1: Finalize the withdrawal.
+const finalizeHash = await walletClientL1.finalizeWithdrawal({
+  targetChain: walletClientL2.chain,
+  withdrawal,
+});
+console.log("The withdrawal Tx hash is: ", finalizeHash);
+
+// Step 5.2: Wait until the withdrawal is finalized.
+const finalizeReceipt = await publicClientL1.waitForTransactionReceipt({
+  hash: finalizeHash,
+});
+
+console.log("The withdrawal Tx is finalized.");
+```
+
+### Summary
+
+This guide provides the necessary steps and code to use Mantle Viem for depositing MNT from L1 to L2 and withdrawing it back to L1 via the official bridge. Always test your implementation in a test environment first. For additional details, consult [here](https://viem.mantle.xyz/).

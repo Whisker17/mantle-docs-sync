@@ -1,0 +1,73 @@
+---
+title: "Use Foundry to Deploy Smart Contracts"
+---
+
+# Use Foundry to Deploy Smart Contracts
+
+[Foundry](https://github.com/foundry-rs/foundry#readme) is a fast, portable, and modular toolkit for EVM application development written in Rust. The two main components that you'll generally be using for smart contract development are:
+
+* [Forge](https://github.com/foundry-rs/foundry/tree/master/crates/forge#readme): used to compile, test, and deploy contracts
+* [Cast](https://github.com/foundry-rs/foundry/tree/master/crates/cast#readme): used to make RPC calls to interact with a network
+
+### Prerequisite 
+
+* Wallet with sufficient balance
+* The [right information](/developers/quick-access#network-details) on the network
+
+
+<Callout type="info">
+If you want to get some testnet tokens, please refer to the [Faucet page](/users/how-to-guides/fetching-test-tokens)
+</Callout>
+
+
+## Install Foundry 
+
+Foundryup is the Foundry toolchain installer. Open your terminal and run the following command:
+
+```javascript
+curl -L https://foundry.paradigm.xyz | bash
+```
+
+For more installation instructions, check [here](https://book.getfoundry.sh/getting-started/installation#installation).
+
+## Create a project 
+
+1. Create a new Foundry project and install the necessary dependencies.
+
+   ```sh
+   forge init hello_mantle
+   ```
+2. Please put your contract in the **src** folder. For this tutorial, we will use the existing example contract `Counter.sol`. Then use the following command to compile a smart contract.
+
+   ```sh
+   forge build
+   ```
+
+   **Sample Outputs**
+
+   ```sh
+   [⠒] Compiling...
+   [⠒] Compiling 24 files with 0.8.15
+   [⠢] Solc 0.8.15 finished in 2.52sCompiler run successful!
+   [⠆] Solc 0.8.15 finished in 2.52s
+   ```
+
+## Deploy your contract 
+
+Upon successful compilation, use the following command to deploy a smart contract (replace \<your-private-key> on the command line with your wallet private key).
+
+```sh
+forge create --rpc-url <mantle_rpc_url> --private-key <your-private-key> src/Counter.sol:Counter --legacy
+```
+
+### **Sample Outputs**
+
+```sh
+[⠢] Compiling...No files changed, compilation skipped
+[⠆] Compiling...
+Deployer: 0xE1F10AfE71FF3397A85aAce99D42Db6661E02bB9
+Deployed to: 0x38fa66D97b98607636F88C98aE59e08C04D2FEB6
+Transaction hash: 0x308fb9f1824ca85e34ed9d1df94aa3f1d9dbcc02b3d01a130ac4b7cf1e1a77fb
+```
+
+Here `0x38fa66D97b98607636F88C98aE59e08C04D2FEB6` is the address of the deployed contract, which you can view via the [Mantle blockchain explorer](https://mantlescan.xyz/).

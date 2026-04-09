@@ -1,0 +1,37 @@
+---
+title: "zk Validity Proof"
+---
+
+# zk Validity Proof
+
+### **Background**
+
+With the transition to validity proofs, Mantle adopts **SP1 zkVM** as the execution environment for generating zero-knowledge proofs of Rollup state transitions.\
+In this model, each block's post-state is derived off-chain and then re-executed inside the zkVM to produce a proof attesting that the state transition follows EVM semantics. The resulting proof is submitted to the `MantleSuccinctL2OutputOracle` contract on Ethereum, allowing L1 to independently verify Mantle's execution without requiring a challenge period.
+
+This approach replaces the Optimistic Rollup assumption ("valid unless proven otherwise") with a **cryptographic validity model**, where every Rollup output must be accompanied by a zk proof.\
+To integrate this model safely, Mantle introduces a dedicated **Mantle** **Succinct Proposer** and a supporting proof-generation pipeline that includes data retrieval, block derivation, zkVM execution, and proof aggregation.
+
+While this significantly strengthens security and accelerates finality, using a zkVM also introduces new dependencies that must be accounted for. To maintain liveness and prevent the network from stalling under exceptional conditions, Mantle preserves a fallback path that can revert to the original OP Stack output mechanism when required.
+
+### **Risk Considerations**
+
+#### **1. Proposer availability and fallback**
+
+The zk-output path depends on a single Succinct Proposer instance responsible for coordinating proof generation and submitting proven outputs to Ethereum.\
+A failure in this component—whether due to network interruption, degraded performance, or scheduler failure—may delay L1 updates.
+
+Mantle therefore preserves a **fallback to the standard op-proposer route**, reactivating the 7-day challenge window model. This ensures that even in the absence of a working zk pipeline, the system maintains its L1 settlement path and avoids loss of liveness.
+
+#### **2. Correctness of SP1 zkVM execution and proofs**
+
+All validity guarantees depend on SP1 producing proofs that correctly reflect EVM-equivalent execution. Any deviation in instruction semantics, determinism, or proof generation logic risks either rejecting valid state transitions or, in extreme cases, validating incorrect ones.
+
+Mantle mitigates this through deterministic execution requirements, stable binary releases, reproducible derivation inputs, rigorous auditing, and the fact that Ethereum independently verifies all proofs via the on-chain verifier.
+
+#### **3. Proof generation failure or delayed submission**
+
+Proof generation involves several steps—data retrieval from EigenDA or fallback sources, block derivation, zkVM execution, and proof aggregation.\
+Failures in any part of this chain can prevent timely submission of state roots to L1. Delays do not compromise safety but can temporarily stall L1 finalization.
+
+To avoid this, Mantle includes a **time-bounded fallback**: if a proof cannot be safely produced within the required interval, the system can revert to non-ZK output submission until proving resumes. This prevents proving outages from blocking L2 → L1 state progression.

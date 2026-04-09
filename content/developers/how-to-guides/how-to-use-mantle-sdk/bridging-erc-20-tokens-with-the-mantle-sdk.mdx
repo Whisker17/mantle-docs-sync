@@ -1,0 +1,355 @@
+---
+title: "Bridging ERC-20 tokens with the Mantle SDK"
+---
+
+# Bridging ERC-20 tokens with the Mantle SDK
+
+<Callout type="info">
+If you want to test the functionality of the Mantle SDK, we recommend using the testnet environment instead of the mainnet environment. The challenge period will be much shorter in the testnet (\~40 minutes) than in the mainnet (7 days).
+</Callout>
+
+
+This tutorial teaches you how to use the Mantle SDK to transfer ERC-20 tokens between layer 1 (L1) and layer 2 (L2). While you *could* use [the bridge contracts](https://github.com/mantlenetworkio/mantle-v2/blob/develop/packages/contracts/contracts/L1/messaging/L1StandardBridge.sol) directly. Check the complete code [here](https://github.com/mantlenetworkio/mantle-tutorial/blob/main/cross-dom-bridge-erc20/index.js).
+
+## Setup 
+
+1. Ensure your computer has:
+   * [`git`](https://git-scm.com/downloads)
+   * [`node`](https://nodejs.org/en/)
+   * [`yarn`](https://classic.yarnpkg.com/lang/en/docs/install/#mac-stable)
+   * [`docker`](https://www.docker.com/products/docker-desktop/)
+2. Start L1 and L2 environments. Currently, we support the local environment or the testnet environment. If you want to deploy your own L1 and L2, please follow the instructions below.
+
+   ```sh
+   git clone https://github.com/mantlenetworkio/mantle-v2.git
+   cd mantle/ops
+   make up
+   # check status
+   make ps
+   ```
+
+   **We highly recommend using the testnet environment, which means you can skip this step, you can apply your own L1 RPC** [**here**](https://www.alchemy.com/) **and replace the L1 RPC URL in the `.env` file.**
+3. Clone this repository and enter it.
+
+   ```sh
+   git clone https://github.com/mantlenetworkio/mantle-tutorial.git
+   cd mantle-tutorial/cross-dom-bridge-erc20
+   ```
+4. Install the necessary packages.
+
+   ```sh
+   yarn
+   ```
+
+## Run the sample code 
+
+The sample code is in `index.js`, the whole execution flow will automatically start after running it.
+
+### Node Environment 
+
+If you want to test by using your own nodes, you should configure the missing or changing environment variables in file `.env.local.tmp` then use `yarn local` to execute `index.js`.
+
+If you want to have a test in our testnet network you should do the same for `.env.testnet.tmp` and then use `yarn testnet` to execute `index.js`.
+
+## How does it work? 
+
+### Import the Necessary Libraries 
+
+```javascript
+const ethers = require('ethers');
+const mantleSDK = require('@mantleio/sdk');
+const fs = require('fs');
+```
+
+In this tutorial, we initialize the required libraries:
+
+* `ethers`: A JavaScript library for interacting with the Ethereum blockchain. It provides an easy-to-use interface for tasks like creating wallets, sending transactions, and interacting with smart contracts.
+* `mantleSDK`: The Mantle SDK, which facilitates cross-chain transactions between Layer 1 (L1) and Layer 2 (L2) blockchains. It abstracts away complexities, making it easier to perform operations like depositing and withdrawing assets.
+* `fs`: The Node.js `fs` module for file system operations. It may be used later in the code for reading or writing files, although it's not explicitly used in the provided snippet.
+
+### Network Configuration and Wallet Setup 
+
+Next, the code defines some configuration parameters. We fetch the specified network and wallet configurations from the `.env` file.
+
+```javascript
+const l1bridge = process.env.L1_BRIDGE;
+const l2bridge = process.env.L2_BRIDGE;
+const key = process.env.PRIV_KEY;
+```
+
+* `l1bridge` and `l2bridge`: Environment variables representing the addresses of the layer 1 (L1) and layer 2 (L2) bridges.
+* `key`: The private key retrieved from the environment variables.
+
+We need to deploy the ERC-20 token by ourselves, so we need to create a factory contract at first.
+
+```javascript
+const L1TestERC20 = JSON.parse(fs.readFileSync('L1TestERC20.json'));
+const L2StandardERC20 = JSON.parse(fs.readFileSync('L2StandardERC20.json'));
+
+const factory__L1_ERC20 = new ethers.ContractFactory(
+  L1TestERC20.abi,
+  L1TestERC20.bytecode,
+);
+const factory__L2_ERC20 = new ethers.ContractFactory(
+  L2StandardERC20.abi,
+  L2StandardERC20.bytecode,
+);
+```
+
+The configuration parameters required for transfers.
+
+```javascript
+// Global variable because we need them almost everywhere
+let crossChainMessenger;
+let l1ERC20, l2ERC20;
+let ourAddr;
+```
+
+Then create wallet objects by passing the private key and RPC addresses as parameters for L1 and L2.
+
+```javascript
+const l1RpcProvider = new ethers.providers.JsonRpcProvider(process.env.L1_RPC);
+const l2RpcProvider = new ethers.providers.JsonRpcProvider(process.env.L2_RPC);
+const l1Wallet = new ethers.Wallet(key, l1RpcProvider);
+const l2Wallet = new ethers.Wallet(key, l2RpcProvider);
+```
+
+### Setup CrossChainMessenger Object 
+
+The `CrossChainMessenger` object calls the cross chain messenger contracts on L1 and L2 to transfer assets. Here we instantiate the object with chain IDs, wallet objects, and contract objects.
+
+```javascript
+ourAddr = l1Wallet.address;
+crossChainMessenger = new mantleSDK.CrossChainMessenger({
+  l1ChainId: process.env.L1_CHAINID,
+  l2ChainId: process.env.L2_CHAINID,
+  l1SignerOrProvider: l1Wallet,
+  l2SignerOrProvider: l2Wallet,
+  bedrock: true,
+});
+```
+
+Deploy the ERC-20 token on L1.
+
+```javascript
+console.log('#################### Deploy ERC20 ####################');
+console.log('Deploying L1 ERC20...');
+const L1_ERC20 = await factory__L1_ERC20
+  .connect(l1Wallet)
+  .deploy('L1 TEST TOKEN', 'LTT');
+await L1_ERC20.deployTransaction.wait();
+console.log('L1 ERC20 Contract ExampleToken Address: ', L1_ERC20.address);
+```
+
+Mint the ERC-20 token on L1.
+
+```javascript
+let amount = ethers.utils.parseEther('10');
+await L1_ERC20.connect(l1Wallet).mint(amount);
+balance = (
+  await L1_ERC20.connect(l1Wallet).balanceOf(l1Wallet.address)
+).toString();
+console.log('mint to ', l1Wallet.address, balance, ' success');
+```
+
+Approve the ERC-20 token on L1.
+
+```javascript
+await L1_ERC20.connect(l1Wallet).approve(l1bridge, amount);
+let allowance = await L1_ERC20.connect(l1Wallet).allowance(
+  l1Wallet.address,
+  l1bridge,
+);
+console.log('allowance: ', allowance.toString());
+```
+
+Deploy the ERC-20 token on L2.
+
+```javascript
+console.log('Deploying L2 ERC20...');
+const L2_ERC20 = await factory__L2_ERC20
+  .connect(l2Wallet)
+  .deploy(L1_ERC20.address);
+await L2_ERC20.deployTransaction.wait();
+console.log(
+  'L2 ERC20 Contract BVM_L2DepositedERC20 Address: ',
+  L2_ERC20.address,
+  '\n',
+);
+
+l1ERC20 = L1_ERC20;
+l2ERC20 = L2_ERC20;
+```
+
+### Report the Balances 
+
+The `reportBalances` function fetches L1 and L2 wallet balances and prints them out. We'll use this method to keep track balance change after deposit and withdraw operations.
+
+```javascript
+const reportERC20Balances = async () => {
+  const l1Balance = await l1ERC20.balanceOf(ourAddr);
+  const l2Balance = await l2ERC20.balanceOf(ourAddr);
+  console.log(`Token on L1:${l1Balance}     Token on L2:${l2Balance}`);
+};
+```
+
+### Deposit 
+
+The `depositERC20` function deposits 1 ERC-20 token to L2 via the Mantle bridge. The asynchronous function prints out the transaction hash and waits for the message to get relayed. Finally, we display the updated LTT balance on L1 and L2.
+
+To show that the deposit actually happened we show before and after balances.
+
+```javascript
+console.log('#################### Deposit ERC20 ####################');
+await reportERC20Balances();
+```
+
+To enable the bridge to transfer ERC-20 tokens, it needs to get an allowance first. The reason to use the SDK here is that it looks up the bridge address for us. While most ERC-20 tokens go through the standard bridge, a few require custom business logic that has to be written into the bridge itself. In those cases, there is a custom bridge contract that needs to get the allowance.
+
+```javascript
+const start = new Date();
+
+// Need the l2 address to know which bridge is responsible
+const allowanceResponse = await crossChainMessenger.approveERC20(
+  l1ERC20.address,
+  l2ERC20.address,
+  oneToken,
+);
+```
+
+Wait until the allowance transaction is processed and then report the time it took and the hash.
+
+```javascript
+await allowanceResponse.wait();
+console.log(`Allowance given by tx ${allowanceResponse.hash}`);
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+```
+
+`crossChainMessenger.depositERC20()` creates and sends the deposit transaction on L1.
+
+```javascript
+const response = await crossChainMessenger.depositERC20(
+  l1ERC20.address,
+  l2ERC20.address,
+  oneToken,
+);
+```
+
+Of course, it takes time for the transaction to actually be processed on L1.
+
+```javascript
+console.log(`Deposit transaction hash (on L1): ${response.hash}`);
+await response.wait();
+```
+
+After the transaction is processed on L1 it needs to be picked up by an off-chain service and relayed to L2. To show that the deposit actually happened we need to wait until the message is relayed. The `waitForMessageStatus` function does this for us.
+
+```javascript
+console.log('Waiting for status to change to RELAYED');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.waitForMessageStatus(
+  response.hash,
+  mantleSDK.MessageStatus.RELAYED,
+);
+```
+
+Once the message is relayed the balance change on L2 is practically instantaneous. We can just report the balances and see that the L2 balance rose by 1.
+
+```javascript
+await reportERC20Balances();
+console.log(`depositERC20 took ${(new Date() - start) / 1000} seconds\n`);
+```
+
+### Withdraw 
+
+This function shows how to withdraw ERC-20 from L2 to L1.
+
+To show that the withdrawal actually happened we show before and after balances.
+
+```javascript
+console.log('#################### Withdraw ERC20 ####################');
+const start = new Date();
+await reportERC20Balances();
+```
+
+`crossChainMessenger.withdrawERC20()` creates and sends the withdraw transaction on L2.
+
+```javascript
+const response = await crossChainMessenger.withdrawERC20(
+  l1ERC20.address,
+  l2ERC20.address,
+  oneToken,
+);
+console.log(`Transaction hash (on L2): ${response.hash}`);
+await response.wait();
+```
+
+We need to wait until the message is ready to prove.
+
+```javascript
+console.log('Waiting for status to be READY_TO_PROVE');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.waitForMessageStatus(
+  response.hash,
+  mantleSDK.MessageStatus.READY_TO_PROVE,
+);
+```
+
+Wait until the state that includes the transaction gets past the challenge period, at which time we can finalize (also known as claim) the transaction. (Make sure your service and network are running well)
+
+```javascript
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.proveMessage(response.hash);
+
+console.log('Waiting for status to change to IN_CHALLENGE_PERIOD');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.waitForMessageStatus(
+  response.hash,
+  mantleSDK.MessageStatus.IN_CHALLENGE_PERIOD,
+);
+
+console.log('In the challenge period, waiting for status READY_FOR_RELAY');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.waitForMessageStatus(
+  response.hash,
+  mantleSDK.MessageStatus.READY_FOR_RELAY,
+);
+```
+
+Finalizing the message also takes a bit of time.
+
+```javascript
+console.log('Ready for relay, finalizing message now');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.finalizeMessage(response.hash);
+
+console.log('Waiting for status to change to RELAYED');
+console.log(`Time so far ${(new Date() - start) / 1000} seconds`);
+await crossChainMessenger.waitForMessageStatus(
+  response,
+  mantleSDK.MessageStatus.RELAYED,
+);
+```
+
+### Invoke deposit and withdraw functions 
+
+We write a `main()` where we call the functions to perform configuration, deposit, and withdraw operations.
+
+```javascript
+const main = async () => {
+  await setup();
+  await depositERC20();
+  await withdrawERC20();
+};
+
+main()
+  .then(() => process.exit(0))
+  .catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
+```
+
+## Conclusion 
+
+You should now be able to write applications that use our SDK and bridge to transfer ERC-20 assets between L1 and L2.

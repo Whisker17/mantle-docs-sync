@@ -1,8 +1,35 @@
 export default {
-  "introduction": "INTRODUCTION",
-  "system-information": "System Information",
-  "for-node-operators": "For Node Operators",
-  "for-developers": "For Developers",
-  "for-users": "For Users",
-  "more": "MORE"
+  index: {
+    title: 'Home',
+    type: 'page',
+    display: 'hidden',
+    theme: {
+      layout: 'full',
+      sidebar: false,
+      toc: false,
+      breadcrumb: false,
+      pagination: false,
+      timestamp: false,
+    },
+  },
+  notices: {
+    title: 'Notices',
+    type: 'page',
+  },
+  'mantle-network': {
+    title: 'Mantle Network',
+    type: 'page',
+  },
+  'node-operators': {
+    title: 'Node Operators',
+    type: 'page',
+  },
+  developers: {
+    title: 'Developers',
+    type: 'page',
+  },
+  users: {
+    title: 'Users',
+    type: 'page',
+  },
 }

@@ -1,0 +1,38 @@
+---
+title: "Preconfirmations"
+---
+
+# Preconfirmations
+
+Mantle Network supports **preconfirmations** (preconfs) — early commitments from the sequencer on transaction inclusion before the transaction is finalized on L1.
+
+## Overview
+
+In a standard rollup, a transaction is only considered final once the batch containing it is posted and verified on Ethereum. This can take minutes to hours. Preconfirmations provide users with a strong guarantee of transaction inclusion within seconds of submission.
+
+## How It Works
+
+When a transaction is submitted to the Mantle sequencer:
+
+1. **Validation** — The sequencer validates the transaction against the current state.
+2. **Preconf issuance** — If valid, the sequencer issues a preconfirmation — a signed commitment that the transaction will be included in the next block.
+3. **Consistency check** — The preconf checker verifies the commitment against the OP Node's sync status to ensure consistency with the L1-derived state.
+4. **Block inclusion** — The transaction is included in the next L2 block and eventually batched to L1.
+
+## Benefits
+
+- **Near-instant UX** — Users receive confirmation in under a second, enabling responsive dApp experiences comparable to centralized applications.
+- **Stronger guarantees** — Unlike soft confirmations (which are just optimistic signals), preconfirmations carry a cryptographic commitment from the sequencer.
+- **DeFi compatibility** — DEXs, lending protocols, and other DeFi applications can treat preconfirmed transactions as effectively final for their business logic.
+
+## Technical Details
+
+The preconfirmation system is implemented in the `miner` package with a dedicated `preconf_checker` that:
+
+- Validates pending transactions against the current execution state.
+- Cross-references with the OP Node's sync status to detect potential L1 reorgs.
+- Issues time-bounded preconf commitments that expire if not included within the expected block window.
+
+<Callout type="info">
+Preconfirmations are a sequencer-level feature. They are as reliable as the sequencer itself. As Mantle progresses toward decentralized sequencing, preconf guarantees will be backed by economic stakes.
+</Callout>

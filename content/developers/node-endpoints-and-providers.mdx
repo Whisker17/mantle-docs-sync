@@ -1,0 +1,71 @@
+---
+title: "Node Endpoints and Providers"
+---
+
+# Node Endpoints and Providers
+
+Mantle provides powerful RPC Endpoints to programmatically interact with the web. Whether you are operating on a Mainnet or testing on a Testnet, Mantle provides accessible URLs for easy integration.
+
+## Official Network Endpoints 
+
+Currently, Mantle Network supports both `https` and `WSS` endpoints.
+
+
+<Tabs items={['Mainnet', 'Testnet (Sepolia)']}>
+<Tabs.Tab>
+| Connection Ways   | Url                                               |
+| ----------------- | ------------------------------------------------- |
+| **Https Url**     | [https://rpc.mantle.xyz](https://rpc.mantle.xyz/) |
+| **WebSocket Url** | wss\://wss.mantle.xyz                             |
+|
+</Tabs.Tab>
+<Tabs.Tab>
+| Connection Ways   | Url                                                               |
+| ----------------- | ----------------------------------------------------------------- |
+| **Https Url**     | [https://rpc.sepolia.mantle.xyz](https://rpc.sepolia.mantle.xyz/) |
+| **WebSocket Url** | N/A                                                               |
+|
+</Tabs.Tab>
+</Tabs>
+     |                                                                   |
+
+
+<Callout type="info">
+* The official Mantle RPC employs rate limiting to ensure stability during traffic spikes
+* The WebSocket supports an access method equivalent to the https interface, along with event subscription and cancellation. See [here](https://ethereum.org/en/developers/tutorials/using-websockets/) for reference.
+</Callout>
+
+
+## Third-Party Providers 
+
+We're working with popular node providers that you can use to connect your dApps or games to the Mantle network. They enable convenient and scalable API access to Mantle nodes, so you can focus on building without having to worry about the underlying infrastructure.
+
+
+<Callout type="info">
+The public third-party RPC endpoints listed below are intended for test environments only. For production environments, please use their premium services to ensure stability and reliability.
+</Callout>
+
+
+<Tabs items={['Mainnet', 'Testnet (Sepolia)']}>
+<Tabs.Tab>
+| Name                                                                                                             | Https Url                                                                                                                          | WebSocket Url                    |
+| ---------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------------------------------- |
+| [**DRPC**](https://drpc.org/chainlist/mantle)                                                                    | [https://mantle.drpc.org](https://mantle.drpc.org/)                                                                                | wss\://mantle.drpc.org           |
+| [**Allnodes**](https://mantle.publicnode.com/)                                                                   | [https://mantle-rpc.publicnode.com/](https://mantle-rpc.publicnode.com/)                                                                                               | wss\://mantle-rpc.publicnode.com |
+| [**1RPC**](https://www.1rpc.io/)                                                                                 | [https://1rpc.io/mantle](https://1rpc.io/mantle)                                                                                                           | N/A                              |
+| [**QuickNode**](https://www.quicknode.com/chains/mantle) **\***                                                  | [https://rpc.mantle.quicknode.com](https://rpc.mantle.quicknode.com/)                                                              | N/A                              |
+| [**ZAN Node**](https://zan.top/service/apikeys)                                                                  | [https://api.zan.top/public/mantle-mainnet](https://api.zan.top/public/mantle-mainnet)                                                                                        | N/A                              |
+| [**Alchemy**](https://dashboard.alchemy.com/?utm_source=chain_partner\&utm_medium=referral\&utm_campaign=mantle) | [Login to create your endpoint](https://dashboard.alchemy.com/?utm_source=chain_partner\&utm_medium=referral\&utm_campaign=mantle) | N/A                              |
+
+\* If you have a higher demand for RPC endpoints, QuickNode has launched a series of discounts for Mantle users, check out the details [here](https://quicknode.notion.site/QuickNode-Benefits-for-Mantle-Developers-94c0992b87a24858b22f5e4a21a44bd1?pvs=4).
+</Tabs.Tab>
+<Tabs.Tab>
+| Name                                                         | Https Url                                                              | WebSocket Url                  |
+| ------------------------------------------------------------ | ---------------------------------------------------------------------- | ------------------------------ |
+| [**Ankr**](https://www.ankr.com/rpc/mantle/)                 | [https://rpc.ankr.com/mantle_sepolia](https://rpc.ankr.com/mantle_sepolia)                                  | N/A                            |
+| [**DRPC**](https://drpc.org/chainlist/mantle#mantle-sepolia) | [https://mantle-sepolia.drpc.org](https://mantle-sepolia.drpc.org/)    | wss\://mantle-sepolia.drpc.org |
+| [**QuickNode**](https://www.quicknode.com/chains/mantle)     | [Login to create your endpoint](https://www.quicknode.com/docs/mantle) | N/A                            |
+|
+</Tabs.Tab>
+</Tabs>
+                                                |                                                                        |                                |

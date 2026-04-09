@@ -1,0 +1,77 @@
+---
+title: "Use Explorer to Verify Smart Contracts"
+---
+
+# Use Explorer to Verify Smart Contracts
+
+There are multiple methods of verification available via [Mantle Explorer](https://mantlescan.xyz/verifyContract).
+
+## Via Source Code 
+
+### Plugging Code Into Explorer 
+
+Once you have obtained the source code, fill in the contract address, contract name, the flattened code, and other fields on [Mantle Explorer](https://mantlescan.xyz/verifyContract) and proceed with verifying your contract.
+
+
+<Callout type="info">
+Make sure to select the correct compiler for your contract, the proper EVM version and the optimization number.
+</Callout>
+
+
+<figure><img src="https://docs-v2.mantle.xyz/assets/images/explorer-3-9893936ecddd85016c449f96b7f3a985.png" alt="" /><figcaption></figcaption></figure>
+
+## Via Standard Input JSON 
+
+### Get JSON file 
+
+
+<Tabs items={['Compiled Using Remix', 'Compiled Using Hardhat', 'Compiled Using Foundry']}>
+<Tabs.Tab>
+1. The file can be found under the **"Solidity Compiler"** tab that can be accessed by clicking on the left navigate bar.
+
+   !
+2. Click on the **Compilation Details** button to bring up a menu from where you can copy the `COMPILERINPUT` code, as shown below.
+
+   !
+</Tabs.Tab>
+<Tabs.Tab>
+1. Once you've successfully compiled your contract code, you'll be able to find a JSON file (with a long name in hexadecimal) in the **"./artifacts/build-info"** directory, as shown below.
+
+   !
+2. Within this JSON file, you'll need to copy the `input` field, as shown below, and then paste the copied code into a **new** empty JSON file. You can import this file to the Explorer later.
+
+<figure><img src="https://3885809119-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FQliZlRNwHhmzesDU1Ksq%2Fuploads%2F0NA1XA2wMxma2M3lZaE6%2Fimage.png?alt=media&#x26;token=df53befb-f0b6-49ab-aa2a-6640c0d75c53" alt="" /><figcaption></figcaption></figure>
+</Tabs.Tab>
+<Tabs.Tab>
+1. With Foundry, you'll need to run the following command to obtain the input and output information for your contract code.
+
+   ```sh
+   forge build --build-info
+   ```
+
+   **Note:**
+
+   If you get this response, please run `forge clean` and then rerun the command.
+
+   ```sh
+   [⠒] Compiling...No files changed, compilation skipped
+   [⠑] Compiling...
+   ```
+2. You'll then be able to find a JSON file (with a long name in hexadecimal) in the **"./out/build-info"** directory, as shown below. Copy the `input` field and paste it into a new empty JSON file, which you can then import to the explorer.
+
+<figure><img src="https://docs-v2.mantle.xyz/assets/images/explorer-8-8be230c85ee3972884c948d1926b97f6.png" alt="" /><figcaption></figcaption></figure>
+</Tabs.Tab>
+</Tabs>
+
+
+### Importing JSON file to Explorer 
+
+Once you've obtained the standard input JSON values in a file, you can import it to the explorer, as shown below.
+
+Choose "Solidity (Standard-Json-Input)" as the compiler type.&#x20;
+
+<figure><img src="https://docs-v2.mantle.xyz/assets/images/explorer-11-b97590c291ac8713469c3111eab3eea4.png" alt="" /><figcaption></figcaption></figure>
+
+Upload the json file and verify it.
+
+<figure><img src="https://3885809119-files.gitbook.io/~/files/v0/b/gitbook-x-prod.appspot.com/o/spaces%2FQliZlRNwHhmzesDU1Ksq%2Fuploads%2Fbe0yiM6g7sAxKzT9zlUx%2Fimage.png?alt=media&#x26;token=be4f6c42-4711-408a-a5b6-05c57b2d72ea" alt="" /><figcaption></figcaption></figure>

@@ -1,0 +1,89 @@
+---
+title: "Arsia Upgrade Mainnet Activation"
+---
+
+# Arsia Upgrade Mainnet Activation
+
+<Callout type="warning">
+**Action required for all Mantle Mainnet node operators.** Upgrade to v1.5.4 before April 22, 2026, 07:00 UTC.
+</Callout>
+
+## Overview
+
+The **Arsia Upgrade** is now scheduled for **Mantle Mainnet** activation at L2 block timestamp **1776841200** (Wednesday, **April 22, 2026, 07:00:00 UTC**).
+
+Arsia was previously activated on Mantle Sepolia (v1.5.3, March 25, 2026). The mainnet release (v1.5.4) includes all Arsia features plus audit-driven fixes identified during the Sepolia testing period.
+
+## What's Included
+
+The Arsia upgrade is the most comprehensive protocol upgrade since Mantle's launch:
+
+### Fee Model Overhaul
+
+The legacy Bedrock-era fee model is replaced with a **transparent three-component fee structure**:
+
+```
+TotalFee = L2ExecutionFee + L1DataFee + OperatorFee
+```
+
+* **L2 Execution Fee** reflects pure EVM execution cost only — the `tokenRatio` multiplier is removed from gas calculations.
+* **L1 Data Fee** uses compression-based estimation (FastLZ → Brotli regression) for more accurate DA pricing.
+* **Operator Fee** is a new configurable revenue stream for sequencer operators.
+
+### Dynamic EIP-1559
+
+The base fee is no longer fixed. It adjusts dynamically based on both gas utilization and data availability footprint, preventing data-heavy blocks from being underpriced.
+
+### OP Stack Alignment
+
+Arsia activates **eight OP Stack forks simultaneously** (Canyon, Delta, Ecotone, Fjord, Granite, Holocene, Isthmus, Jovian), rebasing Mantle on op-node v1.16.3 with span batches and Brotli compression.
+
+### New RPC API
+
+* **`eth_estimateTotalFee`** — Returns total estimated cost including all three fee components.
+* **`eth_getBlockRange`** — Deprecated.
+
+### Security
+
+A comprehensive **CertiK audit** has been completed for the Arsia upgrade. Multiple audit findings have been addressed in v1.5.4.
+
+## Required Actions
+
+### For Node Operators
+
+**You must upgrade to v1.5.4 before April 22, 2026, 07:00 UTC.**
+
+```bash
+docker pull mantlenetworkio/mantle-op-node:v1.5.4
+docker pull mantlenetworkio/mantle-op-geth:v1.5.4
+```
+
+See the [v1.5.4 changelog](/node-operators/mantle-v2-v1.5.4-arsia-mainnet) for full upgrade instructions.
+
+### For Developers
+
+* Adopt `eth_estimateTotalFee` for accurate total fee estimates.
+* `eth_estimateGas` now returns pure L2 execution gas (no L1 cost amplification).
+* Review the [Fee Model Handbook](/mantle-network/fee-mechanism/fee-model-handbook-after-arsia) for updated formulas.
+* The [Three-Component Fee Model](/mantle-network/three-component-fee-model) documentation explains the new architecture.
+
+### For Users
+
+Transaction fees will be calculated differently after the upgrade. The three-component model makes fee attribution fully transparent. Users should see more predictable pricing that reflects actual costs.
+
+## Timeline
+
+| Date | Event |
+|---|---|
+| March 25, 2026 | Arsia activated on Sepolia (v1.5.3) |
+| April 7, 2026 | v1.5.4 Mainnet release published |
+| **April 22, 2026, 07:00 UTC** | **Arsia activates on Mainnet** |
+
+## Resources
+
+* [v1.5.4 Changelog](/node-operators/mantle-v2-v1.5.4-arsia-mainnet)
+* [v1.5.3 Changelog (Sepolia)](/node-operators/mantle-v2-v1.5.3-arsia-upgrade-sepolia)
+* [Arsia Fee Model Details](/notices/arsia-upgrade-mantles-new-fee-model-and-op-stack-alignment)
+* [Fee Model Handbook](/mantle-network/fee-mechanism/fee-model-handbook-after-arsia)
+* [GitHub: mantle-v2 v1.5.4](https://github.com/mantlenetworkio/mantle-v2/releases/tag/v1.5.4)
+* [GitHub: op-geth v1.5.4](https://github.com/mantlenetworkio/op-geth/releases/tag/v1.5.4)

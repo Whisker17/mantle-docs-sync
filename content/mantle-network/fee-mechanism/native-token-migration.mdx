@@ -1,0 +1,35 @@
+---
+title: "Native Token Migration"
+---
+
+# Native Token Migration
+
+Mantle v2 Tectonic, as a significant version update, focuses on optimizing and improving various aspects, including a transformation in the system's native token. In Mantle v2 Tectonic, $MNT will serve as the native token for the system. This change aims to provide users with a more flexible and efficient transaction experience, laying a solid foundation for the ecosystem's future development.
+
+## Why Mantle v2 Tectonic Requires a Change 
+
+In Mantle v2 Tectonic, the decision to change the native token from an ERC-20-based scheme to one using Ether Gas stems from several reasons:
+
+### 1. Closer Alignment With Native Ethereum Design 
+
+Unlike Mantle v1, where we opted for ERC-20 tokens as the native token, Mantle v2 Tectonic aims for closer alignment with Ethereum's native design. This not only simplifies the development and maintenance processes, but also integrates Mantle v2 more naturally into the Ethereum ecosystem.
+
+### 2. Facilitating Rollup Node Upgrades in Sync With the Mainnet 
+
+This new native token makes it easier for Rollup nodes to synchronize with mainnet code upgrades. This consistency helps ensure the seamless collaboration of the entire Mantle Network across different levels and better support potential future EIPs.
+
+### 3. Empowering MNT Token Further 
+
+Mantle v2 Tectonic introduces support for [EIP-1559-type transactions](/mantle-network/glossary#eip-1559-transaction). This update allows the MNT token to serve as a `GasTipCap` token in such transactions, controlling transaction priority. This enhancement not only provides users with more flexibility, but also empowers MNT Token with additional utility and potential, further enhancing the Mantle ecosystem.
+
+## Changes Post-New Solution 
+
+### Transition in Ledger Storage Method: From Contract Accounts to System Accounts 
+
+In Mantle v2 Tectonic, a significant change involves transitioning the storage method of the MNT ledger from contract accounts to system accounts. This shift from centralized storage (in a single contract account) to decentralized storage (balances correspond one-to-one with addresses, dispersed in address accounts) enhances system maintainability and aligns better with the decentralized design of the overall network.
+
+### Achieving Identical Flow Paths for MNT and ETH 
+
+With the modification of the native token, Mantle Network successfully achieves identical flow paths for MNT and ETH. This change elevates the position of MNT in Mantle Network, providing it with an equal and convenient standing in the system. Users can now enjoy a user experience similar to ETH without the need for MNT to adopt different flow paths, as is the case with ERC-20 assets.
+
+These changes not only positively impact the overall performance and user experience of the Mantle system, but also establish a solid foundation for future expansions and ecosystem development.

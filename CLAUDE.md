@@ -84,6 +84,109 @@ When the user initiates a documentation update task, execute the following steps
 
 Use the prefix `docs/` followed by a short description: `docs/<topic>` (e.g., `docs/arsia-fee-model`, `docs/node-v1.5.4-guide`).
 
+## Version Upgrade Playbook
+
+When the user says a new version is being released (e.g., "升级 v1.6.0 Olympus to sepolia"), follow this playbook automatically. Templates are in `scripts/templates/`.
+
+### Required input
+
+Ask the user for any missing fields before starting:
+
+| Field | Required | Example |
+|---|---|---|
+| `VERSION` | Always | `v1.6.0` |
+| `CODENAME` | Always | `Olympus` |
+| `NETWORK` | Always | `sepolia` or `mainnet` |
+| `ACTIVATION_TIME` | Always | `2026-06-01 07:00:00 UTC` |
+| `L2_TIMESTAMP` | Always | `1780300800` |
+| `SUBMODULE_TAGS` | Always | `mantle-v2 v1.6.0, op-geth v1.6.0` |
+| `SEPOLIA_VERSION` | Mainnet only | `v1.5.3` (the sepolia release for this codename) |
+| `SEPOLIA_DATE` | Mainnet only | `March 25, 2026` |
+| `PREV_MAINNET_VERSION` | Mainnet only | `v1.5.4` (the version being superseded) |
+| `PREV_CODENAME` | Mainnet only | `Arsia` (codename of previous mainnet release) |
+
+### Decision tree
+
+```
+IF NETWORK == sepolia:
+  Step 1: Create changelog
+    - New file: content/node-operators/mantle-v2-{VERSION}-{CODENAME}-upgrade-sepolia.mdx
+    - Template: scripts/templates/changelog-sepolia.mdx.tpl
+    - Fill from submodule diff analysis
+
+  Step 2: Update node-operators/_meta.js
+    - Add new entry in "Changelogs" section (ABOVE the archive link)
+    - Format: "mantle-v2-{VERSION}-{CODENAME}-upgrade-sepolia": "v{X.Y.Z} — {CODENAME} (Sepolia)"
+
+  Step 3: (No archiving needed for sepolia-only releases)
+
+  Step 4: [If applicable] Update component-specific docs in content/
+
+IF NETWORK == mainnet:
+  Step 1: ARCHIVE old documents
+    a. Node Operators changelogs — move ALL current changelogs to archive:
+       - Move content/node-operators/mantle-v2-*.mdx → content/node-operators/archive/
+       - Remove their entries from node-operators/_meta.js "Changelogs" section
+       - Add entries to archive/_meta.js (newest first, ABOVE existing entries)
+    b. Notices — demote current active notice to archive section:
+       - In notices/_meta.js, move the current top entry below the "---archive" separator
+       - (Do NOT move the .mdx file itself — only reorder in _meta.js)
+
+  Step 2: CREATE new documents
+    a. Mainnet changelog:
+       - New file: content/node-operators/mantle-v2-{VERSION}-{CODENAME}-mainnet.mdx
+       - Template: scripts/templates/changelog-mainnet.mdx.tpl
+    b. Sepolia changelog (if not already created):
+       - Check if content/node-operators/mantle-v2-{SEPOLIA_VERSION}-{CODENAME}-upgrade-sepolia.mdx exists
+       - If missing, create from scripts/templates/changelog-sepolia.mdx.tpl
+    c. Activation notice:
+       - New file: content/notices/{CODENAME}-mainnet-activation.mdx
+       - Template: scripts/templates/notice-activation.mdx.tpl
+    d. What's New page:
+       - New file: content/mantle-network/whats-new-in-mantle-v2-{CODENAME}.mdx
+       - Template: scripts/templates/whats-new.mdx.tpl
+
+  Step 3: UPDATE _meta.js files
+    a. node-operators/_meta.js:
+       - "Changelogs" section should list ONLY:
+         "{VERSION} — {CODENAME} (Mainnet)"
+         "{SEPOLIA_VERSION} — {CODENAME} (Sepolia)"
+         "archive" link
+    b. notices/_meta.js:
+       - New notice at TOP (before "---archive" separator)
+    c. mantle-network/_meta.js:
+       - Replace "whats-new-in-mantle-v2-*" entry with new codename
+
+  Step 4: [If applicable] Update component-specific docs in content/
+```
+
+### Content generation
+
+For all documents, content is derived from:
+1. **Submodule diff analysis** — `git diff` / `git log` between old and new tags in `repos/mantle-v2` and `repos/op-geth`
+2. **GitHub release notes** — Check `https://github.com/mantlenetworkio/mantle-v2/releases/tag/{VERSION}`
+3. **Existing docs** — Reference prior upgrade docs for consistent style and structure
+
+### Naming conventions
+
+| Type | Filename pattern | _meta.js display |
+|---|---|---|
+| Sepolia changelog | `mantle-v2-{VERSION}-{CODENAME}-upgrade-sepolia.mdx` | `{VERSION} — {CODENAME} (Sepolia)` |
+| Mainnet changelog | `mantle-v2-{VERSION}-{CODENAME}-mainnet.mdx` | `{VERSION} — {CODENAME} (Mainnet)` |
+| Activation notice | `{CODENAME}-mainnet-activation.mdx` | `{CODENAME} Mainnet Activation ({DATE})` |
+| What's New | `whats-new-in-mantle-v2-{CODENAME}.mdx` | `What's New in Mantle v2 {CODENAME}` |
+
+All codenames in filenames are **lowercase kebab-case**. Display names use **Title Case**.
+
+### Post-upgrade checklist
+
+After creating/updating all files:
+- [ ] `npm run build` passes with zero errors
+- [ ] All internal cross-links resolve (changelog ↔ notice ↔ What's New)
+- [ ] Docker image tags are correct
+- [ ] Activation timestamps are consistent across all documents
+- [ ] _meta.js ordering is correct (newest first in changelogs and archive)
+
 ## Key conventions
 
 - Content pages use `.mdx` extension with frontmatter `title` (required) and `asIndexPage: true` (for directory index pages)

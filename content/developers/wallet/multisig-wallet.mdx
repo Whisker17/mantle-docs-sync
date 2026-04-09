@@ -1,0 +1,75 @@
+---
+title: "Multisig Wallet"
+---
+
+# Multisig Wallet
+
+## Safe\{Wallet\} 
+
+[Safe\{Wallet\}](https://multisig.mantle.xyz/) is the most trusted decentralized custody protocol and collective asset management platform.
+
+<details>
+
+<summary><code>What's new</code></summary>
+
+Mantle use several Safe services to support the multisig wallet, this is the changelog for these services:
+
+* **Safe UI \[1.36.4]**
+  * changelogs
+    * Critical Updates
+      * Improved handling of pending transactions.
+      * Disabled execute button.
+      * Added speed-up options.
+      * Redesigned approval editor.
+      * Added ENS resolution for Safe addresses in the sidebar.
+    * New Features and Functionalities
+      * Display balances in Safe list.
+      * Added activity app banner on dashboard.
+      * Introduced speed-up pending transactions feature toggle.
+      * Displayed deprecation banner for social logins on all pages.
+      * Enabled transaction deletion with UI updates.
+      * Automatic approval for verified WalletConnect sessions.
+    * Apps
+      * Added Token Approval Manager, which allows you to keep track of safe ERC20 token approvals and control them (edit/revoke) in batched transactions.
+    * Fixes and Improvements
+      * Always fetch message information when signing.
+      * Corrected fee tooltip text.
+      * Set default owner and improved counterfactual transactions when creating a Safe.
+      * Various UI fixes: dark mode, button overlaps, transaction status indicators.
+* **Safe transaction service \[v5.0.0]**
+  * **changlogs**
+    * Critical Updates:
+      * Removed deprecated endpoints (e.g., balances/usd).
+      * Enhanced UserOperation:
+        * Removed POST method.
+        * Added safeOperation model.
+        * New endpoint for UserOperations with indexing for failed/reverted ones.
+        * Validations for init\_code, nonce, valid\_after, and valid\_until.
+        * Improved decoding error handling and transaction hash logging.
+    * New Features and Functionalities:
+      * Integrated Swagger tags for better API documentation.
+      * Added endpoint for safe deployments.
+      * Refactored delegate endpoint signatures to use EIP712.
+      * Processed ENS names in token list address fields.
+    * Minor Updates and Dependency Changes
+* **Safe Config Service \[v2.80.0]**
+  * **changlogs**
+    * Critical Updates:
+      * Renamed SafeApp visible field to listed.
+      * Added prices provider configuration.
+      * New Features and Functionalities:
+      * Introduced optional "onlyListed" query param for SafeApps filtering.
+    * Minor Updates and Dependency Updates
+* **Safe Event Service \[v0.12.0]**
+  * **changlogs**
+    * Critical Updates:
+      * Updated to Node.js v20.
+      * Rolled back TypeORM to v0.3.19.
+      * New Features and Functionalities:
+      * Added JSON format for event logs.
+      * Introduced asynchronous datasource creation.
+    * Minor Updates and Dependency Updates
+
+</details>
+
+<br />

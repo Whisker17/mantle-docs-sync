@@ -1,0 +1,60 @@
+---
+title: "What's New in Mantle v2 Arsia"
+---
+
+# What's New in Mantle v2 Arsia
+
+The **Arsia Upgrade** is a major release that overhauls the fee model, aligns with the latest OP Stack protocol versions, and introduces DA-aware block management.
+
+### Key Changes
+
+#### Modular Three-Component Fee Model
+
+The legacy fee model is replaced by a **transparent, modular fee model** where each cost component is independently calculated:
+
+```
+TotalFee = L2ExecutionFee + L1DataFee + OperatorFee
+```
+
+* **L2 Execution Fee** — Reflects pure EVM execution cost only. The legacy `tokenRatio` multiplier is removed, and `eth_estimateGas` returns a stable value unaffected by L1 fee market conditions.
+* **L1 Data Fee** — Separated from gas consumption and deducted directly from the sender's balance. Uses compression-based estimation for more accurate and generally lower fees.
+* **Operator Fee** — A new component providing node operators with a transparent revenue stream, collected by the new `OperatorFeeVault` predeploy.
+
+For the full formula breakdown, see the [Fee Model Handbook (After Arsia)](/mantle-network/fee-mechanism/fee-model-handbook-after-arsia).
+
+#### Dynamic EIP-1559 Base Fee
+
+Before Arsia, the L2 base fee was effectively static. Arsia restores a **full dynamic EIP-1559 fee market** — the base fee adjusts based on block gas usage, with a configurable minimum floor and explicit priority fee support.
+
+#### DA Footprint-Aware Block Management
+
+Each transaction's estimated DA size is converted into a **gas-equivalent DA footprint**, which feeds into the EIP-1559 base fee calculation. This ensures data-heavy blocks are priced accordingly, even when execution gas usage is low.
+
+#### OP Stack Fork Alignment
+
+Arsia simultaneously activates the equivalent of **eight upstream Optimism forks** (Canyon through Jovian) at a single timestamp, rebased on **Optimism op-node v1.16.3**. Key capabilities include span batches, Brotli compression, dual-scalar L1 fee model, FastLZ-based fee estimation, operator fee support, and DA footprint gas scalar.
+
+#### New RPC: `eth_estimateTotalFee`
+
+A new RPC endpoint returns the **total estimated transaction cost** including all three fee components. The corresponding `estimateTotalFee` method is also available in the Mantle-Viem SDK.
+
+<Callout type="info">
+After Arsia, `eth_estimateGas` returns pure L2 execution gas without the previous 120% buffer. Use `eth_estimateTotalFee` for accurate total cost estimation.
+</Callout>
+
+#### Contract Upgrades
+
+At the Arsia activation block, the following contracts are upgraded:
+
+* **L1Block** — New fields for operator fee and DA footprint parameters.
+* **GasPriceOracle** — Rewritten with compression-based L1 fee and operator fee calculation.
+* **OperatorFeeVault** — New predeploy at `0x420000000000000000000000000000000000001b`.
+* **SystemConfig** (L1) — New owner-callable functions for configuring Arsia-era fee parameters.
+
+### Impact
+
+**For users**: Fees are now transparently decomposed into three components. Pricing is more predictable, with L2 gas estimates stable regardless of L1 fee market volatility.
+
+**For developers**: Adopt `eth_estimateTotalFee` or the Mantle-Viem SDK's `estimateTotalFee` for accurate total fee estimation. See the [Fee Model Handbook](/mantle-network/fee-mechanism/fee-model-handbook-after-arsia) for details.
+
+**For node operators**: This is a **mandatory upgrade**. See the [Arsia changelog](/node-operators/mantle-v2-v1.5.3-arsia-upgrade-sepolia) for upgrade instructions.

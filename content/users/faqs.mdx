@@ -1,0 +1,65 @@
+---
+title: "FAQs"
+---
+
+# FAQs
+
+### Is there an option for a test drive? 
+
+* You can experience the deposit and withdraw flow by using our simulated testnet. It provides a safe environment to try out the bridge functionality without any real token transactions.
+
+### What is L1/L2, and what are the required gas fees for deposit and withdrawal? 
+
+* Mantle Network is a Layer-2 (L2) scalability solution built on Ethereum which is the Layer-1 (L1).
+  * Deposit: You need ETH on L1 as gas fees to initiate the deposit. After depositing, you'll need MNT on L2 as gas fees to transact on Mantle Network.
+  * Withdraw: You need MNT on L2 as gas fees to initiate the withdrawal and ETH on L1 as gas fees to claim the tokens on Ethereum Mainnet.
+
+### How can I view my bridged token balances on Mantle Network in my wallet? 
+
+* If the auto-detection of your bridged balances doesn't work, you can manually import the tokens to your wallet using the following contract addresses:
+
+  | **Token** | **Contract Address**                       |
+  | --------- | ------------------------------------------ |
+  | ETH       | 0xdEAddEaDdeadDEadDEADDEAddEADDEAddead1111 |
+
+For other token contract addresses, you can access the bridge token mapping by visiting the following [link](/developers/quick-access#token-list).
+
+### What is the typical duration for deposits and withdrawals? 
+
+* Initiating a deposit typically completes in around \~12 minutes.
+
+  Conversely, withdrawals, due to the intricacies of Optimistic Rollups, have a challenge period to detect and address any discrepancies in the Mantle Mainnet transaction. This ensures the highest security, but means withdrawals to Ethereum Mainnet can take up to a week.
+
+### How does transaction finality work on Mantle Network? 
+
+* Transaction/block finality on L2 will depend on the finalized time of the transactions packed onto L1 (2 epochs, which is about 15mins)
+* Transaction/block finality on L1 connects to the challenge period, which is currently set at 7 days
+
+### Why is the estimated fee on Metamask not the same as the actual transaction fee? 
+
+Metamask ensures that the transaction is successful by displaying the estimated fee higher than the actual cost consumed, and the actual fee cost is much lower. You can check the actual cost on explorer after the transaction is confirmed.
+
+### How are withdrawals fees determined? 
+
+* The cost to claim on the bridge is dependent on the gas costs, measured in Gwei, at the time of your transaction. The estimated formula to determine this cost is:
+
+  Cost(ETH)=600,000×GweiCost(ETH)=600,000×Gwei
+
+  For example:
+
+  * At 15 Gwei, the cost is approximately 0.009 ETH.
+  * At 30 Gwei, the cost is approximately 0.018 ETH.
+
+  To minimize your costs, you can opt to claim during a period when the Gwei is low. For current gas prices, you can check the [Etherscan Gas Tracker](https://etherscan.io/gastracker).
+
+### Where can I find the bridge token mapping? 
+
+* You can view the bridge token mapping by visiting [this link](https://token-list.mantle.xyz/mantle.tokenlist.json). It provides comprehensive details on the token list and other related information.
+
+### How does modular data availability bring down transaction costs? 
+
+* The majority of L2 gas costs (>70%) are incurred as the cost to publish data on L1 Ethereum. With Mantle DA powered by EigenDA technology, only state root data (along with very limited transaction data) is posted to L1 contracts, while the rollup data is posted to Mantle DA, which helps bring down the overall cost significantly.
+
+### Where can I find the brand resources for Mantle Network? 
+
+* You can access brand resources by following [this link](https://drive.google.com/drive/folders/1GGyOmob0i86mEUqBTPvZLAhgnzt3Oxaa).

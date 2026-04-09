@@ -1,0 +1,100 @@
+---
+title: "Use Thirdweb to Deploy Smart Contracts"
+---
+
+# Use Thirdweb to Deploy Smart Contracts
+
+[Thirdweb](https://portal.thirdweb.com/) is a complete web3 development framework that provides everything you need to connect your apps and games to decentralized networks like Mantle Network.
+
+## Prerequisite 
+
+* Wallet with sufficient balance
+* The [right information](/developers/quick-access#network-details) on the network
+
+
+<Callout type="info">
+If you want to get some testnet tokens, please refer to the [Faucet page](/users/how-to-guides/fetching-test-tokens)
+</Callout>
+
+
+## Install Thirdweb CLI 
+
+You can install the Thirdweb CLI globally on your machine using npm by running the following command.
+
+```sh
+npm i -g @thirdweb-dev/cli
+```
+
+## Create a project 
+
+1. Start by creating a new project by running:
+
+   ```sh
+   npx thirdweb create contract
+   ```
+2. Input your preferences for the command line prompts, such like:
+
+   ```sh
+   ✔ What is your project named? … mantle-test
+   ✔ What framework do you want to use? › Hardhat
+   ✔ What will be the name of your new smart contract? … MyContract
+   ✔ What type of contract do you want to start from? › Empty Contract
+   ```
+
+   Here we have chosen to use the hardhat framework and generated an empty contract project.
+3. Place the contracts you want to deploy in the contracts folder, for example, let's deploy a `Storage` contract.
+
+   ```solidity
+   // SPDX-License-Identifier: GPL-3.0
+
+   pragma solidity >=0.8.2 <0.9.0;
+
+   /**
+   * @title Storage
+   * @dev Store & retrieve value in a variable
+   * @custom:dev-run-script ./scripts/deploy_with_ethers.ts
+   */
+   contract Storage {
+
+       uint256 number;
+
+       /**
+       * @dev Store value in variable
+       * @param num value to store
+       */
+       function store(uint256 num) public {
+           number = num;
+       }
+
+       /**
+       * @dev Return value
+       * @return value of 'number'
+       */
+       function retrieve() public view returns (uint256){
+           return number;
+       }
+   }
+   ```
+
+## Deploy your contract 
+
+The command `deploy` allows you to deploy a smart contract to Mantle Network without configuring RPC URLs, exposing your private keys, writing scripts, and another additional setup such as verifying your contract.
+
+1. To deploy your smart contract using deploy, navigate to the root directory of your project and run:
+
+   ```sh
+   npx thirdweb deploy
+   ```
+
+   **Sample Outputs**
+
+   ```sh
+   ✔ Detected project type: hardhat
+   ✔ Compilation successful
+   ✔ Processing contract: "Storage"
+   ✔ Upload successful
+   ✔ Open this link to deploy your contracts: https://thirdweb.com/contracts/deploy/QmPQJLQaEHVRD55hUSvkraSb74ZzBqwCcmFGGCXX5TLmx6
+   ```
+2. Open the link and connect your wallet, select the network you need to deploy, and click the **Deploy Now** button to complete the deployment!
+
+<figure><img src="https://docs-v2.mantle.xyz/assets/images/thirdweb-1-a374d0a39cc9e4863fad2b94c93e9506.png" alt="" /><figcaption></figcaption></figure>

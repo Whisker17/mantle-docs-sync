@@ -1,0 +1,44 @@
+---
+title: "Custom Gas Token (MNT)"
+---
+
+# Custom Gas Token (MNT)
+
+Mantle Network uses **MNT** as its native gas token instead of ETH. This is one of the most significant differences from the standard OP Stack, where ETH is always the gas token.
+
+## How It Works
+
+In standard OP Stack chains, ETH is used to pay for gas on L2, mirroring Ethereum's native token model. Mantle modifies the fee pipeline so that MNT serves as the native token for:
+
+- **Transaction gas fees** — All L2 execution fees are denominated and paid in MNT.
+- **L1 data fees** — The L1 data fee component is also deducted from the sender's MNT balance.
+- **Operator fees** — The operator fee introduced in the Arsia upgrade is collected in MNT.
+
+## Token Ratio
+
+Mantle uses a `tokenRatio` parameter in the `GasPriceOracle` contract to convert between ETH-denominated L1 costs and MNT-denominated L2 fees. This ratio reflects the MNT/ETH exchange rate and is updated periodically by the system.
+
+```
+L1DataFee_in_MNT = L1DataFee_in_ETH * tokenRatio
+```
+
+After the Arsia upgrade, the `tokenRatio` is bounded by configurable upper and lower limits stored in the `GasPriceOracle` to prevent extreme fee fluctuations.
+
+## Why Custom Gas Token?
+
+- **Community alignment** — MNT holders participate directly in the network's fee market, aligning incentives between token holders and network users.
+- **Independent economics** — Mantle's fee market is not directly coupled to ETH price volatility, providing more predictable transaction costs.
+- **Ecosystem utility** — MNT accrues value from actual network usage, creating a sustainable economic model.
+
+## Developer Impact
+
+For developers building on Mantle:
+
+- `msg.value` in smart contracts uses MNT, not ETH.
+- `eth_estimateGas` and `eth_gasPrice` return values denominated in MNT.
+- Wallet integrations should display MNT as the native currency.
+- The [Mantle SDK](/developers/how-to-guides/how-to-use-mantle-sdk) and [Mantle Viem](/developers/how-to-guides/how-to-use-mantle-viem) handle token conversion automatically for bridge operations.
+
+<Callout type="info">
+ETH is still available on Mantle as a wrapped ERC-20 token (WETH). Users can bridge ETH from Ethereum and use it in DeFi protocols, but gas fees are always paid in MNT.
+</Callout>

@@ -1,0 +1,903 @@
+/* ============================================
+   Mantle Docs — Global Custom Styles
+   Design system based on Optimism/Base patterns
+   ============================================ */
+
+/* --- 1. Design Tokens --- */
+:root {
+  /* Nextra primary color */
+  --nextra-primary-hue: 175deg;
+  --nextra-primary-saturation: 33%;
+  --nextra-primary-lightness: 40%;
+
+  /* Brand */
+  --mantle-primary: #65B3AE;
+  --mantle-primary-dark: #4A9A95;
+  --mantle-primary-light: #7ECEC9;
+
+  /* Text */
+  --mantle-text-primary: #0f172a;
+  --mantle-text-secondary: #6b7280;
+  --mantle-text-tertiary: #64748b;
+
+  /* Surfaces */
+  --mantle-bg: #ffffff;
+  --mantle-card-bg: transparent;
+  --mantle-card-border: #e2e8f0;
+  --mantle-card-border-hover: rgba(101, 179, 174, 0.45);
+  --mantle-divider: #f1f5f9;
+
+  /* Interactive */
+  --mantle-hover-accent: #4A9A95;
+  --mantle-btn-radius: 0.75rem;
+  --mantle-card-radius: 12px;
+
+  /* Typography */
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system,
+    BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco,
+    Consolas, monospace;
+
+  /* Spacing */
+  --mantle-container-max: 1400px;
+  --mantle-container-padding: 2rem;
+
+  /* Shadows */
+  --mantle-shadow-card: 0 4px 20px rgba(101, 179, 174, 0.08);
+  --mantle-shadow-card-dark: 0 4px 24px rgba(101, 179, 174, 0.1);
+
+  /* Badge colors */
+  --badge-easy-bg: #dcfce7;
+  --badge-easy-text: #166534;
+  --badge-medium-bg: #fef3c7;
+  --badge-medium-text: #92400e;
+  --badge-hard-bg: #fee2e2;
+  --badge-hard-text: #991b1b;
+
+  /* Number badge */
+  --mantle-number-bg: #f1f5f9;
+  --mantle-number-text: #475569;
+}
+
+.dark {
+  --nextra-primary-lightness: 55%;
+
+  --mantle-text-primary: #f9fafb;
+  --mantle-text-secondary: #9ca3af;
+  --mantle-text-tertiary: #94a3b8;
+  --mantle-bg: #0f1419;
+  --mantle-card-bg: #1a2332;
+  --mantle-card-border: #2a3544;
+  --mantle-card-border-hover: rgba(101, 179, 174, 0.35);
+  --mantle-divider: #2a3544;
+  --mantle-hover-accent: #7ECEC9;
+
+  --mantle-shadow-card: 0 4px 24px rgba(101, 179, 174, 0.1);
+
+  --badge-easy-bg: #14532d;
+  --badge-easy-text: #bbf7d0;
+  --badge-medium-bg: #92400e;
+  --badge-medium-text: #fef3c7;
+  --badge-hard-bg: #991b1b;
+  --badge-hard-text: #fecaca;
+
+  --mantle-number-bg: #334155;
+  --mantle-number-text: #cbd5e1;
+}
+
+
+/* --- 2. Base Typography --- */
+body {
+  font-family: var(--font-sans);
+  letter-spacing: -0.011em;
+  color: var(--mantle-text-primary);
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+h2 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.35;
+}
+
+h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+
+code, pre, .nextra-code {
+  font-family: var(--font-mono);
+}
+
+
+/* --- 3. Homepage Hero --- */
+.mantle-hero {
+  padding: 4rem 2rem 2rem;
+  max-width: var(--mantle-container-max);
+  margin: 0 auto;
+}
+
+.mantle-hero h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #65B3AE 0%, #4A9A95 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dark .mantle-hero h1 {
+  background: linear-gradient(135deg, #7ECEC9 0%, #65B3AE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mantle-hero p {
+  font-size: 1.25rem;
+  color: var(--mantle-text-secondary);
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 0 2rem;
+}
+
+.mantle-hero-cta {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 640px) {
+  .mantle-hero {
+    padding: 2.5rem 1rem 1.5rem;
+  }
+  .mantle-hero h1 {
+    font-size: 2rem;
+  }
+  .mantle-hero p {
+    font-size: 1rem;
+  }
+}
+
+
+/* --- 4. CTA Buttons --- */
+.mantle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--mantle-btn-radius);
+  font-size: 0.9rem;
+  font-weight: 550;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border: 1px solid transparent;
+  line-height: 1.4;
+}
+
+.mantle-btn-primary {
+  background: var(--mantle-primary);
+  color: #ffffff;
+  border-color: var(--mantle-primary);
+}
+
+.mantle-btn-primary:hover {
+  background: var(--mantle-primary-dark);
+  border-color: var(--mantle-primary-dark);
+  box-shadow: 0 2px 12px rgba(101, 179, 174, 0.3);
+}
+
+.mantle-btn-secondary {
+  background: transparent;
+  color: var(--mantle-text-primary);
+  border-color: #d1d5db;
+}
+
+.dark .mantle-btn-secondary {
+  border-color: #4b5563;
+  color: var(--mantle-text-primary);
+}
+
+.mantle-btn-secondary:hover {
+  background: rgba(0, 0, 0, 0.04);
+  border-color: #9ca3af;
+}
+
+.dark .mantle-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: #6b7280;
+}
+
+
+/* --- 5. Section Titles --- */
+.mantle-section-title {
+  font-size: 0.75rem;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--mantle-primary);
+  margin: 2.5rem auto 0.75rem;
+  max-width: 960px;
+  padding: 0 0.25rem;
+}
+
+
+/* --- 6. Card Grid (Simple) --- */
+.mantle-card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  padding: 0 0 2rem;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+@media (max-width: 768px) {
+  .mantle-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mantle-card-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+/* --- 7. Simple Cards (HomeCard) --- */
+.mantle-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.5rem;
+  border-radius: var(--mantle-card-radius);
+  border: 1px solid var(--mantle-card-border);
+  background: var(--mantle-card-bg);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+  text-decoration: none !important;
+  color: inherit;
+}
+
+.mantle-card:hover {
+  border-color: var(--mantle-card-border-hover);
+  box-shadow: var(--mantle-shadow-card);
+  transform: translateY(-2px);
+}
+
+.mantle-card-icon {
+  font-size: 1.75rem;
+  margin-bottom: 0.75rem;
+  line-height: 1;
+}
+
+.mantle-card-title {
+  font-size: 1rem;
+  font-weight: 650;
+  margin-bottom: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mantle-card-arrow {
+  font-size: 1.1rem;
+  opacity: 0.3;
+  transition: opacity 0.2s ease, transform 0.2s ease, color 0.2s ease;
+  flex-shrink: 0;
+  margin-left: 0.5rem;
+}
+
+.mantle-card:hover .mantle-card-arrow {
+  opacity: 1;
+  transform: translateX(3px);
+  color: var(--mantle-primary);
+}
+
+.mantle-card-description {
+  font-size: 0.875rem;
+  color: var(--mantle-text-secondary);
+  line-height: 1.55;
+  flex: 1;
+}
+
+
+/* --- 8. Navigation Card (Optimism HomeCard Pattern) --- */
+.mantle-nav-card {
+  display: flex;
+  flex-direction: column;
+  padding: 1.75rem;
+  background: var(--mantle-card-bg);
+  border: 1px solid var(--mantle-card-border);
+  border-radius: var(--mantle-card-radius);
+  transition: all 0.2s ease;
+}
+
+.mantle-nav-card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.mantle-nav-card-icon {
+  font-size: 1.5rem;
+  line-height: 1;
+}
+
+.mantle-nav-card-title {
+  font-size: 1.35rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--mantle-text-primary);
+}
+
+.mantle-nav-card-list {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.mantle-nav-card-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.875rem;
+  padding: 0.875rem 0;
+  border-bottom: 1px solid var(--mantle-divider);
+  text-decoration: none !important;
+  color: inherit;
+  transition: all 0.15s ease;
+}
+
+.mantle-nav-card-item:last-child {
+  border-bottom: none;
+}
+
+.mantle-nav-card-item:hover .mantle-nav-item-title {
+  color: var(--mantle-hover-accent);
+}
+
+.mantle-nav-card-item:hover .mantle-nav-item-arrow {
+  opacity: 1;
+  transform: translateX(4px);
+  color: var(--mantle-hover-accent);
+}
+
+.mantle-nav-item-number {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--mantle-number-bg);
+  color: var(--mantle-number-text);
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+
+.mantle-nav-item-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.mantle-nav-item-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.15rem;
+}
+
+.mantle-nav-item-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: var(--mantle-text-primary);
+  transition: color 0.15s ease;
+}
+
+.mantle-nav-item-desc {
+  font-size: 0.8125rem;
+  color: var(--mantle-text-secondary);
+  line-height: 1.5;
+}
+
+.mantle-nav-item-arrow {
+  opacity: 0;
+  font-size: 0.9rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+  transition: opacity 0.15s ease, transform 0.15s ease, color 0.15s ease;
+  color: var(--mantle-text-tertiary);
+}
+
+.mantle-nav-card-footer {
+  margin-top: 1rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--mantle-divider);
+}
+
+.mantle-nav-card-footer a {
+  font-size: 0.8125rem;
+  font-weight: 550;
+  color: var(--mantle-primary);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  transition: gap 0.15s ease;
+}
+
+.mantle-nav-card-footer a:hover {
+  gap: 0.6rem;
+}
+
+/* Navigation card grid — 2 columns like Optimism */
+.mantle-nav-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 0 2rem;
+}
+
+@media (max-width: 768px) {
+  .mantle-nav-grid {
+    grid-template-columns: 1fr;
+  }
+  .mantle-nav-card-item {
+    flex-wrap: wrap;
+  }
+  .mantle-nav-item-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.25rem;
+  }
+}
+
+
+/* --- 9. Difficulty Badges --- */
+.mantle-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.mantle-badge-easy {
+  background: var(--badge-easy-bg);
+  color: var(--badge-easy-text);
+}
+
+.mantle-badge-medium {
+  background: var(--badge-medium-bg);
+  color: var(--badge-medium-text);
+}
+
+.mantle-badge-hard {
+  background: var(--badge-hard-bg);
+  color: var(--badge-hard-text);
+}
+
+.mantle-badge-new {
+  background: rgba(101, 179, 174, 0.15);
+  color: var(--mantle-primary-dark);
+}
+
+.dark .mantle-badge-new {
+  background: rgba(126, 206, 201, 0.15);
+  color: var(--mantle-primary-light);
+}
+
+
+/* --- 10. Expandable / Accordion --- */
+.mantle-expandable {
+  border: 1px solid var(--mantle-divider);
+  border-radius: 8px;
+  margin: 1rem 0;
+  overflow: hidden;
+}
+
+.mantle-expandable + .mantle-expandable {
+  margin-top: -1px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.mantle-expandable-trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.875rem 1rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 550;
+  color: var(--mantle-text-primary);
+  text-align: left;
+  transition: background 0.15s ease;
+}
+
+.mantle-expandable-trigger:hover {
+  background: rgba(0, 0, 0, 0.02);
+}
+
+.dark .mantle-expandable-trigger:hover {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.mantle-expandable-chevron {
+  transition: transform 0.2s ease;
+  font-size: 0.75rem;
+  color: var(--mantle-text-tertiary);
+}
+
+.mantle-expandable[open] .mantle-expandable-chevron {
+  transform: rotate(180deg);
+}
+
+.mantle-expandable-content {
+  padding: 0 1rem 1rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--mantle-text-secondary);
+}
+
+
+/* --- 11. Key Features Section --- */
+.mantle-features {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 0 0.25rem 3rem;
+}
+
+.mantle-features h2 {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.mantle-features ul {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
+}
+
+@media (max-width: 640px) {
+  .mantle-features ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+.mantle-features li {
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  border: 1px solid var(--mantle-card-border);
+  background: var(--mantle-card-bg);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+.mantle-features li strong {
+  display: block;
+  font-weight: 650;
+  margin-bottom: 0.25rem;
+  font-size: 0.95rem;
+}
+
+
+/* --- 12. Footer --- */
+.mantle-footer {
+  border-top: 1px solid var(--mantle-divider);
+  padding: 2.5rem 1.5rem;
+  font-size: 0.85rem;
+  color: var(--mantle-text-secondary);
+}
+
+.mantle-footer-inner {
+  max-width: 90rem;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.mantle-footer-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.mantle-footer-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--mantle-text-primary);
+}
+
+.mantle-footer-social {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.mantle-footer-social a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: var(--mantle-text-tertiary);
+  transition: color 0.15s ease, background 0.15s ease;
+  text-decoration: none;
+}
+
+.mantle-footer-social a:hover {
+  color: var(--mantle-primary);
+  background: rgba(101, 179, 174, 0.08);
+}
+
+.mantle-footer-social svg {
+  width: 18px;
+  height: 18px;
+}
+
+.mantle-footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--mantle-divider);
+  font-size: 0.8125rem;
+  color: var(--mantle-text-tertiary);
+}
+
+.mantle-footer-links {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.mantle-footer-links a {
+  color: var(--mantle-text-tertiary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.mantle-footer-links a:hover {
+  color: var(--mantle-primary);
+}
+
+
+/* --- 13. Navbar Logo --- */
+.mantle-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: inherit;
+}
+
+.mantle-logo svg {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+
+/* --- 14. Two-Row Navbar (Optimism Pattern) --- */
+/*
+ * Row 1: Logo ... Search, GitHub icon, Theme toggle
+ * Row 2: Tab navigation links with active underline
+ *
+ * Nextra nav structure:
+ *   <header.nextra-navbar>
+ *     <div.nextra-navbar-blur />
+ *     <nav> = flex row
+ *       child 1: logo wrapper (me-auto)
+ *       child 2: items container (tab links)
+ *       child 3+: search, project link, hamburger
+ */
+
+/* Make the nav wrap into two rows */
+.nextra-navbar > nav {
+  flex-wrap: wrap !important;
+  height: auto !important;
+  padding-top: 0.875rem;
+  padding-bottom: 0;
+}
+
+/* Row 1 items keep their default order */
+/* Logo already has me-auto to push others right */
+
+/* Tab items container: force to second row, full width */
+.nextra-navbar > nav > div:nth-child(2) {
+  order: 99 !important;
+  flex-basis: 100% !important;
+  width: 100% !important;
+  padding: 0.625rem 0 0;
+  margin-top: 0.625rem;
+  border-top: 1px solid var(--mantle-divider);
+  gap: 0 !important;
+  overflow-x: hidden;
+}
+
+/* Style individual tab links — Optimism pattern */
+.nextra-navbar > nav > div:nth-child(2) > a {
+  position: relative;
+  padding: 0.5rem 0.875rem !important;
+  font-size: 0.875rem !important;
+  font-weight: 400 !important;
+  color: var(--mantle-text-secondary) !important;
+  transition: color 0.15s ease !important;
+  white-space: nowrap;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+}
+
+.nextra-navbar > nav > div:nth-child(2) > a:first-child {
+  padding-left: 0 !important;
+}
+
+/* Hover state */
+.nextra-navbar > nav > div:nth-child(2) > a:hover {
+  color: var(--mantle-text-primary) !important;
+}
+
+/* Active tab — underline indicator (teal for Mantle) */
+.nextra-navbar > nav > div:nth-child(2) > a[aria-current="true"] {
+  color: var(--mantle-text-primary) !important;
+  font-weight: 500 !important;
+  border-bottom-color: var(--mantle-primary) !important;
+}
+
+/* Logo text styling — bold like Optimism */
+.mantle-logo-text {
+  font-weight: 700;
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+/* Keep blur background covering both rows */
+.nextra-navbar-blur {
+  /* Already position:absolute + size:full, auto-stretches */
+}
+
+/* Mobile: revert to single row (hamburger menu takes over) */
+@media (max-width: 767px) {
+  .nextra-navbar > nav {
+    flex-wrap: nowrap !important;
+    height: var(--nextra-navbar-height) !important;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .nextra-navbar > nav > div:nth-child(2) {
+    order: unset !important;
+    flex-basis: auto !important;
+    width: auto !important;
+    padding: 0;
+    margin-top: 0;
+    border-top: none;
+  }
+}
+
+/* Sidebar link transitions */
+.nextra-sidebar-container a {
+  transition: color 0.15s ease;
+}
+
+
+/* --- 15. 404 Page --- */
+.mantle-404 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 6rem 2rem;
+  text-align: center;
+}
+
+.mantle-404-code {
+  font-size: 6rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  background: linear-gradient(135deg, #65B3AE 0%, #4A9A95 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1;
+  margin-bottom: 1rem;
+}
+
+.dark .mantle-404-code {
+  background: linear-gradient(135deg, #7ECEC9 0%, #65B3AE 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.mantle-404 h1 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.mantle-404 p {
+  color: var(--mantle-text-secondary);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+
+/* --- 16. Content Enhancements --- */
+
+/* Callout refinements */
+.nextra-callout {
+  border-radius: 10px;
+}
+
+/* Better table styling */
+table {
+  font-size: 0.9rem;
+}
+
+/* Smoother page transitions */
+main {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0.92; }
+  to { opacity: 1; }
+}
+
+/* Scrollbar styling for sidebar */
+.nextra-sidebar-container::-webkit-scrollbar {
+  width: 4px;
+}
+
+.nextra-sidebar-container::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.nextra-sidebar-container::-webkit-scrollbar-thumb {
+  background: var(--mantle-divider);
+  border-radius: 2px;
+}

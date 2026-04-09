@@ -1,0 +1,92 @@
+---
+title: "Bridging Your Standard ERC-20 Token Using the Standard Bridge"
+---
+
+# Bridging Your Standard ERC-20 Token Using the Standard Bridge
+
+This tutorial walks through how to create a standard ERC-20 token on Mantle L2 that represents an existing ERC-20 token deployed on Ethereum (L1), and how to bridge tokens using the Mantle official bridge.By the end of this tutorial, you will:
+
+* Deploy a Mantle-compatible L2 ERC-20 token via a factory contract
+* Understand how the L2 token is linked to its L1 counterpart
+* Bridge tokens from Ethereum to Mantle using the official bridge
+
+This tutorial is intended for developers who already have an ERC-20 token deployed on Ethereum and want to create its canonical representation on Mantle.
+
+
+<Callout type="info">
+This tutorial focuses on **creating a standard bridged ERC-20 token on Mantle L2 using smart contracts** and bridging it via the Mantle official bridge.
+
+If your goal is to **integrate token bridging into a dApp or application workflow**, rather than to create the L2 token itself, you should refer to the tutorial on [**bridging tokens using the Mantle Viem**](/developers/how-to-guides/how-to-use-mantle-viem).
+</Callout>
+
+
+### Prerequisites
+
+Before starting this tutorial, make sure the following requirements are met:
+
+* You already have a **standard ERC-20 token deployed on Ethereum (L1)**.
+* Your token is **not** a fee-on-transfer token or a rebasing token.
+* You do **not** require additional token logic such as upgradeability, blacklists/whitelists, or custom minting behavior. If you do, refer to the tutorial on **bridging custom ERC-20 tokens** instead.
+* You have gas tokens on both L1/L2 networks. (For testnet, which are Ethereum Sepolia and Mantle Sepolia, check this to get testnet token)
+* Your development environment is set up with:
+  * `cast` (Foundry)
+  * An RPC endpoint for both networks
+  * A private key funded with testnet gas
+
+This tutorial assumes a **standard ERC-20 bridging flow** using the Mantle official bridge.
+
+### Step 1: Prepare Environment Variables
+
+Export your private key (used to sign transactions):
+
+```bash
+export TUTORIAL_PRIVATE_KEY=0x...
+```
+
+Make sure this account has MNT on Mantle.Set the Mantle RPC endpoint:
+
+```bash
+export TUTORIAL_RPC_URL=https://rpc.mantle.xyz
+```
+
+### Step 2: Specify the L1 ERC-20 Token Address
+
+Set the address of your existing Ethereum ERC-20 token:
+
+```bash
+export TUTORIAL_L1_ERC20_ADDRESS=0xYourL1TokenAddress
+```
+
+This token will be treated as the canonical asset.
+
+### Step 3: Deploy the L2 ERC-20 Token on Mantle
+
+Mantle provides a factory contract that deploys standard L2 ERC-20 tokens compatible with the official bridge.Call the factory contract to create your L2 token:
+
+```bash
+cast send 0x4200000000000000000000000000000000000012 \
+  "createOptimismMintableERC20(address,string,string)" \
+  $TUTORIAL_L1_ERC20_ADDRESS \
+  "My Mantle Token" \
+  "mTOKEN" \
+  --private-key $TUTORIAL_PRIVATE_KEY \
+  --rpc-url $TUTORIAL_RPC_URL
+```
+
+This transaction deploys:
+
+* A new ERC-20 contract on Mantle
+* Links it permanently to the specified L1 token
+* Grants mint/burn rights exclusively to the Mantle bridge
+
+The resulting L2 token address will be returned in the transaction logs.
+
+### Step 4: Add your token to the Mantle token list (Optional)
+
+
+<Callout type="info">
+If you don’t need your asset to be displayed in the Mantle Bridge UI, you don’t need to submit a PR for review. You can use [**Mantle Viem**](/developers/how-to-guides/how-to-use-mantle-viem) to quickly fulfill your asset bridging requirements.
+</Callout>
+
+
+Mantle maintains an official token list that is used by infrastructure such as the Mantle Bridge UI and other ecosystem tools.If you want your token to be discoverable and properly displayed across the Mantle ecosystem, you can submit it to the [Mantle token list](/developers/quick-access#token-list) following the review and inclusion guidelines.<br />

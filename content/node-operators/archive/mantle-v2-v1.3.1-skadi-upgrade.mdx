@@ -1,0 +1,39 @@
+---
+title: "Mantle v2 v1.3.1 - Skadi Upgrade"
+---
+
+# Mantle v2 v1.3.1 - Skadi Upgrade
+
+This release is primarily aimed to enable the Mantle Network to support all features of the Ethereum Prague upgrade.
+
+
+<Callout type="warning">
+**🚧 It is a required upgrade for all operators of Mantle mainnet Network. 🚧**
+</Callout>
+
+
+## Mantle v2 
+
+This release introduces a new API `optimism_safeHeadAtL1Block` has been added to the op-node to generate succinct ZKP proofs faster.
+
+* Compatible with op-geth v1.3.1 [#219](https://github.com/mantlenetworkio/mantle-v2/pull/219)
+* Added `optimism_safeHeadAtL1Block` [#213](https://github.com/mantlenetworkio/mantle-v2/pull/213)
+
+## op-geth 
+
+This upgrade adjusts the `eth_maxPriorityFeePerGas` method, which no longer returns a fixed zero value but instead provides a suggested value based on network congestion.
+
+Key EIPs included in this upgrade:
+
+* EIP-1153: Introduces `TSTORE/TLOAD` opcodes to reduce the gas cost of temporary data storage in smart contracts.
+* EIP-5656: Introduces the `MCOPY` opcode to optimize memory data copying in smart contracts.
+* EIP-6780: Adjusts the `SELFDESTRUCT` opcode
+* EIP-7702: Supports `SetCode TX`.
+* EIP-2935: Introduces a system contract to store the most recent 8191 historical block hashes.
+
+Changelogs:
+
+* Mantle Prague upgrade [#112](https://github.com/mantlenetworkio/op-geth/pull/112)
+* Adjusts eth\_maxPriorityFeePerGas logic [#110](https://github.com/mantlenetworkio/op-geth/pull/110)
+
+<br />

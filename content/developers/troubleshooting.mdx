@@ -1,0 +1,103 @@
+---
+title: "Troubleshooting"
+---
+
+# Troubleshooting
+
+## General 
+
+* **Status code: 429 \{"error": "API rate limit exceeded"\}**
+
+  The official Mantle RPC employs rate limiting to ensure stability during traffic spikes. If your particular use case involves calling the Mantle API frequently, you might run into issues that arise due to rate limiting. In case this happens, please consider connecting to third-party RPCs instead. You can find the list of available RPC providers [here](/developers/node-endpoints-and-providers).
+* **RPC call Error: timeout**
+
+  While calling the methods of our rpc (e.g. debug trace / get logs) to sync data from blocks, you may encounter the 'Timeout' issue, that's because the output of certain calls may be a large amount of data(due to big size blocks or large amount of logs) which may needs more time to be synced.
+
+  So under such situations if the call lacks of timeout parameter or the default timeout settings is too low, it may result in an error of timeout. So it is recommended that you should add a timeout parameter with the call or set higher timeout parameter accordingly to solve the timeout issue.
+* **Error: intrinsic gas too low**
+
+  This is due to your `gaslimit` being set too low. The `gaslimit` setting needs to be taken seriously, and we explain why you need the right `gaslimit` [here](/mantle-network/fee-mechanism/estimate-fees#estimate-fees-in-mantle-v2-tectonic)!
+* **Error: replacement transaction underpriced**
+
+  This error usually occurs when you need to replace a transaction with the same nonce. Note that if you need to replace an old transaction with a new transaction with the same nonce, you need to set the `gasprice` by **1.1x**!
+
+## Smart Contracts 
+
+### Deployment Issues 
+
+
+<Tabs items={['Hardhat', 'Foundry']}>
+<Tabs.Tab>
+* **Contract deploy error: "max code size exceeded."**
+
+  Set `optimizer` bigger. Such as:
+
+  ```javascript
+  module.exports = {
+    solidity: {
+      version: '0.8.4',
+      settings: {
+        optimizer: {
+          enabled: true,
+          runs: 10000,
+        },
+      },
+    },
+  };
+  ```
+</Tabs.Tab>
+<Tabs.Tab>
+* **"insufficient gas for l1Cost. Please use estimateGas to get gasLimit."**
+
+  The reason for this error is that Mantle's gas model is different from Ethereum, and the `forge script` command broadcasts the transaction without estimating the gas using the provided mantle rpc. You can fix this error by these 2 ways:
+
+  1. Upgrade your Foundry tools version to the latest.
+  2. Add `--skip-simulation` to the `forge script` command.
+</Tabs.Tab>
+</Tabs>
+
+
+### Verification Issues 
+
+
+<Tabs items={['Hardhat']}>
+<Tabs.Tab>
+* **Contract verification error: Hardhat found multiple contracts in the project (your MyTokenContract and the imported @openzeppelin/contracts/token/ERC20/IERC20.sol), and it doesn't know against which one you want to verify the bytecode**
+
+  If you see this error, try verifying the contract again by specifying the name of the contract that you're looking to verify. You can do this using the --contract option. Here's an example:
+
+  ```sh
+  npx hardhat verify --contract "contracts/MyTokenContract.sol:MyToken" --network mantleTest 0x3A2b26...
+  ```
+</Tabs.Tab>
+</Tabs>
+
+
+### Contracts Call Issues 
+
+
+<Tabs items={['Foundry']}>
+<Tabs.Tab>
+* **Error: Failed to send transaction. Context: (code: -32000, message: failed to forward tx to sequencer, please try again. Error message: 'intrinsic gas too low', data: None)**
+
+  The reason for this error is that Mantle's gas model is different from Ethereum, and the `forge script` command broadcasts the transaction without estimating the gas using the provided mantle rpc. Two things should be noted when using it:
+
+  1. Set the `priority-gas-price` to 0.
+  2. Upgrade your Foundry tools version to the latest or add `--skip-simulation` to the `forge script` command.
+</Tabs.Tab>
+</Tabs>
+
+
+## Standard Bridge 
+
+* **Error when withdrawing: no bridge found for token pair**
+
+  Try switching to a different [RPC provider](/developers/node-endpoints-and-providers).
+
+## Explorer 
+
+* **Error: Awaiting internal transactions for reason**
+
+  You may encounter this error if you there are multiple internal transaction calls in the contract being invoked. This does not necessarily mean the transaction has failed, just that the explorer is yet to receive acknowledgements for all the internal transactions.
+
+<br />

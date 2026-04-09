@@ -1,0 +1,51 @@
+---
+title: "Contract Introduction"
+---
+
+# Contract Introduction
+
+Mantle Network's on-chain module contains a series of smart contracts that run on the blockchain to ensure decentralized and reliable execution. These contracts are responsible for handling the logic of various dApps interacting with the blockchain, as well as the interaction of the off-chain system with the on-chain system, including asset transfers, asset swaps, and so on.
+
+## Contract Explained 
+
+### L1CrossDomainMessengerProxy 
+
+This contract is a proxy for the L1CrossDomainMessenger contract on the L2, which can be used to the interaction with the L2 contract from L1.
+
+The L1CrossDomainMessenger contract is a high-level interface for sending messages to and receiving messages from Mantle Network (from L1 to L2).
+
+### L1StandardBridgeProxy 
+
+This contract is a proxy for the L1StandardBridge contract on the L2, which can be used to the interaction with the L2 bridge from L1.
+
+The L1StandardBridge is a standardized contract for transferring ERC20 tokens to/from Mantle Network
+
+### L1ERC721BridgeProxy 
+
+The proxy contract for transferring ERC721 tokens to/from Mantle Network.
+
+### L2OutputOracleProxy 
+
+The proxy contract of stores commitments to the state of Mantle Network, which can be used by contracts on L1 to access the L2 state
+
+### OptimismMintableERC20FactoryProxy 
+
+The proxy contract of factory contract for minting ERC20 tokens.
+
+### OptimismPortalProxy 
+
+The proxy contract of low-level message-passing interface.
+
+### ProxyAdmin 
+
+Admin contract for the contracts, is the owner of all the proxy contracts. It can be used to upgrade the most system contracts in Mantle.
+
+### SystemConfigProxy 
+
+This is a proxy contract of the system contract that stores the configuration values for the on-chain system.
+
+### AddressManager 
+
+AddressManager is a legacy contract that was used in the old version of the Mantle system to manage a registry of string names to addresses.
+
+<br />

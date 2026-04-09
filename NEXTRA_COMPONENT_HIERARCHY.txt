@@ -1,0 +1,229 @@
+# Nextra Component Hierarchy & Flow Diagram
+
+## Component Tree Overview
+
+RootLayout (app/layout.jsx)
+├── Head (Nextra theme color config)
+├── Layout (nextra-theme-docs)
+│   ├── Navbar (nextra-theme-docs)
+│   │   ├── MantleLogo (custom SVG)
+│   │   └── Navigation tabs
+│   │       ├── Mantle Network
+│   │       ├── Node Operators
+│   │       ├── Developers
+│   │       └── Users
+│   ├── Sidebar (nextra-theme-docs)
+│   │   └── Navigation links (from content/_meta.js)
+│   │       ├── Internal pages (.mdx files)
+│   │       ├── Separators
+│   │       └── External links (href properties)
+│   ├── Main Content (children / MDX page)
+│   │   ├── Nextra theme components
+│   │   ├── Custom Mantle components
+│   │   └── ...
+│   └── Footer (MantleFooter)
+│       ├── Brand section
+│       ├── Social icons
+│       └── Legal links
+└── Global Styles
+    ├── nextra-theme-docs/style.css (base)
+    └── app/globals.css (custom overrides)
+
+
+## Data Flow: Sidebar Generation
+
+next.config.mjs
+  ↓ (contentDirBasePath: '/')
+content/
+  ├── _meta.js (root)
+  │   ├── notices
+  │   ├── mantle-network
+  │   ├── node-operators
+  │   ├── developers
+  │   └── users
+  │
+  ├── developers/
+  │   ├── _meta.js (section config)
+  │   │   ├── quick-access
+  │   │   ├── how-to-guides
+  │   │   ├── common-use-cases
+  │   │   ├── ---links (separator)
+  │   │   ├── faucet → href: https://faucet.sepolia.mantle.xyz
+  │   │   ├── bridge → href: https://bridge.mantle.xyz
+  │   │   └── explorer → href: https://explorer.mantle.xyz
+  │   │
+  │   ├── quick-access.mdx
+  │   └── ...
+
+getPageMap() → Nextra builds sidebar from _meta.js
+              ↓
+        Sidebar renders as HTML:
+            <nav class="nextra-sidebar-container">
+              <a href="/developers/quick-access">Quick Access</a>
+              <a href="https://faucet.sepolia.mantle.xyz">Faucet ↗</a>
+              <a href="https://bridge.mantle.xyz">Bridge ↗</a>
+            </nav>
+
+
+## Styling Cascade
+
+Browser Default Styles
+  ↓ (very low specificity)
+nextra-theme-docs/style.css
+  ├── .nextra-navbar { ... }
+  ├── .nextra-sidebar-container { ... }
+  ├── .nextra-sidebar-container a { ... }
+  └── ... (all .nextra-* classes)
+  ↓ (medium specificity)
+app/globals.css (custom Mantle overrides)
+  ├── Design tokens (:root)
+  ├── Typography (h1, h2, body, etc.)
+  ├── .mantle-hero { ... }
+  ├── .nextra-navbar > nav { flex-wrap: wrap !important; }
+  └── ... (custom styles)
+  ↓ (high specificity / !important)
+
+
+## CSS Architecture
+
+### Design Tokens Layer
+
+:root {
+  --nextra-primary-hue: 175deg;          /* Sets Nextra theme color */
+  --mantle-primary: #65B3AE;              /* Brand color */
+  --mantle-text-primary: #0f172a;         /* Text color */
+  --font-sans: var(--font-inter), ...;    /* Font stack */
+}
+
+.dark {
+  --nextra-primary-lightness: 55%;        /* Nextra adjusts for dark mode */
+  --mantle-primary: #7ECEC9;              /* Lighter teal */
+}
+
+
+## MDX Component Registration Flow
+
+mdx-components.js exports useMDXComponents()
+    ↓
+    ├── Imports getDocsMDXComponents() from nextra-theme-docs
+    │   (provides: Callout, Steps, Link, etc.)
+    │
+    ├── Imports custom components from ./components/HomeCard.jsx
+    │   (provides: Hero, CardGrid, HomeCard, etc.)
+    │
+    └── Merges into single object:
+        {
+          ...nextra_defaults,
+          ...custom_mantle_components,
+        }
+
+Content author writes MDX:
+    ↓
+<Hero title="..." subtitle="...">
+  <CTAButton href="..." variant="primary">Get Started</CTAButton>
+</Hero>
+
+MDX compiler looks up component in useMDXComponents()
+    ↓
+Finds Hero component → renders <div className="mantle-hero">
+Finds CTAButton → renders <Link className="mantle-btn mantle-btn-primary">
+
+
+## Sidebar Link CSS Selectors
+
+### Distinguishing Internal vs External Links
+
+<!-- Internal link (from _meta.js page reference) -->
+<a href="/developers/quick-access">Quick Access</a>
+
+<!-- External link (from _meta.js href property) -->
+<a href="https://faucet.sepolia.mantle.xyz">Faucet ↗</a>
+
+<!-- How to distinguish in CSS -->
+a[href^="/"]         /* Internal link */
+a[href^="http"]      /* External link */
+
+
+### Current CSS for Sidebar
+
+.nextra-sidebar-container a {
+  transition: color 0.15s ease;
+}
+
+This applies to ALL sidebar links.
+
+
+### Proposed Enhancement
+
+/* All sidebar links */
+.nextra-sidebar-container a {
+  transition: color 0.15s ease, font-weight 0.15s ease;
+}
+
+/* Internal links - default style */
+.nextra-sidebar-container a[href^="/"] {
+  color: var(--mantle-text-primary);
+}
+
+/* External links - distinct style */
+.nextra-sidebar-container a[href^="http"] {
+  color: var(--mantle-primary);
+  font-weight: 550;
+}
+
+.nextra-sidebar-container a[href^="http"]:hover {
+  color: var(--mantle-primary-dark);
+  text-decoration: underline;
+}
+
+
+## Responsive Design Breakpoints
+
+Mobile: max-width: 640px
+Tablet: max-width: 768px & min-width: 769px
+Desktop: min-width: 1025px
+Navbar revert: max-width: 767px (single row, hamburger menu)
+
+
+## File Dependency Graph
+
+next.config.mjs
+  ├── Nextra wrapper configuration
+  └── Points content to / directory
+
+app/layout.jsx (Root)
+  ├── Imports nextra-theme-docs/style.css (base)
+  ├── Imports ./globals.css (overrides)
+  ├── Imports { MantleLogo } from ./components/HomeCard
+  └── Renders <Layout> with navbar, footer, sidebar
+
+app/globals.css
+  ├── Design tokens (:root)
+  ├── Component styles (.mantle-*)
+  ├── Nextra overrides (.nextra-*)
+  └── Responsive media queries
+
+mdx-components.js
+  ├── Imports getDocsMDXComponents from nextra-theme-docs
+  ├── Imports custom components from ./components/HomeCard
+  └── Exports useMDXComponents() → merged registry
+
+components/HomeCard.jsx
+  ├── MantleLogo (SVG)
+  ├── Hero
+  ├── CTAButton
+  ├── CardGrid
+  ├── HomeCard
+  ├── NavigationCard
+  ├── DifficultyBadge
+  ├── Expandable
+  └── NavGrid
+
+content/_meta.js
+  ├── Root navigation structure
+  └── Links to content/**/_meta.js files
+
+content/[section]/_meta.js
+  ├── Section-specific navigation
+  ├── Internal page references
+  └── External links (href properties)
